@@ -13,6 +13,9 @@ import {AnimatedSprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Camera from '../helpers/Camera';
 
+	// You have a stateManagement package in the app that should be handling
+	// Anything related to manipulating the game state through inputs (mouse/keyboard)
+	// doesn't belong here.
 interface keysDown {
 	w: boolean;
 	d: boolean;
@@ -78,15 +81,19 @@ export default class Player extends Actor {
 		this.strength = 90;
 		this.movable = true;
 
+		// I think you should move away all this logic to a class dedicated to handling input.
 		document.addEventListener('keydown', this.handleKeyDown.bind(this));
 		document.addEventListener('keyup', this.handleKeyUp.bind(this));
 		document.addEventListener('keydown', this.handleKeyPress.bind(this));
+
+		// This doesn't belong in a Player class
 		window.onresize = this.centerCamera.bind(this);
 		camera.on('mousemove', this.handleMouseMove.bind(this));
 		camera.on('mouseout', this.handleMouseOut.bind(this));
 		camera.on('mousedown', this.handleMouseDown.bind(this));
 		camera.on('mouseup', this.handleMouseUp.bind(this));
 
+		// This doesn't belong in a Player class
 		this.keysDown = {
 			w: false,
 			d: false,
@@ -95,6 +102,7 @@ export default class Player extends Actor {
 			shift: false
 		};
 
+		// This doesn't belong in a Player class
 		this.mouse = {
 			x: 500,
 			y: 500,
@@ -118,6 +126,17 @@ export default class Player extends Actor {
 		this.shoot();
 	}
 
+	// You should probably simplify this logic.
+	// You are mixing up the calculation of direction and speed
+	// With modifying the state (like reducing/increasing stamina)
+	// this.status.moving can be simplified like this:
+	//
+	// const movingVertically = this.keysDown.w?!this.keysDown.s:this.keysDown.s;
+	// const movingLaterally = this.keysDown.a?!this.keysDown.d:this.keysDown.d;
+	// this.status.moving = movingLaterally || movingVertically;
+	// 
+	// and only once you've determined you're moving you should calculate direction,
+	// check stamina / shift / etc.
 	controlMovement() {
 		let direction = 0;
 		this.speed = 4;
@@ -189,6 +208,7 @@ export default class Player extends Actor {
 		this.rotation = angle;
 	}
 
+		// This doesn't belong in a Player class
 	handleKeyDown(event: KeyboardEvent) {
 		if (event.code === 'KeyW') this.keysDown.w = true;
 		if (event.code === 'KeyD') this.keysDown.d = true;
@@ -197,6 +217,7 @@ export default class Player extends Actor {
 		if (event.shiftKey) this.keysDown.shift = true;
 	}
 
+		// This doesn't belong in a Player class
 	handleKeyUp(event: KeyboardEvent) {
 		if (event.code === 'KeyW') this.keysDown.w = false;
 		if (event.code === 'KeyD') this.keysDown.d = false;
@@ -205,29 +226,35 @@ export default class Player extends Actor {
 		if (!event.shiftKey) this.keysDown.shift = false;
 	}
 
+		// This doesn't belong in a Player class
 	handleKeyPress(event: KeyboardEvent) {
 		if (event.code === 'Escape') {
 			this.state.pause();
 		}
 	}
 
+		// This doesn't belong in a Player class
 	handleMouseMove(event: interaction.InteractionEvent) {
 		this.mouse.x = event.data.getLocalPosition(this.camera).x;
 		this.mouse.y = event.data.getLocalPosition(this.camera).y;
 	}
 
+		// This doesn't belong in a Player class
 	handleMouseOut() {
 		this.state.paused = true;
 	}
 
+		// This doesn't belong in a Player class
 	handleMouseDown() {
 		this.mouse.pressed = true;
 	}
 
+		// This doesn't belong in a Player class
 	handleMouseUp() {
 		this.mouse.pressed = false;
 	}
 
+		// This doesn't belong in a Player class
 	centerCamera() {
 		let x = this.x - this.screen.width/2;
 		let y = this.y - this.screen.height/2;
