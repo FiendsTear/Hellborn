@@ -19,6 +19,7 @@ export interface Pair {
 	secondActor: Actor;
 }
 
+// This class probably belongs in stateManagement and not in Physics.
 export default class Grid {
 	id: string;
 	quadrants: Quadrant[][];

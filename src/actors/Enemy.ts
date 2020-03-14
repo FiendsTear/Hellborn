@@ -14,6 +14,8 @@ export default class Enemy extends Actor {
 	sprite: Sprite;
 
 	constructor(ground: Ground, texture: PIXI.Texture, state: Game, quadrant: Quadrant) {
+		// you're using typescript. You probably don't need this.
+		// And if you do, you should use Typescript's types (or enums) to enforce some type/value safety.
 		const type = 'enemy';
 		super(state, type, quadrant, ground);
 
