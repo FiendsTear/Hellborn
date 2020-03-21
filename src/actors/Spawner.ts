@@ -33,7 +33,5 @@ export default class Spawner extends Actor {
 			this.ground.addChild(enemy);	
 			this.spawnCooldown = 4000;
 		}
-
 	}
-
 }
