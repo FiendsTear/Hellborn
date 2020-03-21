@@ -133,7 +133,7 @@ export default class Game extends PIXI.Application {
 				this.spawnerCount = this.spawnerCount + 1;
 				break;
 			}
-			const quadrantToAddActorTo = actor.currentQuadrants[0];
+			const quadrantToAddActorTo = actor.status.quadrants[0];
 			this.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
 		}
 	}

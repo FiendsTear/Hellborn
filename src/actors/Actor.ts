@@ -11,36 +11,30 @@ interface Status {
 	moving: boolean;
 	alive: boolean;
 	attacking: boolean;
+	attackReady: boolean;
+	health: number;
+	quadrants: Quadrant[];
+	destination: PIXI.Point;
+	speed: number;
 }
 
 // If you never plan to do "new Actor(...)", this should be an abstract class.
 // Also, Projectile extends Actor. Do projectiles or spawners have health? Can a
 // spawner move? be alive? attack others?
 // You may need to work on the Actor class hierarchy.
-export default class Actor extends Container {
+export default abstract class Actor extends Container {
 	id: string;
 	type: string;
+	status: Status;
 
 	maxHealth: number;
-
-	// Shouldn't this be in the status interface?
-	currentHealth: number;
-
-	status: Status;
 	hitBoxRadius: number;
 	strength: number;
 
 	state: Game;
 	ground: Ground;
 
-	// Shouldn't this be in the status interface?
-	attackReady: boolean;
-
-	// Shouldn't this be in the status interface?
-	speed: number;
-	currentQuadrants: Quadrant[];
 	isObstacle: boolean;
-	destination: PIXI.Point;
 	movable: boolean;
 
 	// the type argument should either use TS types or be removed completely from here and instead
@@ -63,7 +57,15 @@ export default class Actor extends Container {
 		 */
 		this.state = state;
 		this.ground = ground;
-
+		this.status = {
+			alive: true, 
+			moving: false, 
+			attacking: false, 
+			attackReady: true,
+			health: this.maxHealth,
+			quadrants: [],
+			destination: new Point(),
+			speed: 0};
 		this.type = type;
 		/**
 		You have a section in the app for stateMangement. I think it would make a lot
@@ -73,31 +75,21 @@ export default class Actor extends Container {
 
 		Last, besides the fact you should remove this code from here, make sure that you always use '===' in JS/TS.
 		*/
-		if (type == 'enemy') this.id = this.type + (state.enemiesCount + 1);
-		if (type == 'player') this.id = this.type + (state.playersCount + 1);
-		if (type == 'projectile') this.id = this.type + (state.projectilesCount + 1);
-		if (type == 'spawner') this.id = this.type + (state.spawnerCount + 1);
+		if (type === 'enemy') this.id = this.type + (state.enemiesCount + 1);
+		if (type === 'player') this.id = this.type + (state.playersCount + 1);
+		if (type ==='projectile') this.id = this.type + (state.projectilesCount + 1);
+		if (type === 'spawner') this.id = this.type + (state.spawnerCount + 1);
 
 		// this.hitBoxRadius = Math.floor(Math.sqrt(this.height/2*this.height/2 + this.width/2*this.width/2));
-		this.currentQuadrants = [];
-		this.currentQuadrants.push(quadrant);
+		this.status.quadrants.push(quadrant);
 		let actorCenterX;
 		let actorCentery;
 		actorCenterX = (quadrant.x1 + quadrant.x2)/2;	
 		actorCentery = (quadrant.y1 + quadrant.y2)/2;
 		this.x = actorCenterX;
 		this.y = actorCentery;
-		this.destination = new Point(this.x, this.y);
-
-		/**
-		 * if you do
-		 * this.status = { alive: true, moving: false, attacking: false };
-		 * you don't need to do the casting, and TS will help you with type checking.
-		 */
-		this.status = {} as Status;
-		this.status.alive = true;
-		this.status.moving = false;
-		this.status.attacking = false;
+		this.status.destination.x = this.x;
+		this.status.destination.y = this.y;
 
 		// You are not using isObstacle anywhere in the code. Does this even need to be here at all?
 		this.isObstacle = true;
@@ -110,8 +102,8 @@ export default class Actor extends Container {
 	}
 
 	move() {
-		this.x = this.destination.x;
-		this.y = this.destination.y;
+		this.x = this.status.destination.x;
+		this.y = this.status.destination.y;
 
 	}
 
@@ -120,8 +112,8 @@ export default class Actor extends Container {
 	 * (due to the state.prepareToMoveActor call). In fact it's not super clear what this does.
 	 */
 	calculateDestination(direction: number) {
-		let x = this.x + this.speed * Math.cos(direction);
-		let y = this.y + this.speed * Math.sin(direction);
+		let x = this.x + this.status.speed * Math.cos(direction);
+		let y = this.y + this.status.speed * Math.sin(direction);
 		if (x - this.hitBoxRadius <= 0) {
 			x = this.hitBoxRadius;
 		}
@@ -134,13 +126,13 @@ export default class Actor extends Container {
 		if (y + this.hitBoxRadius >= this.ground.fixedHeight) {
 			y = this.ground.fixedHeight - this.hitBoxRadius;
 		}
-		this.destination.x = x;
-		this.destination.y = y;
+		this.status.destination.x = x;
+		this.status.destination.y = y;
 		this.state.prepareToMoveActor(this);
 	}
 
 	reduceHealth(damage: number) {
-		this.currentHealth = this.currentHealth - damage;
+		this.status.health = this.status.health - damage;
 	}
 	prepare() {}
 	act(){}
@@ -148,14 +140,14 @@ export default class Actor extends Container {
 	hit(actor: Actor){}
 	
 	die() {
-		this.speed = 0;
+		this.status.speed = 0;
 		this.status.alive = false;
 
 		// Why are actors added to the state and removed from the ground?
 		// Seems like a weird way of adding/removing resources.
 		this.ground.removeChild(this);
-		for (let i = 0, quadrantCount = this.currentQuadrants.length; i < quadrantCount; i++) {
-			const quadrant = this.currentQuadrants[i];
+		for (let i = 0, quadrantCount = this.status.quadrants.length; i < quadrantCount; i++) {
+			const quadrant = this.status.quadrants[i];
 			quadrant.activeActors.splice(quadrant.activeActors.indexOf(this.id), 1);
 		}
 	}

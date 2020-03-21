@@ -13,9 +13,9 @@ import {AnimatedSprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Camera from '../helpers/Camera';
 
-	// You have a stateManagement package in the app that should be handling
-	// Anything related to manipulating the game state through inputs (mouse/keyboard)
-	// doesn't belong here.
+// You have a stateManagement package in the app that should be handling
+// Anything related to manipulating the game state through inputs (mouse/keyboard)
+// doesn't belong here.
 interface keysDown {
 	w: boolean;
 	d: boolean;
@@ -63,12 +63,12 @@ export default class Player extends Actor {
 
 		this.centerCamera();
 
-		this.speed = 4;
+		this.status.speed = 4;
 		this.rotation = -(3*Math.PI/2);
 		this.interactive = true;
 
 		this.maxHealth = 100;
-		this.currentHealth = this.maxHealth;
+		this.status.health = this.maxHealth;
 
 		this.maxStamina = 100;
 		this.currentStamina = this.maxStamina;
@@ -139,9 +139,9 @@ export default class Player extends Actor {
 	// check stamina / shift / etc.
 	controlMovement() {
 		let direction = 0;
-		this.speed = 4;
+		this.status.speed = 4;
 		if (this.keysDown.shift && this.currentStamina > 0) {
-			this.speed = 8;
+			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
 			this.camera.hud.draw();
 		}
@@ -208,7 +208,7 @@ export default class Player extends Actor {
 		this.rotation = angle;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleKeyDown(event: KeyboardEvent) {
 		if (event.code === 'KeyW') this.keysDown.w = true;
 		if (event.code === 'KeyD') this.keysDown.d = true;
@@ -217,7 +217,7 @@ export default class Player extends Actor {
 		if (event.shiftKey) this.keysDown.shift = true;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleKeyUp(event: KeyboardEvent) {
 		if (event.code === 'KeyW') this.keysDown.w = false;
 		if (event.code === 'KeyD') this.keysDown.d = false;
@@ -226,35 +226,35 @@ export default class Player extends Actor {
 		if (!event.shiftKey) this.keysDown.shift = false;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleKeyPress(event: KeyboardEvent) {
 		if (event.code === 'Escape') {
 			this.state.pause();
 		}
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleMouseMove(event: interaction.InteractionEvent) {
 		this.mouse.x = event.data.getLocalPosition(this.camera).x;
 		this.mouse.y = event.data.getLocalPosition(this.camera).y;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleMouseOut() {
 		this.state.paused = true;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleMouseDown() {
 		this.mouse.pressed = true;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	handleMouseUp() {
 		this.mouse.pressed = false;
 	}
 
-		// This doesn't belong in a Player class
+	// This doesn't belong in a Player class
 	centerCamera() {
 		let x = this.x - this.screen.width/2;
 		let y = this.y - this.screen.height/2;

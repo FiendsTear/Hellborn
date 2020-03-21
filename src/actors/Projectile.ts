@@ -22,7 +22,7 @@ export default class Projectile extends Actor {
 		const shooterFaceCenterY = shooter.y + shooter.hitBoxRadius * Math.sin(shooter.rotation);
 		this.x = shooterFaceCenterX;
 		this.y = shooterFaceCenterY; 
-		this.speed = 25;
+		this.status.speed = 25;
 		this.lifespan = 300;
 		this.status.moving = true;
 		this.direction = shooter.rotation + Math.random() * Math.PI/30 - Math.PI/60;
