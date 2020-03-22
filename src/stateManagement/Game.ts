@@ -11,6 +11,7 @@ import Menu from '../interface/Menu';
 // eslint-disable-next-line no-unused-vars
 import Camera from '../helpers/Camera';
 import HUD from '../interface/HUD';
+import Input from '../helpers/Input';
 
 export interface Actors {
 	[id: string]: Actor;
@@ -27,6 +28,7 @@ export default class Game extends PIXI.Application {
 	grid: Grid;
 	actors: Actors;
 	camera: Camera;
+	input: Input;
 
 	constructor() {
 		super({
@@ -59,20 +61,22 @@ export default class Game extends PIXI.Application {
 	}
 
 	initialize(loader: PIXI.Loader, resources: Partial<Record<string, PIXI.LoaderResource>>) {
-		this.camera = new Camera();
-		this.camera.interactive = true;
 		this.renderer.plugins.interaction.cursorStyles.hover = 'url("assets/sprites/sight.png"),auto';
 
-		this.camera.cursor = 'hover';
+		this.input = new Input(this);
+		document.addEventListener('keydown', this.input.handleKeyDown);
+		document.addEventListener('keyup', this.input.handleKeyUp);
+		document.addEventListener('keydown', this.input.handleKeyPress);
 
-		const groundSprite = PIXI.Sprite.from('ground');
-		groundSprite.zIndex = 1;
-		const ground = new Ground();
-		ground.addChild(groundSprite);
-		this.camera.addChild(ground);
+		this.camera = new Camera(this);
+		window.onresize = this.camera.centerOnPlayer.bind(this);
 
 		this.menu = new Menu(this);
 		this.menu.show();
+
+		const ground = new Ground();
+		this.camera.addChild(ground);
+		this.camera.ground = ground;
 
 		const hud = new HUD(this);
 		this.camera.hud = hud;
@@ -86,7 +90,7 @@ export default class Game extends PIXI.Application {
 		// initialize player and enemy
 		const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 		const playerTextures = [resources.player2.texture, resources.player1.texture, resources.player2.texture, resources.player3.texture];
-		const player = new Player(this.screen, this.camera, ground, playerTextures, this, playerQuadrant, resources.bullet.texture);
+		const player = new Player(this, playerTextures, this, playerQuadrant, resources.bullet.texture);
 		ground.addChild(player);
 
 		const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
@@ -152,6 +156,7 @@ export default class Game extends PIXI.Application {
 				this.actors[actorID].act();
 			}
 		}
+		this.camera.centerOnPlayer(this.actors.player1 as Player);
 	}
 
 	pause() {
