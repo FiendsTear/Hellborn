@@ -18,6 +18,7 @@ export default class Player extends Actor {
 	reloadTime: number;
 	shotSound: HTMLAudioElement;
 	maxStamina: number;
+	maxSpeed: number;
 	currentStamina: number;
 	sprite: AnimatedSprite;
 
@@ -37,7 +38,8 @@ export default class Player extends Actor {
 		this.addChild(this.sprite);
 		this.rotation = -(Math.PI/2);
 
-		this.status.speed = 4;
+		this.maxSpeed = 4;
+		this.status.speed = 0;
 		this.rotation = -(3*Math.PI/2);
 		this.interactive = true;
 
@@ -83,6 +85,7 @@ export default class Player extends Actor {
 	// check stamina / shift / etc.
 	controlMovement() {
 		let direction = 0;
+		this.status.speed = this.maxSpeed;
 		const keys = this.game.input.keys;
 		if (keys.shift && this.currentStamina > 0) {
 			this.status.speed = 8;
