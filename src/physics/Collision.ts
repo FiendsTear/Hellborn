@@ -7,8 +7,8 @@ export default class Collision {
 	static check(pair: Pair): void {
 		const firstActor = pair.firstActor;
 		const secondActor = pair.secondActor;
-		const distance = (secondActor.destination.x - firstActor.destination.x) * (secondActor.destination.x - firstActor.destination.x) + 
-			(secondActor.destination.y - firstActor.destination.y) * (secondActor.destination.y - firstActor.destination.y);
+		const distance = (secondActor.status.destination.x - firstActor.status.destination.x) * (secondActor.status.destination.x - firstActor.status.destination.x) + 
+			(secondActor.status.destination.y - firstActor.status.destination.y) * (secondActor.status.destination.y - firstActor.status.destination.y);
 		if (distance <= (secondActor.hitBoxRadius + firstActor.hitBoxRadius)*(secondActor.hitBoxRadius + firstActor.hitBoxRadius)) {	
 			this.collide(firstActor, secondActor);
 		}
@@ -36,8 +36,8 @@ export default class Collision {
 			const verticalDistanceToPushedActor = pushedActor.y - pushingActor.y;
 			let directionToPushedActor = Math.atan2(verticalDistanceToPushedActor, horizontalDistanceToPushedActor);
 
-			const horizontalDistanceToDestination = pushingActor.destination.x - pushingActor.x;
-			const verticalDistanceToDestination = pushingActor.destination.y - pushingActor.y;
+			const horizontalDistanceToDestination = pushingActor.status.destination.x - pushingActor.x;
+			const verticalDistanceToDestination = pushingActor.status.destination.y - pushingActor.y;
 			let directionPushingActor = Math.atan2(verticalDistanceToDestination, horizontalDistanceToDestination);
 
 			if (pushingActor.status.moving) {

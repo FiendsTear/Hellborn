@@ -37,12 +37,12 @@ export default class Player extends Actor {
 		this.addChild(this.sprite);
 		this.rotation = -(Math.PI/2);
 
-		this.speed = 4;
+		this.status.speed = 4;
 		this.rotation = -(3*Math.PI/2);
 		this.interactive = true;
 
 		this.maxHealth = 100;
-		this.currentHealth = this.maxHealth;
+		this.status.health = this.maxHealth;
 
 		this.maxStamina = 100;
 		this.currentStamina = this.maxStamina;
@@ -83,10 +83,9 @@ export default class Player extends Actor {
 	// check stamina / shift / etc.
 	controlMovement() {
 		let direction = 0;
-		this.speed = 4;
 		const keys = this.game.input.keys;
 		if (keys.shift && this.currentStamina > 0) {
-			this.speed = 8;
+			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
 			this.game.camera.hud.draw();
 		}

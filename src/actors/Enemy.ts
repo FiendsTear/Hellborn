@@ -27,14 +27,14 @@ export default class Enemy extends Actor {
 		this.rotation = -(Math.PI/2);
 		
 		this.attackCooldown = 0;
-		this.attackReady = true;
+		this.status.attackReady = true;
 		this.hitBoxRadius = 28;
 		this.attackReach = 50;
 
 		this.strength = 80;
 		this.maxHealth = 80;
-		this.currentHealth = this.maxHealth;
-		this.speed = 3;
+		this.status.health = this.maxHealth;
+		this.status.speed = 3;
 		this.movable = true;
 
 		this.attack = this.attack.bind(this);
@@ -42,18 +42,18 @@ export default class Enemy extends Actor {
 	}
 	
 	prepare() {
-		if (this.currentHealth <= 0) {
+		if (this.status.health <= 0) {
 			this.die();
 		}
 		else {
 			if (this.attackCooldown > 0) {
 				this.attackCooldown = this.attackCooldown - this.state.ticker.elapsedMS;
 				if (this.attackCooldown <= 0) {
-					this.attackReady = true;
+					this.status.attackReady = true;
 				}
 			}
 			this.status.moving = true;
-			this.speed = 3;
+			this.status.speed = 3;
 	
 			const player = this.state.actors.player1;
 			// temporarily set as player1 cause there's no multiplayer yet
@@ -67,7 +67,7 @@ export default class Enemy extends Actor {
 			this.calculateDestination(direction);
 			
 			const quadDistance = verticalDistance*verticalDistance + horizontalDistance*horizontalDistance;
-			if (quadDistance <= this.attackReach*this.attackReach + player.hitBoxRadius*player.hitBoxRadius && this.attackReady) {
+			if (quadDistance <= this.attackReach*this.attackReach + player.hitBoxRadius*player.hitBoxRadius && this.status.attackReady) {
 				this.attack(player);
 			}
 		}
@@ -79,10 +79,10 @@ export default class Enemy extends Actor {
 
 	attack(player: Actor): void {
 		player.reduceHealth(10);
-		if (player.currentHealth <= 0) {
+		if (player.status.health <= 0) {
 			this.state.pause();
 		}
-		this.attackReady = false;
+		this.status.attackReady = false;
 		this.attackCooldown = 1000;
 	}
 }

@@ -79,7 +79,7 @@ export default class Grid {
 		const actorBottomBorder = actor.y + actor.hitBoxRadius;
 		const actorTopBorder = actor.y - actor.hitBoxRadius;
 
-		let currentQuadrantsClone = actor.currentQuadrants.slice();
+		let currentQuadrantsClone = actor.status.quadrants.slice();
 		currentQuadrantsClone.forEach((quadrant) => {
 			// right
 			if (actorRightBorder >= quadrant.x2) {	
@@ -138,7 +138,7 @@ export default class Grid {
 				}
 			}
 		});
-		currentQuadrantsClone = actor.currentQuadrants.slice();
+		currentQuadrantsClone = actor.status.quadrants.slice();
 		currentQuadrantsClone.forEach((quadrant) => {
 			if (actorBottomBorder < quadrant.y1 ||
 					actorTopBorder > quadrant.y2 ||
@@ -153,17 +153,17 @@ export default class Grid {
 		if (!quadrant.activeActors.includes(actor.id)) {
 			quadrant.activeActors.push(actor.id);
 		}
-		const quadrantIndexInArray = this.checkQuadrantInArray(actor.currentQuadrants, quadrant);
+		const quadrantIndexInArray = this.checkQuadrantInArray(actor.status.quadrants, quadrant);
 		if (quadrantIndexInArray == -1) {
-			actor.currentQuadrants.push(quadrant);
+			actor.status.quadrants.push(quadrant);
 		}
 	}
 
 	// replace indexof with findIndex
 	removeActorFromQuadrant(quadrant: Quadrant, actor: Actor) {
 		quadrant.activeActors.splice( quadrant.activeActors.indexOf(actor.id), 1);
-		const quadrantIndexInArray = this.checkQuadrantInArray(actor.currentQuadrants, quadrant);
-		actor.currentQuadrants.splice(quadrantIndexInArray, 1);
+		const quadrantIndexInArray = this.checkQuadrantInArray(actor.status.quadrants, quadrant);
+		actor.status.quadrants.splice(quadrantIndexInArray, 1);
 	}
 	
 	checkQuadrantInArray(quadrants: Quadrant[], quadrant: Quadrant) {
@@ -180,7 +180,7 @@ export default class Grid {
 		let quadrants: Quadrant[] = [];
 		for (var actorID in actors) {
 			const actor = actors[actorID];
-			actor.currentQuadrants.forEach((quadrant) => {
+			actor.status.quadrants.forEach((quadrant) => {
 				if (this.checkQuadrantInArray(quadrants, quadrant) == -1) {
 					quadrants.push(quadrant);
 				}
