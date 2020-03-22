@@ -60,7 +60,7 @@ export default class Game extends PIXI.Application {
 			.add('sight', 'assets/sprites/sight.png');
 	}
 
-	initialize(loader: PIXI.Loader, resources: Partial<Record<string, PIXI.LoaderResource>>) {
+	initialize() {
 		this.renderer.plugins.interaction.cursorStyles.hover = 'url("assets/sprites/sight.png"),auto';
 
 		this.input = new Input(this);
@@ -68,12 +68,17 @@ export default class Game extends PIXI.Application {
 		document.addEventListener('keyup', this.input.handleKeyUp);
 		document.addEventListener('keydown', this.input.handleKeyPress);
 
-		this.camera = new Camera(this);
-		window.onresize = this.camera.centerOnPlayer.bind(this);
-
 		this.menu = new Menu(this);
 		this.menu.show();
+	}
 
+	startGame() {
+
+		this.camera = new Camera(this);
+		window.onresize = this.camera.centerOnPlayer.bind(this.camera);
+		this.stage.addChild(this.camera);
+
+		const resources = this.loader.resources;
 		const ground = new Ground();
 		this.camera.addChild(ground);
 		this.camera.ground = ground;
@@ -82,11 +87,9 @@ export default class Game extends PIXI.Application {
 		this.camera.hud = hud;
 		this.camera.addChild(hud.graphics);
 
-		this.stage.addChild(this.camera);
-	
 		// initialize grid for collisions
 		new Grid(ground, this);
-	
+
 		// initialize player and enemy
 		const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 		const playerTextures = [resources.player2.texture, resources.player1.texture, resources.player2.texture, resources.player3.texture];
@@ -99,6 +102,8 @@ export default class Game extends PIXI.Application {
 		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
 		const spawnerQuadrant3: Quadrant = this.grid.quadrants[7][8];
 		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
+		this.pause();
+		// this.ticker.add(() => this.loop());
 	}
 
 	loop(): void{
