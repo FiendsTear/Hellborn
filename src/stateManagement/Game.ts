@@ -54,12 +54,16 @@ export default class Game extends PIXI.Application {
 			.add('ground', 'assets/sprites/ground.png')
 			.add('wall', 'assets/sprites/wall.png')
 			.add('bullet', 'assets/sprites/bullet.png')
-			.add('spawner', 'assets/sprites/spawner.png');
+			.add('spawner', 'assets/sprites/spawner.png')
+			.add('sight', 'assets/sprites/sight.png');
 	}
 
 	initialize(loader: PIXI.Loader, resources: Partial<Record<string, PIXI.LoaderResource>>) {
 		this.camera = new Camera();
 		this.camera.interactive = true;
+		this.renderer.plugins.interaction.cursorStyles.hover = 'url("assets/sprites/sight.png"),auto';
+
+		this.camera.cursor = 'hover';
 
 		const groundSprite = PIXI.Sprite.from('ground');
 		groundSprite.zIndex = 1;
@@ -91,9 +95,6 @@ export default class Game extends PIXI.Application {
 		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
 		const spawnerQuadrant3: Quadrant = this.grid.quadrants[7][8];
 		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
-		
-
-
 	}
 
 	loop(): void{
@@ -132,7 +133,7 @@ export default class Game extends PIXI.Application {
 				this.spawnerCount = this.spawnerCount + 1;
 				break;
 			}
-			const quadrantToAddActorTo = actor.currentQuadrants[0];
+			const quadrantToAddActorTo = actor.status.quadrants[0];
 			this.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
 		}
 	}

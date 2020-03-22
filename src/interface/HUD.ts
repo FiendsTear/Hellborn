@@ -24,7 +24,7 @@ export default class HUD extends Container {
 		this.graphics.drawRect(50, 50, 2 * player.maxHealth, 20);
 		this.graphics.endFill();
 		this.graphics.beginFill(0xDE3230);
-		this.graphics.drawRect(50, 50, 2 * player.currentHealth, 20);
+		this.graphics.drawRect(50, 50, 2 * player.status.health, 20);
 		this.graphics.endFill();
 
 		this.graphics.beginFill(0x344543);
