@@ -17,6 +17,8 @@ export default class Player extends Actor {
 	weaponReady: boolean;
 	reloadTime: number;
 	shotSound: HTMLAudioElement;
+	meleeSound: HTMLAudioElement;
+	meleeReady: boolean;
 	maxStamina: number;
 	maxSpeed: number;
 	currentStamina: number;
@@ -51,8 +53,12 @@ export default class Player extends Actor {
 		this.game.camera.hud.draw();
 
 		this.weaponReady = true;
+		this.meleeReady = true;
 		this.reloadTime = 0;
 		this.shotSound = new Audio('./assets/sounds/shot.wav');
+		this.shotSound.volume = 0.1;
+		this.meleeSound = new Audio('./assets/sounds/melee.wav');
+		this.meleeSound.volume = 0.5;
 
 		this.strength = 90;
 		this.movable = true;
@@ -69,25 +75,19 @@ export default class Player extends Actor {
 	act() {
 		this.move();
 		this.reload();
-		this.shoot();
+		if (this.weaponReady && this.game.input.mouse.pressed && this.game.input.keys.shift) {
+			this.shoot();
+		}
+		if (this.meleeReady && this.game.input.mouse.pressed) {
+			this.melee();
+		}
 	}
 
-	// You should probably simplify this logic.
-	// You are mixing up the calculation of direction and speed
-	// With modifying the state (like reducing/increasing stamina)
-	// this.status.moving can be simplified like this:
-	//
-	// const movingVertically = this.keysDown.w?!this.keysDown.s:this.keysDown.s;
-	// const movingLaterally = this.keysDown.a?!this.keysDown.d:this.keysDown.d;
-	// this.status.moving = movingLaterally || movingVertically;
-	// 
-	// and only once you've determined you're moving you should calculate direction,
-	// check stamina / shift / etc.
 	controlMovement() {
 		let direction = 0;
 		this.status.speed = this.maxSpeed;
 		const keys = this.game.input.keys;
-		if (keys.shift && this.currentStamina > 0) {
+		if (keys.space && this.currentStamina > 0) {
 			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
 			this.game.camera.hud.draw();
@@ -156,16 +156,19 @@ export default class Player extends Actor {
 	}
 
 	shoot() {
-		if (this.weaponReady && this.game.input.mouse.pressed) {
-			this.shotSound.play();
-			const shooterFaceCenterX = this.x + this.hitBoxRadius * Math.cos(this.rotation);
-			const shooterFaceCenterY = this.y + this.hitBoxRadius * Math.sin(this.rotation);
-			let bulletQuadrant = this.state.grid.getQuadrantByCoords(shooterFaceCenterX, shooterFaceCenterY);
-			const bullet = new Projectile(this.bulletTexture, this.state, 'projectile', bulletQuadrant, this.ground, this);
-			this.ground.addChild(bullet);
-			this.weaponReady = false;
-			this.reloadTime = 2000;
-		}
+		this.shotSound.play();
+		const shooterFaceCenterX = this.x + this.hitBoxRadius * Math.cos(this.rotation);
+		const shooterFaceCenterY = this.y + this.hitBoxRadius * Math.sin(this.rotation);
+		let bulletQuadrant = this.state.grid.getQuadrantByCoords(shooterFaceCenterX, shooterFaceCenterY);
+		const bullet = new Projectile(this.bulletTexture, this.state, 'projectile', bulletQuadrant, this.ground, this);
+		this.ground.addChild(bullet);
+		this.weaponReady = false;
+		this.reloadTime = 2000;
+	}
+
+	melee() {
+		this.meleeSound.play();
+		this.meleeReady = false;
 	}
 
 	reload() {

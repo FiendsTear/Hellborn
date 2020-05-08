@@ -2,30 +2,24 @@ import {Container} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import HUD from '../interface/HUD';
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
-// eslint-disable-next-line no-unused-vars
 import Player from '../actors/Player';
 // eslint-disable-next-line no-unused-vars
 import Ground from './Ground';
 
 export default class Camera extends Container {
 	hud: HUD;
-	game: Game;
+	screen: any;
 	ground: Ground;
 
-	constructor(game: Game) {
+	constructor(screen: any) {
 		super();
-		this.game = game;
+		this.screen = screen;
 		this.interactive = true;
 		this.cursor = 'hover';
-		this.on('mousemove', game.input.handleMouseMove);
-		this.on('mouseout', game.input.handleMouseOut);
-		this.on('mousedown', game.input.handleMouseDown);
-		this.on('mouseup', game.input.handleMouseUp);
 	}
 
 	centerOnPlayer(player: Player) {
-		const screen = this.game.screen;
+		const screen = this.screen;
 		let x = player.x - screen.width/2;
 		let y = player.y - screen.height/2;
 		if (player.x - screen.width/2 <= 0) {
