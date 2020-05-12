@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
-import { interaction } from 'pixi.js';
+import { interaction, Sprite } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Game from '../stateManagement/Game';
 import Projectile from './Projectile';
@@ -20,9 +20,10 @@ export default class Player extends Actor {
 	maxStamina: number;
 	maxSpeed: number;
 	currentStamina: number;
-	sprite: AnimatedSprite;
+	legs: AnimatedSprite;
+	body: Sprite;
 
-	constructor(game: Game, texture: PIXI.Texture[], state: Game, quadrant: Quadrant, bulletTexture: PIXI.Texture) {
+	constructor(game: Game, legsTexture: PIXI.Texture[], bodyTexture: PIXI.Texture, state: Game, quadrant: Quadrant, bulletTexture: PIXI.Texture) {
 		const type = 'player';
 		super(state, type, quadrant, game.camera.ground);
 		this.game = game;
@@ -31,16 +32,23 @@ export default class Player extends Actor {
 
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
-		this.sprite = new AnimatedSprite(texture);
-		this.sprite.anchor.x = 0.5;
-		this.sprite.anchor.y = 0.5;
-		this.sprite.animationSpeed = 0.1;
-		this.addChild(this.sprite);
-		this.rotation = -(Math.PI/2);
+
+		this.legs = new AnimatedSprite(legsTexture);
+		this.legs.anchor.x = 0.5;
+		this.legs.anchor.y = 0.5;
+		this.legs.animationSpeed = 0.1;
+		this.addChild(this.legs);
+
+		this.body = new Sprite(bodyTexture);
+		this.body.anchor.x = 0.5;
+		this.body.anchor.y = 0.5;
+		this.addChild(this.body);
+
+		// this.rotation = -(Math.PI/2);
 
 		this.maxSpeed = 4;
 		this.status.speed = 0;
-		this.rotation = -(3*Math.PI/2);
+		// this.rotation = -(3*Math.PI/2);
 		this.interactive = true;
 
 		this.maxHealth = 100;
@@ -140,11 +148,19 @@ export default class Player extends Actor {
 			}
 		}
 		if (this.status.moving) {
-			this.sprite.play();
+			const diffBodyLegs = Math.cos(this.body.rotation - direction);
+			if (diffBodyLegs > 0) {
+				this.legs.rotation = direction;
+			}
+			else {
+				this.status.speed = this.status.speed/1.5;
+				this.legs.rotation = direction + Math.PI;
+			}
+			this.legs.play();
 			this.calculateDestination(direction);
 		}
 		else {
-			this.sprite.gotoAndStop(0);
+			this.legs.gotoAndStop(0);
 		}
 	}
 
@@ -152,14 +168,14 @@ export default class Player extends Actor {
 		const actorRelativeToCameraX = this.x + this.ground.x;
 		const actorRelativeToCameraY = this.y + this.ground.y;
 		let angle = Math.atan2(this.game.input.mouse.y - actorRelativeToCameraY, this.game.input.mouse.x - actorRelativeToCameraX);
-		this.rotation = angle;
+		this.body.rotation = angle;
 	}
 
 	shoot() {
 		if (this.weaponReady && this.game.input.mouse.pressed) {
 			this.shotSound.play();
-			const shooterFaceCenterX = this.x + this.hitBoxRadius * Math.cos(this.rotation);
-			const shooterFaceCenterY = this.y + this.hitBoxRadius * Math.sin(this.rotation);
+			const shooterFaceCenterX = this.x + this.hitBoxRadius * Math.cos(this.body.rotation);
+			const shooterFaceCenterY = this.y + this.hitBoxRadius * Math.sin(this.body.rotation);
 			let bulletQuadrant = this.state.grid.getQuadrantByCoords(shooterFaceCenterX, shooterFaceCenterY);
 			const bullet = new Projectile(this.bulletTexture, this.state, 'projectile', bulletQuadrant, this.ground, this);
 			this.ground.addChild(bullet);
