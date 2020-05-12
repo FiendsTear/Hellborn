@@ -172,18 +172,6 @@ export default class Player extends Actor {
 	}
 
 	shoot() {
-<<<<<<< HEAD
-		if (this.weaponReady && this.game.input.mouse.pressed) {
-			this.shotSound.play();
-			const shooterFaceCenterX = this.x + this.hitBoxRadius * Math.cos(this.body.rotation);
-			const shooterFaceCenterY = this.y + this.hitBoxRadius * Math.sin(this.body.rotation);
-			let bulletQuadrant = this.state.grid.getQuadrantByCoords(shooterFaceCenterX, shooterFaceCenterY);
-			const bullet = new Projectile(this.bulletTexture, this.state, 'projectile', bulletQuadrant, this.ground, this);
-			this.ground.addChild(bullet);
-			this.weaponReady = false;
-			this.reloadTime = 2000;
-		}
-=======
 		this.shotSound.play();
 		const shooterFaceCenterX = this.x + this.hitBoxRadius * Math.cos(this.rotation);
 		const shooterFaceCenterY = this.y + this.hitBoxRadius * Math.sin(this.rotation);
@@ -197,7 +185,6 @@ export default class Player extends Actor {
 	melee() {
 		this.meleeSound.play();
 		this.meleeReady = false;
->>>>>>> melee
 	}
 
 	reload() {
