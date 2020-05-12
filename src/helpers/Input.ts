@@ -9,6 +9,7 @@ interface Keys {
 	s: boolean;
 	a: boolean;
 	shift: boolean;
+	space: boolean;
 }
 
 interface Mouse {
@@ -34,7 +35,8 @@ export default class Input {
 			d: false,
 			s: false,
 			a: false,
-			shift: false
+			shift: false,
+			space: false
 		};
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
@@ -46,25 +48,28 @@ export default class Input {
 	}
 
 	handleKeyDown(event: KeyboardEvent) {
+		event.preventDefault();
 		if (event.code === 'KeyW') this.keys.w = true;
 		if (event.code === 'KeyD') this.keys.d = true;
 		if (event.code === 'KeyS') this.keys.s = true;
 		if (event.code === 'KeyA') this.keys.a = true;
+		if (event.code === 'Space') this.keys.space = true;
 		if (event.shiftKey) this.keys.shift = true;
 	}
 
 	handleKeyUp(event: KeyboardEvent) {
+		event.preventDefault();
 		if (event.code === 'KeyW') this.keys.w = false;
 		if (event.code === 'KeyD') this.keys.d = false;
 		if (event.code === 'KeyS') this.keys.s = false;
 		if (event.code === 'KeyA') this.keys.a = false;
+		if (event.code === 'Space') this.keys.space = false;
 		if (!event.shiftKey) this.keys.shift = false;
 	}
 
 	handleKeyPress(event: KeyboardEvent) {
-		if (event.code === 'Escape') {
-			this.game.pause();
-		}
+		event.preventDefault();
+		if (event.code === 'Escape') this.game.pause();
 	}
 
 	handleMouseMove(event: interaction.InteractionEvent) {

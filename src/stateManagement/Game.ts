@@ -75,7 +75,11 @@ export default class Game extends PIXI.Application {
 
 	startGame() {
 
-		this.camera = new Camera(this);
+		this.camera = new Camera(this.screen);
+		this.camera.on('mousemove', this.input.handleMouseMove);
+		this.camera.on('mouseout', this.input.handleMouseOut);
+		this.camera.on('mousedown', this.input.handleMouseDown);
+		this.camera.on('mouseup', this.input.handleMouseUp);
 		window.onresize = this.camera.centerOnPlayer.bind(this.camera);
 		this.stage.addChild(this.camera);
 

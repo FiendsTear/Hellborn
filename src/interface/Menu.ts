@@ -12,11 +12,6 @@ export default class Menu extends Container {
 		super();	
 		this.game = game;
 		this.interactive = true;
-		// this.graphics = new Graphics();
-		// this.graphics.beginFill(0x432828);
-		// this.graphics.drawRect(0, 0, 150, 40);
-		// this.graphics.endFill();
-		// this.addChild(this.graphics);
 		this.newGame = new Container();
 		this.newGame.addChild(new Text('New game', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
 		this.newGame.interactive = true;
