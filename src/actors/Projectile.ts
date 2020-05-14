@@ -11,25 +11,24 @@ import {Sprite} from 'pixi.js';
 export default class Projectile extends Actor {
 	direction: number;
 	lifespan: number;
+	damage: number;
 	sprite: Sprite;
 
-	constructor(texture: PIXI.Texture, state: Game, type: string, quadrant: Quadrant, ground: Ground, shooter: Actor) {
-		super(state, type, quadrant, ground);
+	constructor(texture: PIXI.Texture, x: number, y: number, speed: number, lifespan: number, direction: number, damage: number, owner: Actor, type: string) {
+		super(owner.state, type, owner.ground, null, x, y);
 		this.type = 'projectile';
 		this.sprite = new Sprite(texture);
 		this.addChild(this.sprite);
-		const shooterFaceCenterX = shooter.x + shooter.hitBoxRadius * Math.cos(shooter.rotation);
-		const shooterFaceCenterY = shooter.y + shooter.hitBoxRadius * Math.sin(shooter.rotation);
-		this.x = shooterFaceCenterX;
-		this.y = shooterFaceCenterY; 
-		this.status.speed = 25;
-		this.lifespan = 300;
+		this.status.speed = speed;
+		this.lifespan = lifespan;
+		this.damage = damage;
 		this.status.moving = true;
-		this.direction = shooter.rotation + Math.random() * Math.PI/30 - Math.PI/60;
+		this.direction = direction;
 		this.movable = false;
 		this.hitBoxRadius = 3;
 		this.hit = this.hit.bind(this);
 	}
+
 	prepare() {
 		this.calculateDestination(this.direction);
 	}

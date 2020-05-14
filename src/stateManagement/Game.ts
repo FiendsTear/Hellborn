@@ -52,7 +52,8 @@ export default class Game extends PIXI.Application {
 			.add('playerLegs1', 'assets/sprites/legs_left_forward.png')
 			.add('playerLegs2', 'assets/sprites/legs_still.png')
 			.add('playerLegs3', 'assets/sprites/legs_right_forward.png')
-			.add('playerBody', 'assets/sprites/body.png')
+			.add('playerBodyRanged', 'assets/sprites/body_ranged.png')
+			.add('playerBodyMelee', 'assets/sprites/body_melee.png')
 			.add('enemy', 'assets/sprites/enemy.png')
 			.add('ground', 'assets/sprites/ground.png')
 			.add('wall', 'assets/sprites/wall.png')
@@ -98,7 +99,8 @@ export default class Game extends PIXI.Application {
 		// initialize player and enemy
 		const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 		const playerLegsTextures = [resources.playerLegs2.texture, resources.playerLegs1.texture, resources.playerLegs2.texture, resources.playerLegs3.texture];
-		const player = new Player(this, playerLegsTextures, resources.playerBody.texture, this, playerQuadrant, resources.bullet.texture);
+		const playerBodyTextures = [resources.playerBodyRanged.texture, resources.playerBodyMelee.texture];
+		const player = new Player(this, playerLegsTextures, playerBodyTextures, this, playerQuadrant, resources.bullet.texture);
 		ground.addChild(player);
 
 		const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];

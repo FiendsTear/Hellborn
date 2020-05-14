@@ -14,7 +14,7 @@ export default class Spawner extends Actor {
 
 	constructor(ground: Ground, texture: PIXI.Texture, state: Game, quadrant: Quadrant) {
 		const type = 'spawner';
-		super(state, type, quadrant, ground);
+		super(state, type, ground, quadrant);
 
 		this.spawnTexture = texture;
 		this.spawnCooldown = 0;

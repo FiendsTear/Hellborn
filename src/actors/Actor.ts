@@ -18,10 +18,6 @@ interface Status {
 	speed: number;
 }
 
-// If you never plan to do "new Actor(...)", this should be an abstract class.
-// Also, Projectile extends Actor. Do projectiles or spawners have health? Can a
-// spawner move? be alive? attack others?
-// You may need to work on the Actor class hierarchy.
 export default abstract class Actor extends Container {
 	id: string;
 	type: string;
@@ -37,9 +33,7 @@ export default abstract class Actor extends Container {
 	isObstacle: boolean;
 	movable: boolean;
 
-	// the type argument should either use TS types or be removed completely from here and instead
-	// should be inferred from the subclass type. 
-	constructor(state: Game, type: string, quadrant: Quadrant, ground: Ground) {
+	constructor(state: Game, type: string, ground: Ground, quadrant?: Quadrant, x?: number, y?: number) {
 		super();
 		
 		/**
@@ -81,13 +75,22 @@ export default abstract class Actor extends Container {
 		if (type === 'spawner') this.id = this.type + (state.spawnerCount + 1);
 
 		// this.hitBoxRadius = Math.floor(Math.sqrt(this.height/2*this.height/2 + this.width/2*this.width/2));
-		this.status.quadrants.push(quadrant);
-		let actorCenterX;
-		let actorCentery;
-		actorCenterX = (quadrant.x1 + quadrant.x2)/2;	
-		actorCentery = (quadrant.y1 + quadrant.y2)/2;
-		this.x = actorCenterX;
-		this.y = actorCentery;
+		if (quadrant) {
+			this.status.quadrants.push(quadrant);
+			let actorCenterX;
+			let actorCentery;
+			actorCenterX = (quadrant.x1 + quadrant.x2)/2;	
+			actorCentery = (quadrant.y1 + quadrant.y2)/2;
+			this.x = actorCenterX;
+			this.y = actorCentery;
+		}
+		else {
+			this.x = x;
+			this.y = y;
+			let quadrant = this.state.grid.getQuadrantByCoords(x, y);
+			this.status.quadrants.push(quadrant);
+		}
+
 		this.status.destination.x = this.x;
 		this.status.destination.y = this.y;
 

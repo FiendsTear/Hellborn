@@ -17,7 +17,7 @@ export default class Enemy extends Actor {
 		// you're using typescript. You probably don't need this.
 		// And if you do, you should use Typescript's types (or enums) to enforce some type/value safety.
 		const type = 'enemy';
-		super(state, type, quadrant, ground);
+		super(state, type, ground, quadrant);
 
 		this.zIndex = 1;
 		this.sprite = new Sprite(texture);
