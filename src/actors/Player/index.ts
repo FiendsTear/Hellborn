@@ -17,7 +17,7 @@ export default class Player extends Actor {
 	maxSpeed: number;
 	currentStamina: number;
 	legs: AnimatedSprite;
-	body: Sprite;
+	body: AnimatedSprite;
 	equippedWeapon: Weapon;
 	weapons: Weapon[];
 
@@ -35,7 +35,7 @@ export default class Player extends Actor {
 		this.legs.animationSpeed = 0.1;
 		this.addChild(this.legs);
 
-		this.body = new Sprite(bodyTexture[1]);
+		this.body = new AnimatedSprite(bodyTexture);
 		this.body.anchor.x = 0.5;
 		this.body.anchor.y = 0.5;
 		this.addChild(this.body);
@@ -71,7 +71,7 @@ export default class Player extends Actor {
 
 	act() {
 		this.move();
-		this.equippedWeapon.reload();
+		this.equippedWeapon.update();
 		if (this.equippedWeapon.ready && this.game.input.mouse.pressed) {
 			this.equippedWeapon.shoot();
 		}
