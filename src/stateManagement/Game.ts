@@ -101,7 +101,7 @@ export default class Game extends PIXI.Application {
 		// initialize player and enemy
 		const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 		const playerLegsTextures = [resources.playerLegs2.texture, resources.playerLegs1.texture, resources.playerLegs2.texture, resources.playerLegs3.texture];
-		const playerBodyTextures = [resources.playerBodyMelee.texture, resources.playerBodyMelee1.texture, resources.playerBodyMelee3.texture];
+		const playerBodyTextures = [resources.playerBodyMelee.texture, resources.playerBodyMelee1.texture, resources.playerBodyMelee3.texture, resources.playerBodyMelee.texture];
 		const player = new Player(this, playerLegsTextures, playerBodyTextures, this, playerQuadrant, resources.bullet.texture);
 		ground.addChild(player);
 

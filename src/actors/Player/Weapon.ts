@@ -13,7 +13,6 @@ export class Weapon {
 	melee: boolean;
 	reloadTime: number;
 	owner: Player;
-	currentSprite: number;
 	swinging: boolean;
 
 	constructor(projectileTexture: PIXI.Texture, owner: Player) {
@@ -28,7 +27,6 @@ export class Weapon {
 		this.sound = new Audio('./assets/sounds/shot.wav');
 		this.sound.volume = 0.1;
 		this.melee = true;
-		this.currentSprite = 0;
 		this.swinging = false;
 	}
 
@@ -37,6 +35,7 @@ export class Weapon {
 		const owner = this.owner;
 		if (this.melee) {
 			this.swinging = true;
+			this.owner.body.gotoAndPlay(0);
 		}
 		else {
 			const shooterFaceCenterX = owner.x + owner.hitBoxRadius * Math.cos(owner.rotation);
@@ -66,15 +65,6 @@ export class Weapon {
 		}
 		else {
 			this.ready = true;
-		}
-
-		if (this.swinging) {
-			this.currentSprite = this.currentSprite + 1;
-			if (this.currentSprite > 2) {
-				this.currentSprite = 0;
-				this.swinging = false;
-			}
-			this.owner.body.gotoAndStop(this.currentSprite);
 		}
 	}
 }

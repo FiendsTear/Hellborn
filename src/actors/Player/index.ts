@@ -38,6 +38,8 @@ export default class Player extends Actor {
 		this.body = new AnimatedSprite(bodyTexture);
 		this.body.anchor.x = 0.5;
 		this.body.anchor.y = 0.5;
+		this.body.animationSpeed = 0.2;
+		this.body.loop = false;
 		this.addChild(this.body);
 
 		this.maxSpeed = 4;
