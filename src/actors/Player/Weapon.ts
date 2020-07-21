@@ -10,7 +10,6 @@ export class Weapon {
 	projectileSpeed: number;
 	projectileLifespan: number;
 	damage: number;
-	melee: boolean;
 	reloadTime: number;
 	owner: Player;
 	swinging: boolean;
@@ -26,35 +25,28 @@ export class Weapon {
 		this.reloadTime = 0;
 		this.sound = new Audio('./assets/sounds/shot.wav');
 		this.sound.volume = 0.1;
-		this.melee = true;
 		this.swinging = false;
 	}
 
 	shoot() {
 		this.sound.play();
 		const owner = this.owner;
-		if (this.melee) {
-			this.swinging = true;
-			this.owner.body.gotoAndPlay(0);
-		}
-		else {
-			const shooterFaceCenterX = owner.x + owner.hitBoxRadius * Math.cos(owner.rotation);
-			const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
-			const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
+		const shooterFaceCenterX = owner.x + owner.hitBoxRadius * Math.cos(owner.rotation);
+		const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
+		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
-			const bullet = new Projectile(
-				this.projectileTexture, 
-				shooterFaceCenterX, 
-				shooterFaceCenterY, 
-				this.projectileSpeed, 
-				this.projectileLifespan, 
-				projectileDirection,
-				this.damage,
-				owner,
-				'projectile'
-			);
-			owner.ground.addChild(bullet);
-		}
+		const bullet = new Projectile(
+			this.projectileTexture, 
+			shooterFaceCenterX, 
+			shooterFaceCenterY, 
+			this.projectileSpeed, 
+			this.projectileLifespan, 
+			projectileDirection,
+			this.damage,
+			owner,
+			'projectile'
+		);
+		owner.ground.addChild(bullet);
 		this.ready = false;
 		this.reloadTime = 2000;
 	}
