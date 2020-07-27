@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Game from '../stateManagement/Game';
 // eslint-disable-next-line no-unused-vars
-import { interaction } from 'pixi.js';
+import { InteractionEvent } from 'pixi.js';
 
 interface Keys {
 	w: boolean;
@@ -72,7 +72,7 @@ export default class Input {
 		if (event.code === 'Escape') this.game.pause();
 	}
 
-	handleMouseMove(event: interaction.InteractionEvent) {
+	handleMouseMove(event: InteractionEvent) {
 		this.mouse.x = event.data.getLocalPosition(this.game.camera).x;
 		this.mouse.y = event.data.getLocalPosition(this.game.camera).y;
 	}

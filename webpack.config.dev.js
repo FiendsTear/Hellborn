@@ -19,9 +19,11 @@ module.exports = {
 			title: 'Hellborn',
 			template: 'src/index.html'
 		}),
-		new CopyPlugin([
-			{ from: 'src/assets', to: './assets' }
-		]),
+		new CopyPlugin({
+      patterns: [
+        { from: 'src/assets', to: './assets' }
+      ],
+		})
 	],
 	resolve: {
     extensions: [".ts", ".js"]

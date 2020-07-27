@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
-import { interaction, Sprite } from 'pixi.js';
+import { Sprite } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Game from '../../stateManagement/Game';
 // eslint-disable-next-line no-unused-vars
