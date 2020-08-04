@@ -62,7 +62,9 @@ export default class Game extends PIXI.Application {
 	}
 
 	initialize() {
-		this.renderer.plugins.interaction.cursorStyles.hover = 'url("assets/sprites/sight.png"),auto';
+		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';
+
+		this.audioCtx = new AudioContext();
 
 		this.input = new Input(this);
 		document.addEventListener('keydown', this.input.handleKeyDown);
