@@ -3,7 +3,7 @@ import Projectile from '../Projectile';
 import Player from '.';
 
 export class Weapon {
-	sound: HTMLAudioElement;
+	sound: AudioBuffer;
 	ready: boolean;
 	cooldown: number;
 	projectileTexture: PIXI.Texture;
@@ -23,13 +23,37 @@ export class Weapon {
 		this.damage = 80;
 		this.ready = true;
 		this.reloadTime = 0;
-		this.sound = new Audio('./assets/sounds/shot.wav');
-		this.sound.volume = 0.1;
-		this.swinging = false;
+
+		let request = new XMLHttpRequest();
+
+		request.open('GET', './assets/sounds/shot.wav', true);
+		request.responseType = 'arraybuffer';
+
+		request.onload = () => {
+			var audioData = request.response;
+
+			this.owner.game.audioCtx.decodeAudioData(audioData, (buffer) => {
+					this.sound = buffer;
+				},
+				function(e){ console.log("Error with decoding audio data"); });
+		}
+		request.send();
+
 	}
 
 	shoot() {
-		this.sound.play();
+		const audioCtx = this.owner.game.audioCtx;
+
+		let gainNode = audioCtx.createGain();
+		gainNode.gain.value = 0.4;
+		gainNode.connect(audioCtx.destination);
+
+		let source = audioCtx.createBufferSource();
+		source.buffer = this.sound;
+
+		source.connect(gainNode);
+		source.start(0);
+		// this.sound.play();
 		const owner = this.owner;
 		const shooterFaceCenterX = owner.x + owner.hitBoxRadius * Math.cos(owner.rotation);
 		const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
@@ -48,7 +72,7 @@ export class Weapon {
 		);
 		owner.ground.addChild(bullet);
 		this.ready = false;
-		this.reloadTime = 2000;
+		this.reloadTime = 500;
 	}
 
 	update() {

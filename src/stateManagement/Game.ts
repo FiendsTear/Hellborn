@@ -18,7 +18,7 @@ export interface Actors {
 }
 
 export default class Game extends PIXI.Application {
-	// What do you use the counts for?
+	audioCtx: AudioContext;
 	paused: boolean;
 	enemiesCount: number;
 	playersCount: number;
