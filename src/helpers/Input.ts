@@ -69,7 +69,7 @@ export default class Input {
 
 	handleKeyPress(event: KeyboardEvent) {
 		event.preventDefault();
-		if (event.code === 'Escape') this.game.pause();
+		if (event.code === 'Escape') this.game.switchPause();
 	}
 
 	handleMouseMove(event: InteractionEvent) {

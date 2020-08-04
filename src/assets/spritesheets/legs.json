@@ -1,0 +1,47 @@
+{"frames": {
+
+"legs_01.png":
+{
+	"frame": {"x":0,"y":0,"w":35,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
+	"sourceSize": {"w":35,"h":25}
+},
+"legs_02.png":
+{
+	"frame": {"x":35,"y":0,"w":35,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
+	"sourceSize": {"w":35,"h":25}
+},
+"legs_03.png":
+{
+	"frame": {"x":70,"y":0,"w":35,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
+	"sourceSize": {"w":35,"h":25}
+},
+"legs_04.png":
+{
+	"frame": {"x":105,"y":0,"w":35,"h":25},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
+	"sourceSize": {"w":35,"h":25}
+}},
+"animations": {
+	"legs": ["legs_01.png","legs_02.png","legs_03.png","legs_04.png"]
+},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "legs.png",
+	"format": "RGBA8888",
+	"size": {"w":140,"h":25},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:7543846c76cb3116e6ec44294aaf2288:2b36adad59e1116fd4c02743cba3bb1c:3640100e9060e5a04ba45cd1355ffc52$"
+}
+}

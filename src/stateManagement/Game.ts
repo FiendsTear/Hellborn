@@ -49,9 +49,7 @@ export default class Game extends PIXI.Application {
 
 	loadResources() {
 		return this.loader
-			.add('playerLegs1', 'assets/sprites/legs_left_forward.png')
-			.add('playerLegs2', 'assets/sprites/legs_still.png')
-			.add('playerLegs3', 'assets/sprites/legs_right_forward.png')
+			.add('playerLegs', 'assets/spritesheets/legs.json')
 			.add('playerBodyRanged', 'assets/sprites/body_ranged.png')
 			.add('enemy', 'assets/sprites/enemy.png')
 			.add('ground', 'assets/sprites/ground.png')
@@ -69,59 +67,61 @@ export default class Game extends PIXI.Application {
 		this.input = new Input(this);
 		document.addEventListener('keydown', this.input.handleKeyDown);
 		document.addEventListener('keyup', this.input.handleKeyUp);
-		document.addEventListener('keydown', this.input.handleKeyPress);
+		document.addEventListener('keydown', this.input.handleKeyPress);	
 
 		this.menu = new Menu(this);
 		this.menu.show();
+
+		this.ticker.add(() => this.loop());
 	}
 
 	startGame() {
+		this.loadResources().load(() =>  {
+			// set up camera, ground, hud
+			this.camera = new Camera(this.screen);
+			this.camera.on('mousemove', this.input.handleMouseMove);
+			this.camera.on('mouseout', this.input.handleMouseOut);
+			this.camera.on('mousedown', this.input.handleMouseDown);
+			this.camera.on('mouseup', this.input.handleMouseUp);
+			window.onresize = this.camera.centerOnPlayer.bind(this.camera);
+			this.stage.addChild(this.camera);
 
-		this.camera = new Camera(this.screen);
-		this.camera.on('mousemove', this.input.handleMouseMove);
-		this.camera.on('mouseout', this.input.handleMouseOut);
-		this.camera.on('mousedown', this.input.handleMouseDown);
-		this.camera.on('mouseup', this.input.handleMouseUp);
-		window.onresize = this.camera.centerOnPlayer.bind(this.camera);
-		this.stage.addChild(this.camera);
+			const resources = this.loader.resources;
+			const ground = new Ground();
+			this.camera.addChild(ground);
+			this.camera.ground = ground;
 
-		const resources = this.loader.resources;
-		const ground = new Ground();
-		this.camera.addChild(ground);
-		this.camera.ground = ground;
+			const hud = new HUD(this);
+			this.camera.hud = hud;
+			this.camera.addChild(hud.graphics);
 
-		const hud = new HUD(this);
-		this.camera.hud = hud;
-		this.camera.addChild(hud.graphics);
+			// initialize grid for collisions
+			new Grid(ground, this);
 
-		// initialize grid for collisions
-		new Grid(ground, this);
+			// initialize player and enemy
+			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
+			const playerLegsTextures = resources.playerLegs.spritesheet.animations["legs"];
+			const playerBodyTextures = [resources.playerBodyRanged.texture];
+			const player = new Player(this, playerLegsTextures, playerBodyTextures, this, playerQuadrant, resources.bullet.texture);
+			ground.addChild(player);
 
-		// initialize player and enemy
-		const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
-		const playerLegsTextures = [resources.playerLegs2.texture, resources.playerLegs1.texture, resources.playerLegs2.texture, resources.playerLegs3.texture];
-		const playerBodyTextures = [resources.playerBodyRanged.texture];
-		const player = new Player(this, playerLegsTextures, playerBodyTextures, this, playerQuadrant, resources.bullet.texture);
-		ground.addChild(player);
+			const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
+			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant1);
+			const spawnerQuadrant2: Quadrant = this.grid.quadrants[7][2];
+			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
+			const spawnerQuadrant3: Quadrant = this.grid.quadrants[7][8];
+			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
 
-		const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
-		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant1);
-		const spawnerQuadrant2: Quadrant = this.grid.quadrants[7][2];
-		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
-		const spawnerQuadrant3: Quadrant = this.grid.quadrants[7][8];
-		new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
-		this.pause();
-		// this.ticker.add(() => this.loop());
+			// all set, go
+			this.switchPause();
+		});
 	}
 
 	loop(): void{
 		if (!this.paused) {
-			// console.log(delta);
 			this.play();
-			// tick++;
 		}
 		else {
-			// menu.manage();
 		}
 	}
 
@@ -156,7 +156,6 @@ export default class Game extends PIXI.Application {
 	}
 
 	play() {
-		// console.log(this);
 		for (let actorID in this.actors) {
 			if (this.actors[actorID].status.alive) {
 				this.actors[actorID].prepare();
@@ -172,7 +171,7 @@ export default class Game extends PIXI.Application {
 		this.camera.centerOnPlayer(this.actors.player1 as Player);
 	}
 
-	pause() {
+	switchPause() {
 		this.paused = !this.paused;
 		if (this.paused) {
 			this.menu.show();
