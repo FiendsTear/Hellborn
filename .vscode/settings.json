@@ -2,7 +2,6 @@
   "editor.detectIndentation": false,
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
-	"editor.fontFamily": "'JetBrains Mono'",
 	"eslint.alwaysShowStatus": true,
 	"eslint.format.enable": true
 }
