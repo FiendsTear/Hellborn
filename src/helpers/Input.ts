@@ -40,7 +40,6 @@ export default class Input {
 		};
 		this.handleKeyDown = this.handleKeyDown.bind(this);
 		this.handleKeyUp = this.handleKeyUp.bind(this);
-		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.handleMouseMove = this.handleMouseMove.bind(this);
 		this.handleMouseOut = this.handleMouseOut.bind(this);
 		this.handleMouseDown = this.handleMouseDown.bind(this);
@@ -65,10 +64,6 @@ export default class Input {
 		if (event.code === 'KeyA') this.keys.a = false;
 		if (event.code === 'Space') this.keys.space = false;
 		if (!event.shiftKey) this.keys.shift = false;
-	}
-
-	handleKeyPress(event: KeyboardEvent) {
-		event.preventDefault();
 		if (event.code === 'Escape') this.game.switchPause();
 	}
 

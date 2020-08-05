@@ -67,7 +67,6 @@ export default class Game extends PIXI.Application {
 		this.input = new Input(this);
 		document.addEventListener('keydown', this.input.handleKeyDown);
 		document.addEventListener('keyup', this.input.handleKeyUp);
-		document.addEventListener('keydown', this.input.handleKeyPress);	
 
 		this.menu = new Menu(this);
 		this.menu.show();
@@ -100,7 +99,7 @@ export default class Game extends PIXI.Application {
 
 			// initialize player and enemy
 			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
-			const playerLegsTextures = resources.playerLegs.spritesheet.animations["legs"];
+			const playerLegsTextures = resources.playerLegs.spritesheet.animations['legs'];
 			const playerBodyTextures = [resources.playerBodyRanged.texture];
 			const player = new Player(this, playerLegsTextures, playerBodyTextures, this, playerQuadrant, resources.bullet.texture);
 			ground.addChild(player);
