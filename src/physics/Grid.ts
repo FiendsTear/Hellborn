@@ -34,9 +34,9 @@ export default class Grid {
 		const quadrantHeight = ground.height/this.verticalCount;
 		for (let i = 0; i < this.horizontalCount; i++) {
 			this.quadrants[i] = [];
-			let currentX = i * quadrantWidth;
+			const currentX = i * quadrantWidth;
 			for (let j = 0; j < this.verticalCount; j++) {
-				let currentY = j * quadrantHeight;
+				const currentY = j * quadrantHeight;
 				this.quadrants[i][j] = {
 					xIndex: i,
 					yIndex: j,
@@ -167,7 +167,7 @@ export default class Grid {
 	}
 	
 	checkQuadrantInArray(quadrants: Quadrant[], quadrant: Quadrant) {
-		let quadrantIndexInArray = quadrants.findIndex((currentQuadrant) => {
+		const quadrantIndexInArray = quadrants.findIndex((currentQuadrant) => {
 			if (currentQuadrant.xIndex == quadrant.xIndex && currentQuadrant.yIndex == quadrant.yIndex) {
 				return true;
 			}
@@ -177,7 +177,7 @@ export default class Grid {
 
 	checkCollisions(actors: Actors) {
 		// set up an array of quadrantIndexes to check
-		let quadrants: Quadrant[] = [];
+		const quadrants: Quadrant[] = [];
 		for (var actorID in actors) {
 			const actor = actors[actorID];
 			actor.status.quadrants.forEach((quadrant) => {
@@ -187,7 +187,7 @@ export default class Grid {
 			});
 		}
 
-		let pairs: Pair[] = [];
+		const pairs: Pair[] = [];
 		quadrants.forEach((quadrant) => {
 			if (quadrant.activeActors.length > 1) {
 				for (let i = 0; i < quadrant.activeActors.length; i++) {
@@ -211,7 +211,7 @@ export default class Grid {
 
 	isPairCheckedForCollision(pairs: Pair[], pair: Pair) {
 		let isPairChecked = false;
-		let pairIndexInArray = pairs.findIndex((currentPair) => {
+		const pairIndexInArray = pairs.findIndex((currentPair) => {
 			if ((currentPair.firstActor.id == pair.firstActor.id && currentPair.secondActor.id == pair.secondActor.id) ||
 					(currentPair.firstActor.id == pair.secondActor.id && currentPair.secondActor.id == pair.firstActor.id)) {
 				return true;

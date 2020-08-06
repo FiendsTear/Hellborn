@@ -155,14 +155,14 @@ export default class Game extends PIXI.Application {
 	}
 
 	play() {
-		for (let actorID in this.actors) {
+		for (const actorID in this.actors) {
 			if (this.actors[actorID].status.alive) {
 				this.actors[actorID].prepare();
 			}
 		}
 		this.grid.checkCollisions(this.actors);
 
-		for (let actorID in this.actors) {
+		for (const actorID in this.actors) {
 			if (this.actors[actorID].status.alive) {
 				this.actors[actorID].act();
 			}

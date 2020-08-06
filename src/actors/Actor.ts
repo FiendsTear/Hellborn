@@ -87,15 +87,13 @@ export default abstract class Actor extends Container {
 		else {
 			this.x = x;
 			this.y = y;
-			let quadrant = this.state.grid.getQuadrantByCoords(x, y);
+			const quadrant = this.state.grid.getQuadrantByCoords(x, y);
 			this.status.quadrants.push(quadrant);
 		}
 
 		this.status.destination.x = this.x;
 		this.status.destination.y = this.y;
 
-		// You are not using isObstacle anywhere in the code. Does this even need to be here at all?
-		this.isObstacle = true;
 		// Is it the responsibility of an Actor to add itself to the state?
 		// wouldn't it be better if whatever creates an actor instance adds it to the state / Game?
 		this.state.addActor(this);
