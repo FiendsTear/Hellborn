@@ -29,6 +29,7 @@ export default class Game extends PIXI.Application {
 	actors: Actors;
 	camera: Camera;
 	input: Input;
+	gameStarted: boolean;
 
 	constructor() {
 		super({
@@ -38,6 +39,7 @@ export default class Game extends PIXI.Application {
 			resizeTo: window
 		});
 		this.paused = true;
+		this.gameStarted = false;
 		this.enemiesCount = 0;
 		this.playersCount = 0;
 		this.projectilesCount = 0;
@@ -112,6 +114,7 @@ export default class Game extends PIXI.Application {
 			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
 
 			// all set, go
+			this.gameStarted = true;
 			this.switchPause();
 		});
 	}
@@ -173,6 +176,7 @@ export default class Game extends PIXI.Application {
 	switchPause() {
 		this.paused = !this.paused;
 		if (this.paused) {
+
 			this.menu.show();
 		}
 		else {

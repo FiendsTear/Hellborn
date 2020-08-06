@@ -73,7 +73,9 @@ export default class Input {
 	}
 	
 	handleMouseOut() {
-		this.game.paused = true;
+		if (!this.game.paused) {
+			this.game.switchPause();
+		}
 	}
 
 	handleMouseDown() {
