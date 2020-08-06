@@ -21,7 +21,7 @@ export default class Player extends Actor {
 	equippedWeapon: Weapon;
 	weapons: Weapon[];
 
-	constructor(game: Game, legsTexture: PIXI.Texture[], bodyTexture: PIXI.Texture[], state: Game, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
+	constructor(game: Game, state: Game, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
 		const type = 'player';
 		super(state, type, game.camera.ground, quadrant);
 		this.game = game;
@@ -29,13 +29,15 @@ export default class Player extends Actor {
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
 
-		this.legs = new AnimatedSprite(legsTexture);
+		const resources = this.game.loader.resources;
+
+		this.legs = new AnimatedSprite(resources.playerLegs.spritesheet.animations['legs']);
 		this.legs.anchor.x = 0.5;
 		this.legs.anchor.y = 0.5;
 		this.legs.animationSpeed = 0.1;
 		this.addChild(this.legs);
 
-		this.body = new AnimatedSprite(bodyTexture);
+		this.body = new AnimatedSprite([resources.playerBodyRanged.texture]);
 		this.body.anchor.x = 0.5;
 		this.body.anchor.y = 0.5;
 		this.body.animationSpeed = 0.2;

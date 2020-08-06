@@ -7,6 +7,7 @@ import Player from '../actors/Player';
 import Grid, { Quadrant } from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
 import Actor from '../actors/Actor';
+import ActorManager from '../actors/ActorManager';
 import Menu from '../interface/Menu';
 // eslint-disable-next-line no-unused-vars
 import Camera from '../helpers/Camera';
@@ -19,6 +20,7 @@ export interface Actors {
 
 export default class Game extends PIXI.Application {
 	audioCtx: AudioContext;
+	actorManager: ActorManager;
 	paused: boolean;
 	enemiesCount: number;
 	playersCount: number;
@@ -45,6 +47,7 @@ export default class Game extends PIXI.Application {
 		this.projectilesCount = 0;
 		this.spawnerCount = 0;
 		this.actors = {};
+		this.actorManager = new ActorManager(this);
 
 		this.play = this.play.bind(this);
 	}
@@ -101,9 +104,7 @@ export default class Game extends PIXI.Application {
 
 			// initialize player and enemy
 			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
-			const playerLegsTextures = resources.playerLegs.spritesheet.animations['legs'];
-			const playerBodyTextures = [resources.playerBodyRanged.texture];
-			const player = new Player(this, playerLegsTextures, playerBodyTextures, this, playerQuadrant, resources.bullet.texture);
+			const player = new Player(this, this, playerQuadrant, resources.bullet.texture);
 			ground.addChild(player);
 
 			const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
@@ -134,29 +135,7 @@ export default class Game extends PIXI.Application {
 	prepareToMoveActor(actor: Actor) {
 		this.grid.calculateNewQuadrants(actor);
 	}
-
-	addActor(actor: Actor) {
-		if (!this.actors[actor.id]) {
-			this.actors[actor.id] = actor;
-			switch(actor.type) {
-			case 'enemy':
-				this.enemiesCount = this.enemiesCount + 1;
-				break;
-			case 'player':
-				this.playersCount = this.playersCount + 1;
-				break;
-			case 'projectile':
-				this.projectilesCount = this.projectilesCount + 1;
-				break;
-			case 'spawner':
-				this.spawnerCount = this.spawnerCount + 1;
-				break;
-			}
-			const quadrantToAddActorTo = actor.status.quadrants[0];
-			this.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
-		}
-	}
-
+	
 	play() {
 		for (const actorID in this.actors) {
 			if (this.actors[actorID].status.alive) {
