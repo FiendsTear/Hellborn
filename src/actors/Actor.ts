@@ -61,18 +61,6 @@ export default abstract class Actor extends Container {
 			destination: new Point(),
 			speed: 0};
 		this.type = type;
-		/**
-		You have a section in the app for stateMangement. I think it would make a lot
-		more sense to assign these IDs there. With this approach you're using here you're
-		breaking the abstraction of an Actor by making the Actor class "know" about every possible type,
-		and also making instances define their own ID which doesn't make much sense.
-
-		Last, besides the fact you should remove this code from here, make sure that you always use '===' in JS/TS.
-		*/
-		if (type === 'enemy') this.id = this.type + (state.enemiesCount + 1);
-		if (type === 'player') this.id = this.type + (state.playersCount + 1);
-		if (type ==='projectile') this.id = this.type + (state.projectilesCount + 1);
-		if (type === 'spawner') this.id = this.type + (state.spawnerCount + 1);
 
 		// this.hitBoxRadius = Math.floor(Math.sqrt(this.height/2*this.height/2 + this.width/2*this.width/2));
 		if (quadrant) {
@@ -129,7 +117,7 @@ export default abstract class Actor extends Container {
 		}
 		this.status.destination.x = x;
 		this.status.destination.y = y;
-		this.state.prepareToMoveActor(this);
+		this.state.grid.calculateNewQuadrants(this);
 	}
 
 	reduceHealth(damage: number) {
@@ -143,13 +131,6 @@ export default abstract class Actor extends Container {
 	die() {
 		this.status.speed = 0;
 		this.status.alive = false;
-
-		// Why are actors added to the state and removed from the ground?
-		// Seems like a weird way of adding/removing resources.
-		this.ground.removeChild(this);
-		for (let i = 0, quadrantCount = this.status.quadrants.length; i < quadrantCount; i++) {
-			const quadrant = this.status.quadrants[i];
-			quadrant.activeActors.splice(quadrant.activeActors.indexOf(this.id), 1);
-		}
+		this.state.actorManager.removeActor(this);
 	}
 }

@@ -14,21 +14,13 @@ import Camera from '../helpers/Camera';
 import HUD from '../interface/HUD';
 import Input from '../helpers/Input';
 
-export interface Actors {
-	[id: string]: Actor;
-}
 
 export default class Game extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
 	paused: boolean;
-	enemiesCount: number;
-	playersCount: number;
-	projectilesCount: number;
-	spawnerCount: number;
 	menu: Menu;
 	grid: Grid;
-	actors: Actors;
 	camera: Camera;
 	input: Input;
 	gameStarted: boolean;
@@ -42,11 +34,7 @@ export default class Game extends PIXI.Application {
 		});
 		this.paused = true;
 		this.gameStarted = false;
-		this.enemiesCount = 0;
-		this.playersCount = 0;
-		this.projectilesCount = 0;
-		this.spawnerCount = 0;
-		this.actors = {};
+
 		this.actorManager = new ActorManager(this);
 
 		this.play = this.play.bind(this);
@@ -105,7 +93,7 @@ export default class Game extends PIXI.Application {
 			// initialize player and enemy
 			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 			const player = new Player(this, this, playerQuadrant, resources.bullet.texture);
-			ground.addChild(player);
+			this.actorManager.addActor(player);
 
 			const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
 			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant1);
@@ -131,31 +119,17 @@ export default class Game extends PIXI.Application {
 	addGrid(grid: Grid) {
 		this.grid = grid;
 	}
-
-	prepareToMoveActor(actor: Actor) {
-		this.grid.calculateNewQuadrants(actor);
-	}
 	
 	play() {
-		for (const actorID in this.actors) {
-			if (this.actors[actorID].status.alive) {
-				this.actors[actorID].prepare();
-			}
-		}
-		this.grid.checkCollisions(this.actors);
-
-		for (const actorID in this.actors) {
-			if (this.actors[actorID].status.alive) {
-				this.actors[actorID].act();
-			}
-		}
-		this.camera.centerOnPlayer(this.actors.player1 as Player);
+		this.actorManager.prepareActors();
+		this.grid.checkCollisions(this.actorManager.actors);
+		this.actorManager.updateActors();
+		this.camera.centerOnPlayer(this.actorManager.actors.player1 as Player);
 	}
 
 	switchPause() {
 		this.paused = !this.paused;
 		if (this.paused) {
-
 			this.menu.show();
 		}
 		else {
