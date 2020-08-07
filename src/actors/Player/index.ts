@@ -53,7 +53,6 @@ export default class Player extends Actor {
 
 		this.maxStamina = 100;
 		this.currentStamina = this.maxStamina;
-		this.game.camera.hud.draw();
 
 		this.weapons = [];
 		this.weapons[0] = new Weapon(projectileTexture, this);

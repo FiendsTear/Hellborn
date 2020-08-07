@@ -55,7 +55,7 @@ export default class Enemy extends Actor {
 			this.status.moving = true;
 			this.status.speed = 3;
 	
-			const player = this.state.actors.player1;
+			const player = this.state.actorManager.actors.player1;
 			// temporarily set as player1 cause there's no multiplayer yet
 			const playerX = player.x;
 			const playerY = player.y;

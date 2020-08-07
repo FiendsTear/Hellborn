@@ -84,7 +84,6 @@ export default abstract class Actor extends Container {
 
 		// Is it the responsibility of an Actor to add itself to the state?
 		// wouldn't it be better if whatever creates an actor instance adds it to the state / Game?
-		this.state.actorManager.addActor(this);
 
 		this.move = this.move.bind(this);
 		this.calculateDestination = this.calculateDestination.bind(this);

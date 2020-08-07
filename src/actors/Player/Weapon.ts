@@ -70,7 +70,7 @@ export class Weapon {
 			owner,
 			'projectile'
 		);
-		owner.ground.addChild(bullet);
+		owner.game.actorManager.addActor(bullet);
 		this.ready = false;
 		this.reloadTime = 500;
 	}

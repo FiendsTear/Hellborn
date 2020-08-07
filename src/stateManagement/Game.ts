@@ -14,7 +14,6 @@ import Camera from '../helpers/Camera';
 import HUD from '../interface/HUD';
 import Input from '../helpers/Input';
 
-
 export default class Game extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
@@ -83,26 +82,31 @@ export default class Game extends PIXI.Application {
 			this.camera.addChild(ground);
 			this.camera.ground = ground;
 
-			const hud = new HUD(this);
-			this.camera.hud = hud;
-			this.camera.addChild(hud.graphics);
-
 			// initialize grid for collisions
 			new Grid(ground, this);
 
-			// initialize player and enemy
 			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 			const player = new Player(this, this, playerQuadrant, resources.bullet.texture);
 			this.actorManager.addActor(player);
 
+			const hud = new HUD(this);
+			this.camera.hud = hud;
+			this.camera.addChild(hud.graphics);
+			this.camera.hud.draw();
+			// initialize player and enemy
+
 			const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
-			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant1);
+			const spawner1 = new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant1);
+			this.actorManager.addActor(spawner1);
 			const spawnerQuadrant2: Quadrant = this.grid.quadrants[7][2];
-			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
+			const spawner2 = new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
+			this.actorManager.addActor(spawner2);
 			const spawnerQuadrant3: Quadrant = this.grid.quadrants[7][8];
-			new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
+			const spawner3 = new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
+			this.actorManager.addActor(spawner3);
 
 			// all set, go
+			console.log(this);
 			this.gameStarted = true;
 			this.switchPause();
 		});

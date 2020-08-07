@@ -1,5 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import Game, { Actors } from '../stateManagement/Game';
+import Game from '../stateManagement/Game';
+// eslint-disable-next-line no-unused-vars
+import { Actors } from '../actors/ActorManager';
 // eslint-disable-next-line no-unused-vars
 import Actor from '../actors/Actor';
 import Collision from './Collision';
@@ -178,9 +180,9 @@ export default class Grid {
 	checkCollisions(actors: Actors) {
 		// set up an array of quadrantIndexes to check
 		const quadrants: Quadrant[] = [];
-		for (var actorID in actors) {
+		for (const actorID in actors) {
 			const actor = actors[actorID];
-			actor.status.quadrants.forEach((quadrant) => {
+			actor.status.quadrants.forEach((quadrant: Quadrant) => {
 				if (this.checkQuadrantInArray(quadrants, quadrant) == -1) {
 					quadrants.push(quadrant);
 				}

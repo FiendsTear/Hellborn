@@ -19,7 +19,7 @@ export default class HUD extends Container {
 
 	draw() {
 		this.graphics.clear();
-		const player = this.state.actors.player1 as Player;
+		const player = this.state.actorManager.actors.player1 as Player;
 		this.graphics.beginFill(0x432828);
 		this.graphics.drawRect(50, 50, 2 * player.maxHealth, 20);
 		this.graphics.endFill();

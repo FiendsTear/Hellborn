@@ -42,7 +42,7 @@ export default class ActorManager {
 				break;
 			case 'spawner':
 				this.spawnerCount = this.spawnerCount + 1;
-				actor.id = actor.id + this.projectilesCount;
+				actor.id = actor.id + this.spawnerCount;
 				break;
 			}
 			this.actors[actor.id] = actor;

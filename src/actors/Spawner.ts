@@ -30,7 +30,7 @@ export default class Spawner extends Actor {
 	act(): void {
 		if (this.spawnCooldown <= 0) {
 			const enemy = new Enemy(this.ground, this.spawnTexture, this.state, this.status.quadrants[0]);
-			this.ground.addChild(enemy);	
+			this.state.actorManager.addActor(enemy);
 			this.spawnCooldown = 4000;
 		}
 	}
