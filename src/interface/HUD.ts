@@ -1,38 +1,57 @@
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
-// eslint-disable-next-line no-unused-vars
 import Player from '../actors/Player';
-import {Graphics, Container} from 'pixi.js';
+import {Graphics, Text, Container} from 'pixi.js';
 
 export default class HUD extends Container {
-	graphics: Graphics;
-	state: Game;
+	health: Graphics;
+	stamina: Graphics;
+	player: Player;
+	currencyAmountText: Text;
 
-	constructor(state: Game) {
+	constructor(player: Player) {
 		super();
-		this.state = state;
-		this.graphics = new Graphics();
+		this.player = player;
 		this.zIndex = 10;
-		this.addChild(this.graphics);
-		this.draw = this.draw.bind(this);
+
+		this.health = new Graphics();
+		this.updateHealthBar();
+		this.addChild(this.health);
+
+		this.stamina = new Graphics();
+		this.updateStaminaBar();
+		this.addChild(this.stamina);
+
+		this.currencyAmountText = new Text(player.currencyAmount.toString(10), {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
+		this.currencyAmountText.x = 500;
+		this.currencyAmountText.y = 500;
+		this.addChild(this.currencyAmountText);
+
+		this.updateStaminaBar = this.updateStaminaBar.bind(this);
+		this.updateHealthBar = this.updateHealthBar.bind(this);
+		this.updateCurrencyAmount = this.updateCurrencyAmount.bind(this);
 	}
 
-	draw() {
-		this.graphics.clear();
-		const player = this.state.actorManager.actors.player1 as Player;
-		this.graphics.beginFill(0x432828);
-		this.graphics.drawRect(50, 50, 2 * player.maxHealth, 20);
-		this.graphics.endFill();
-		this.graphics.beginFill(0xDE3230);
-		this.graphics.drawRect(50, 50, 2 * player.status.health, 20);
-		this.graphics.endFill();
+	updateCurrencyAmount() {
+		this.currencyAmountText.text = this.player.currencyAmount.toString(10);
+	}
 
-		this.graphics.beginFill(0x344543);
-		this.graphics.drawRect(50, 85, 2 * player.maxStamina, 20);
-		this.graphics.endFill();
-		this.graphics.beginFill(0x33B149);
-		this.graphics.drawRect(50, 85, 2 * player.currentStamina, 20);
-		this.graphics.endFill();
+	updateHealthBar() {
+		this.health.clear();
+		this.health.beginFill(0x432828);
+		this.health.drawRect(50, 50, 2 * this.player.maxHealth, 20);
+		this.health.endFill();
+		this.health.beginFill(0xDE3230);
+		this.health.drawRect(50, 50, 2 * this.player.status.health, 20);
+		this.health.endFill();
+	}
 
+	updateStaminaBar() {
+		this.stamina.clear();
+		this.stamina.beginFill(0x344543);
+		this.stamina.drawRect(50, 85, 2 * this.player.maxStamina, 20);
+		this.stamina.endFill();
+		this.stamina.beginFill(0x33B149);
+		this.stamina.drawRect(50, 85, 2 * this.player.currentStamina, 20);
+		this.stamina.endFill();
 	}
 }

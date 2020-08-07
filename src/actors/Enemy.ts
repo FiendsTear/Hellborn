@@ -7,18 +7,20 @@ import {Quadrant} from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
 import Ground from '../helpers/Ground';
 import {Sprite} from 'pixi.js';
+// eslint-disable-next-line no-unused-vars
+import Player from './Player';
 
 export default class Enemy extends Actor {
 	attackCooldown: number;
 	attackReach: number;
 	sprite: Sprite;
+	player: Player;
 
 	constructor(ground: Ground, texture: PIXI.Texture, state: Game, quadrant: Quadrant) {
-		// you're using typescript. You probably don't need this.
-		// And if you do, you should use Typescript's types (or enums) to enforce some type/value safety.
 		const type = 'enemy';
 		super(state, type, ground, quadrant);
 
+		this.player = this.state.actorManager.actors.player1 as Player;
 		this.zIndex = 1;
 		this.sprite = new Sprite(texture);
 		this.sprite.anchor.x = 0.5;
@@ -43,6 +45,7 @@ export default class Enemy extends Actor {
 	
 	prepare() {
 		if (this.status.health <= 0) {
+			this.player.currencyAmount = this.player.currencyAmount + 10;
 			this.die();
 		}
 		else {
@@ -55,20 +58,19 @@ export default class Enemy extends Actor {
 			this.status.moving = true;
 			this.status.speed = 3;
 	
-			const player = this.state.actorManager.actors.player1;
 			// temporarily set as player1 cause there's no multiplayer yet
-			const playerX = player.x;
-			const playerY = player.y;
+			const playerX = this.player.x;
+			const playerY = this.player.y;
 			const verticalDistance = playerY - this.y;
 			const horizontalDistance = playerX - this.x;
-			let direction = Math.atan2(verticalDistance, horizontalDistance);
+			const direction = Math.atan2(verticalDistance, horizontalDistance);
 			this.rotation = direction;
 	
 			this.calculateDestination(direction);
 			
 			const quadDistance = verticalDistance*verticalDistance + horizontalDistance*horizontalDistance;
-			if (quadDistance <= this.attackReach*this.attackReach + player.hitBoxRadius*player.hitBoxRadius && this.status.attackReady) {
-				this.attack(player);
+			if (quadDistance <= this.attackReach*this.attackReach + this.player.hitBoxRadius*this.player.hitBoxRadius && this.status.attackReady) {
+				this.attack(this.player);
 			}
 		}
 	}

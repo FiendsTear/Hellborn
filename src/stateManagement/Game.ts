@@ -19,6 +19,7 @@ export default class Game extends PIXI.Application {
 	menu: Menu;
 	grid: Grid;
 	camera: Camera;
+	hud: HUD;
 	ground: Ground;
 	input: Input;
 	gameStarted: boolean;
@@ -88,10 +89,9 @@ export default class Game extends PIXI.Application {
 			const player = new Player(this, this, playerQuadrant, resources.bullet.texture);
 			this.actorManager.addActor(player);
 
-			const hud = new HUD(this);
-			this.camera.hud = hud;
-			this.camera.addChild(hud.graphics);
-			this.camera.hud.draw();
+			const hud = new HUD(player);
+			this.hud = hud;
+			this.camera.addChild(hud);
 			// initialize player and enemy
 
 			const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];

@@ -64,10 +64,8 @@ export default abstract class Actor extends Container {
 
 		if (quadrant) {
 			this.status.quadrants.push(quadrant);
-			let actorCenterX;
-			let actorCentery;
-			actorCenterX = (quadrant.x1 + quadrant.x2)/2;	
-			actorCentery = (quadrant.y1 + quadrant.y2)/2;
+			const actorCenterX = (quadrant.x1 + quadrant.x2)/2;	
+			const actorCentery = (quadrant.y1 + quadrant.y2)/2;
 			this.x = actorCenterX;
 			this.y = actorCentery;
 		}
@@ -118,6 +116,7 @@ export default abstract class Actor extends Container {
 	reduceHealth(damage: number) {
 		this.status.health = this.status.health - damage;
 	}
+
 	prepare() {}
 	act(){}
 	// eslint-disable-next-line no-unused-vars

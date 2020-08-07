@@ -1,8 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
-import { Sprite } from 'pixi.js';
-// eslint-disable-next-line no-unused-vars
 import Game from '../../stateManagement/Game';
 // eslint-disable-next-line no-unused-vars
 import { Quadrant } from '../../physics/Grid';
@@ -15,6 +13,7 @@ export default class Player extends Actor {
 	game: Game;
 	maxStamina: number;
 	maxSpeed: number;
+	private _currencyAmount: number;
 	currentStamina: number;
 	legs: AnimatedSprite;
 	body: AnimatedSprite;
@@ -54,6 +53,8 @@ export default class Player extends Actor {
 		this.maxStamina = 100;
 		this.currentStamina = this.maxStamina;
 
+		this._currencyAmount = 0;
+
 		this.weapons = [];
 		this.weapons[0] = new Weapon(projectileTexture, this);
 		this.weapons[1] = new Weapon(projectileTexture, this);
@@ -87,11 +88,11 @@ export default class Player extends Actor {
 		if (keys.space && this.currentStamina > 0) {
 			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
-			this.game.camera.hud.draw();
+			this.game.hud.updateStaminaBar();
 		}
 		if (this.currentStamina < this.maxStamina) {
 			this.currentStamina = this.currentStamina + 0.1;
-			this.game.camera.hud.draw();
+			this.game.hud.updateStaminaBar();
 		}
 		this.status.moving = false;
 		if (keys.w) {
@@ -160,4 +161,17 @@ export default class Player extends Actor {
 		this.body.rotation = angle;
 	}
 
+	reduceHealth(damage: number) {
+		this.status.health = this.status.health - damage;
+		this.game.hud.updateHealthBar();
+	}
+
+	set currencyAmount(amount: number) {
+		this._currencyAmount = amount;
+		this.game.hud.updateCurrencyAmount();
+	}
+
+	get currencyAmount() {
+		return this._currencyAmount;
+	}
 }
