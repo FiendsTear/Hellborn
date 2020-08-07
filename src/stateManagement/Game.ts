@@ -19,6 +19,7 @@ export default class Game extends PIXI.Application {
 	menu: Menu;
 	grid: Grid;
 	camera: Camera;
+	ground: Ground;
 	input: Input;
 	gameStarted: boolean;
 
@@ -67,7 +68,7 @@ export default class Game extends PIXI.Application {
 	startGame() {
 		this.loadResources().load(() =>  {
 			// set up camera, ground, hud
-			this.camera = new Camera(this.screen);
+			this.camera = new Camera(this);
 			this.camera.on('mousemove', this.input.handleMouseMove);
 			this.camera.on('mouseout', this.input.handleMouseOut);
 			this.camera.on('mousedown', this.input.handleMouseDown);
@@ -77,8 +78,8 @@ export default class Game extends PIXI.Application {
 
 			const resources = this.loader.resources;
 			const ground = new Ground();
+			this.ground = ground;
 			this.camera.addChild(ground);
-			this.camera.ground = ground;
 
 			// initialize grid for collisions
 			new Grid(ground, this);
@@ -104,7 +105,6 @@ export default class Game extends PIXI.Application {
 			this.actorManager.addActor(spawner3);
 
 			// all set, go
-			console.log(this);
 			this.gameStarted = true;
 			this.switchPause();
 		});

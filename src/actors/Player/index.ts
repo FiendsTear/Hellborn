@@ -23,7 +23,7 @@ export default class Player extends Actor {
 
 	constructor(game: Game, state: Game, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
 		const type = 'player';
-		super(state, type, game.camera.ground, quadrant);
+		super(state, type, game.ground, quadrant);
 		this.game = game;
 
 		this.hitBoxRadius = 20;

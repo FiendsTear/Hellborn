@@ -1,40 +1,40 @@
 import {Container} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
+import Game from '../stateManagement/Game';
+// eslint-disable-next-line no-unused-vars
 import HUD from '../interface/HUD';
 // eslint-disable-next-line no-unused-vars
 import Player from '../actors/Player';
-// eslint-disable-next-line no-unused-vars
-import Ground from './Ground';
 
 export default class Camera extends Container {
 	hud: HUD;
 	screen: any;
-	ground: Ground;
+	game: Game;
 
-	constructor(screen: any) {
+	constructor(game: Game) {
 		super();
-		this.screen = screen;
+		this.game = game;
 		this.interactive = true;
 		this.cursor = 'hover';
 	}
 
 	centerOnPlayer(player: Player) {
-		const screen = this.screen;
+		const screen = this.game.screen;
 		let x = player.x - screen.width/2;
 		let y = player.y - screen.height/2;
 		if (player.x - screen.width/2 <= 0) {
 			x = 0;
 		}
-		if (player.x + screen.width/2 >= this.ground.fixedWidth) {
-			x = this.ground.fixedWidth - screen.width;
+		if (player.x + screen.width/2 >= this.game.ground.fixedWidth) {
+			x = this.game.ground.fixedWidth - screen.width;
 		}
 		if (player.y - screen.height/2 <= 0) {
 			y = 0;
 		}
-		if (player.y + screen.height/2 >= this.ground.fixedHeight) {
-			y = this.ground.fixedHeight - screen.height;
+		if (player.y + screen.height/2 >= this.game.ground.fixedHeight) {
+			y = this.game.ground.fixedHeight - screen.height;
 		}
-		this.ground.x = -x;
-		this.ground.y = -y;
+		this.game.ground.x = -x;
+		this.game.ground.y = -y;
 	}
 }
