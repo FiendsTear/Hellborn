@@ -24,19 +24,19 @@ export class Weapon {
 		this.ready = true;
 		this.reloadTime = 0;
 
-		let request = new XMLHttpRequest();
+		const request = new XMLHttpRequest();
 
 		request.open('GET', './assets/sounds/shot.wav', true);
 		request.responseType = 'arraybuffer';
 
 		request.onload = () => {
-			var audioData = request.response;
+			const audioData = request.response;
 
 			this.owner.game.audioCtx.decodeAudioData(audioData, (buffer) => {
-					this.sound = buffer;
-				},
-				function(e){ console.log("Error with decoding audio data"); });
-		}
+				this.sound = buffer;
+			},
+			function(){ console.log('Error with decoding audio data'); });
+		};
 		request.send();
 
 	}
@@ -44,11 +44,11 @@ export class Weapon {
 	shoot() {
 		const audioCtx = this.owner.game.audioCtx;
 
-		let gainNode = audioCtx.createGain();
+		const gainNode = audioCtx.createGain();
 		gainNode.gain.value = 0.4;
 		gainNode.connect(audioCtx.destination);
 
-		let source = audioCtx.createBufferSource();
+		const source = audioCtx.createBufferSource();
 		source.buffer = this.sound;
 
 		source.connect(gainNode);

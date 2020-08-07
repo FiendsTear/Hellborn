@@ -62,7 +62,6 @@ export default abstract class Actor extends Container {
 			speed: 0};
 		this.type = type;
 
-		// this.hitBoxRadius = Math.floor(Math.sqrt(this.height/2*this.height/2 + this.width/2*this.width/2));
 		if (quadrant) {
 			this.status.quadrants.push(quadrant);
 			let actorCenterX;
@@ -81,9 +80,6 @@ export default abstract class Actor extends Container {
 
 		this.status.destination.x = this.x;
 		this.status.destination.y = this.y;
-
-		// Is it the responsibility of an Actor to add itself to the state?
-		// wouldn't it be better if whatever creates an actor instance adds it to the state / Game?
 
 		this.move = this.move.bind(this);
 		this.calculateDestination = this.calculateDestination.bind(this);

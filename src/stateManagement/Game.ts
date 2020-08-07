@@ -5,8 +5,6 @@ import Ground from '../helpers/Ground';
 import Player from '../actors/Player';
 // eslint-disable-next-line no-unused-vars
 import Grid, { Quadrant } from '../physics/Grid';
-// eslint-disable-next-line no-unused-vars
-import Actor from '../actors/Actor';
 import ActorManager from '../actors/ActorManager';
 import Menu from '../interface/Menu';
 // eslint-disable-next-line no-unused-vars
@@ -115,8 +113,6 @@ export default class Game extends PIXI.Application {
 	loop(): void{
 		if (!this.paused) {
 			this.play();
-		}
-		else {
 		}
 	}
 

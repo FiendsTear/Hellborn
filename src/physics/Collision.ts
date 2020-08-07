@@ -34,11 +34,11 @@ export default class Collision {
 
 			const horizontalDistanceToPushedActor = pushedActor.x - pushingActor.x;
 			const verticalDistanceToPushedActor = pushedActor.y - pushingActor.y;
-			let directionToPushedActor = Math.atan2(verticalDistanceToPushedActor, horizontalDistanceToPushedActor);
+			const directionToPushedActor = Math.atan2(verticalDistanceToPushedActor, horizontalDistanceToPushedActor);
 
 			const horizontalDistanceToDestination = pushingActor.status.destination.x - pushingActor.x;
 			const verticalDistanceToDestination = pushingActor.status.destination.y - pushingActor.y;
-			let directionPushingActor = Math.atan2(verticalDistanceToDestination, horizontalDistanceToDestination);
+			const directionPushingActor = Math.atan2(verticalDistanceToDestination, horizontalDistanceToDestination);
 
 			if (pushingActor.status.moving) {
 				pushingActor.calculateDestination(directionPushingActor);

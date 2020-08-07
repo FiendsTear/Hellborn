@@ -156,7 +156,7 @@ export default class Player extends Actor {
 	controlSight() {
 		const actorRelativeToCameraX = this.x + this.ground.x;
 		const actorRelativeToCameraY = this.y + this.ground.y;
-		let angle = Math.atan2(this.game.input.mouse.y - actorRelativeToCameraY, this.game.input.mouse.x - actorRelativeToCameraX);
+		const angle = Math.atan2(this.game.input.mouse.y - actorRelativeToCameraY, this.game.input.mouse.x - actorRelativeToCameraX);
 		this.body.rotation = angle;
 	}
 
