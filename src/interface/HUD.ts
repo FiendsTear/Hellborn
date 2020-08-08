@@ -1,16 +1,21 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '../actors/Player';
+// eslint-disable-next-line no-unused-vars
+import Game from '../stateManagement/Game';
 import {Graphics, Text, Container} from 'pixi.js';
 
 export default class HUD extends Container {
 	health: Graphics;
 	stamina: Graphics;
-	player: Player;
 	currencyAmountText: Text;
+	player: Player;
+	game: Game;
 
-	constructor(player: Player) {
+	constructor(game: Game) {
 		super();
-		this.player = player;
+		this.game = game;
+		this.player = this.game.actorManager.actors.player1 as Player;
+
 		this.zIndex = 10;
 
 		this.health = new Graphics();
@@ -21,9 +26,9 @@ export default class HUD extends Container {
 		this.updateStaminaBar();
 		this.addChild(this.stamina);
 
-		this.currencyAmountText = new Text(player.currencyAmount.toString(10), {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
-		this.currencyAmountText.x = 500;
-		this.currencyAmountText.y = 500;
+		this.currencyAmountText = new Text(this.player.currencyAmount.toString(10), {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
+		this.currencyAmountText.x = this.game.screen.width - 100;
+		this.currencyAmountText.y = this.game.screen.height - 100;
 		this.addChild(this.currencyAmountText);
 
 		this.updateStaminaBar = this.updateStaminaBar.bind(this);

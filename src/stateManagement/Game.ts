@@ -89,7 +89,7 @@ export default class Game extends PIXI.Application {
 			const player = new Player(this, this, playerQuadrant, resources.bullet.texture);
 			this.actorManager.addActor(player);
 
-			const hud = new HUD(player);
+			const hud = new HUD(this);
 			this.hud = hud;
 			this.camera.addChild(hud);
 			// initialize player and enemy
