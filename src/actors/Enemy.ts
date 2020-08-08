@@ -17,8 +17,8 @@ export default class Enemy extends Actor {
 	player: Player;
 
 	constructor(ground: Ground, texture: PIXI.Texture, state: Game, quadrant: Quadrant) {
-		const type = 'enemy';
-		super(state, type, ground, quadrant);
+		const kind = 'enemy';
+		super(state, kind, ground, quadrant);
 
 		this.player = this.state.actorManager.actors.player1 as Player;
 		this.zIndex = 1;
@@ -47,6 +47,7 @@ export default class Enemy extends Actor {
 		if (this.status.health <= 0) {
 			this.player.currencyAmount = this.player.currencyAmount + 10;
 			this.die();
+			this.state.checkLevelFinish();
 		}
 		else {
 			if (this.attackCooldown > 0) {

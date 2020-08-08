@@ -46,10 +46,10 @@ export default class Collision {
 			pushedActor.calculateDestination(directionToPushedActor);
 		}
 		else {
-			if (firstActor.type == 'projectile' && firstActor.status.alive && secondActor.type == 'enemy') {
+			if (firstActor.kind == 'projectile' && firstActor.status.alive && secondActor.kind == 'enemy') {
 				firstActor.hit(secondActor);
 			}
-			if (secondActor.type == 'projectile' && secondActor.status.alive && firstActor.type == 'enemy') {
+			if (secondActor.kind == 'projectile' && secondActor.status.alive && firstActor.kind == 'enemy') {
 				secondActor.hit(firstActor);
 			}
 		}

@@ -26,8 +26,8 @@ export default class ActorManager {
 
 	addActor(actor: Actor) {
 		if (!this.actors[actor.id]) {
-			actor.id = actor.type;
-			switch(actor.type) {
+			actor.id = actor.kind;
+			switch(actor.kind) {
 			case 'enemy':
 				this.enemiesCount = this.enemiesCount + 1;
 				actor.id = actor.id + this.enemiesCount;
@@ -58,6 +58,7 @@ export default class ActorManager {
 			const quadrant = actor.status.quadrants[i];
 			quadrant.activeActors.splice(quadrant.activeActors.indexOf(actor.id), 1);
 		}
+		delete this.actors[actor.id];
 	}
 
 	prepareActors() {

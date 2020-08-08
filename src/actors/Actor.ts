@@ -20,7 +20,7 @@ interface Status {
 
 export default abstract class Actor extends Container {
 	id: string;
-	type: string;
+	kind: string;
 	status: Status;
 
 	maxHealth: number;
@@ -33,14 +33,14 @@ export default abstract class Actor extends Container {
 	isObstacle: boolean;
 	movable: boolean;
 
-	constructor(state: Game, type: string, ground: Ground, quadrant?: Quadrant, x?: number, y?: number) {
+	constructor(state: Game, kind: string, ground: Ground, quadrant?: Quadrant, x?: number, y?: number) {
 		super();
 		
 		/**
 		 * Whenever you assign private fields to arguments passed to the constructor
 		 * you can remove the field declaration and write your constructor like this:
 		 * 
-		 * constructor(private state: Game, private type: string, private quadrant: Quadrant, private ground: Ground) {
+		 * constructor(private state: Game, private kind: string, private quadrant: Quadrant, private ground: Ground) {
 		 * 
 		 * }
 		 * 
@@ -60,7 +60,7 @@ export default abstract class Actor extends Container {
 			quadrants: [],
 			destination: new Point(),
 			speed: 0};
-		this.type = type;
+		this.kind = kind;
 
 		if (quadrant) {
 			this.status.quadrants.push(quadrant);

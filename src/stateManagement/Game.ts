@@ -112,6 +112,7 @@ export default class Game extends PIXI.Application {
 
 	loop(): void{
 		if (!this.paused) {
+			console.log(this);
 			this.play();
 		}
 	}
@@ -134,6 +135,12 @@ export default class Game extends PIXI.Application {
 		}
 		else {
 			this.menu.hide();
+		}
+	}
+
+	checkLevelFinish() {
+		if (this.actorManager.enemiesCount === 10) {
+			
 		}
 	}
 }
