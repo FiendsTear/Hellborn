@@ -13,7 +13,7 @@ export default class Player extends Actor {
 	game: Game;
 	maxStamina: number;
 	maxSpeed: number;
-	private _currencyAmount: number;
+	currencyAmount: number;
 	currentStamina: number;
 	legs: AnimatedSprite;
 	body: AnimatedSprite;
@@ -53,7 +53,7 @@ export default class Player extends Actor {
 		this.maxStamina = 100;
 		this.currentStamina = this.maxStamina;
 
-		this._currencyAmount = 0;
+		this.currencyAmount = 0;
 
 		this.weapons = [];
 		this.weapons[0] = new Weapon(projectileTexture, this);
@@ -166,12 +166,9 @@ export default class Player extends Actor {
 		this.game.hud.updateHealthBar();
 	}
 
-	set currencyAmount(amount: number) {
-		this._currencyAmount = amount;
+	changeCurrencyAmount(amount: number) {
+		this.currencyAmount = this.currencyAmount + amount;
 		this.game.hud.updateCurrencyAmount();
 	}
 
-	get currencyAmount() {
-		return this._currencyAmount;
-	}
 }

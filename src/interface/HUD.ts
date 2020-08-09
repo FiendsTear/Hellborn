@@ -8,6 +8,7 @@ export default class HUD extends Container {
 	health: Graphics;
 	stamina: Graphics;
 	currencyAmountText: Text;
+	finish: Text;
 	player: Player;
 	game: Game;
 
@@ -30,6 +31,10 @@ export default class HUD extends Container {
 		this.currencyAmountText.x = this.game.screen.width - 100;
 		this.currencyAmountText.y = this.game.screen.height - 100;
 		this.addChild(this.currencyAmountText);
+
+		this.finish = new Text('Level Finished', {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
+		this.finish.x = this.game.screen.width/2 - 50;
+		this.finish.y = this.game.screen.height/2 - 50;
 
 		this.updateStaminaBar = this.updateStaminaBar.bind(this);
 		this.updateHealthBar = this.updateHealthBar.bind(this);
@@ -58,5 +63,9 @@ export default class HUD extends Container {
 		this.stamina.beginFill(0x33B149);
 		this.stamina.drawRect(50, 85, 2 * this.player.currentStamina, 20);
 		this.stamina.endFill();
+	}
+
+	drawFinish() {
+		this.addChild(this.finish);
 	}
 }

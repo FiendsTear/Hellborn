@@ -45,7 +45,7 @@ export default class Enemy extends Actor {
 	
 	prepare() {
 		if (this.status.health <= 0) {
-			this.player.currencyAmount = this.player.currencyAmount + 10;
+			this.player.changeCurrencyAmount(10);
 			this.die();
 			this.state.checkLevelFinish();
 		}

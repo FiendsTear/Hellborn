@@ -11,6 +11,7 @@ export default class ActorManager {
 	game: Game;
 	actors: Actors;
 	enemiesCount: number;
+	enemiesAlive: number;
 	playersCount: number;
 	projectilesCount: number;
 	spawnerCount: number;
@@ -19,6 +20,7 @@ export default class ActorManager {
 		this.game = game;
 		this.actors = {};
 		this.enemiesCount = 0;
+		this.enemiesAlive = 0;
 		this.playersCount = 0;
 		this.projectilesCount = 0;
 		this.spawnerCount = 0;
@@ -31,6 +33,7 @@ export default class ActorManager {
 			case 'enemy':
 				this.enemiesCount = this.enemiesCount + 1;
 				actor.id = actor.id + this.enemiesCount;
+				this.enemiesAlive = this.enemiesAlive + 1;
 				break;
 			case 'player':
 				this.playersCount = this.playersCount + 1;
@@ -53,6 +56,9 @@ export default class ActorManager {
 	}
 
 	removeActor(actor: Actor) {
+		if (actor.kind === 'enemy') {
+			this.enemiesAlive = this.enemiesAlive - 1;
+		}
 		actor.ground.removeChild(actor);
 		for (let i = 0, quadrantCount = actor.status.quadrants.length; i < quadrantCount; i++) {
 			const quadrant = actor.status.quadrants[i];

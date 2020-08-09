@@ -139,8 +139,9 @@ export default class Game extends PIXI.Application {
 	}
 
 	checkLevelFinish() {
-		if (this.actorManager.enemiesCount === 10) {
-			
+		if (this.actorManager.enemiesCount === 10 && this.actorManager.enemiesAlive === 0) {
+			this.hud.drawFinish();
+			this.switchPause();
 		}
 	}
 }
