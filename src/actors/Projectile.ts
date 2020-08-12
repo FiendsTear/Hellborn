@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import { Quadrant } from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
@@ -15,7 +15,7 @@ export default class Projectile extends Actor {
 	sprite: Sprite;
 
 	constructor(texture: PIXI.Texture, x: number, y: number, speed: number, lifespan: number, direction: number, damage: number, owner: Actor, kind: string) {
-		super(owner.state, kind, owner.ground, null, x, y);
+		super(owner.engine, kind, owner.ground, null, x, y);
 		this.kind = 'projectile';
 		this.sprite = new Sprite(texture);
 		this.addChild(this.sprite);
@@ -35,7 +35,7 @@ export default class Projectile extends Actor {
 
 	act() {
 		this.move();
-		this.lifespan = this.lifespan - this.state.ticker.elapsedMS;
+		this.lifespan = this.lifespan - this.engine.ticker.elapsedMS;
 		if (this.lifespan <= 0) {
 			this.die();
 		}

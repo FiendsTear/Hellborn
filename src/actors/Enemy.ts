@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import {Quadrant} from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
@@ -16,11 +16,11 @@ export default class Enemy extends Actor {
 	sprite: Sprite;
 	player: Player;
 
-	constructor(ground: Ground, texture: PIXI.Texture, state: Game, quadrant: Quadrant) {
+	constructor(ground: Ground, texture: PIXI.Texture, engine: Engine, quadrant: Quadrant) {
 		const kind = 'enemy';
-		super(state, kind, ground, quadrant);
+		super(engine, kind, ground, quadrant);
 
-		this.player = this.state.actorManager.actors.player1 as Player;
+		this.player = this.engine.actorManager.actors.player1 as Player;
 		this.zIndex = 1;
 		this.sprite = new Sprite(texture);
 		this.sprite.anchor.x = 0.5;
@@ -47,11 +47,11 @@ export default class Enemy extends Actor {
 		if (this.status.health <= 0) {
 			this.player.changeCurrencyAmount(10);
 			this.die();
-			this.state.checkLevelFinish();
+			this.engine.checkLevelFinish();
 		}
 		else {
 			if (this.attackCooldown > 0) {
-				this.attackCooldown = this.attackCooldown - this.state.ticker.elapsedMS;
+				this.attackCooldown = this.attackCooldown - this.engine.ticker.elapsedMS;
 				if (this.attackCooldown <= 0) {
 					this.status.attackReady = true;
 				}
@@ -83,7 +83,7 @@ export default class Enemy extends Actor {
 	attack(player: Actor): void {
 		player.reduceHealth(10);
 		if (player.status.health <= 0) {
-			this.state.switchPause();
+			this.engine.switchPause();
 		}
 		this.status.attackReady = false;
 		this.attackCooldown = 1000;

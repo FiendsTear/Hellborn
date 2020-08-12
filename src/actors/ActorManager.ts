@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import Actor from '../actors/Actor';
 
@@ -8,7 +8,7 @@ export interface Actors {
 }
 
 export default class ActorManager {
-	game: Game;
+	engine: Engine;
 	actors: Actors;
 	enemiesCount: number;
 	enemiesAlive: number;
@@ -16,8 +16,8 @@ export default class ActorManager {
 	projectilesCount: number;
 	spawnerCount: number;
 	
-	constructor(game: Game) {
-		this.game = game;
+	constructor(engine: Engine) {
+		this.engine = engine;
 		this.actors = {};
 		this.enemiesCount = 0;
 		this.enemiesAlive = 0;
@@ -50,7 +50,7 @@ export default class ActorManager {
 			}
 			this.actors[actor.id] = actor;
 			const quadrantToAddActorTo = actor.status.quadrants[0];
-			this.game.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
+			this.engine.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
 			actor.ground.addChild(actor);
 		}
 	}

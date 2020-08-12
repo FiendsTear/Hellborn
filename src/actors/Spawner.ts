@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import {Quadrant} from '../physics/Grid';
 import Enemy from './Enemy';
@@ -12,9 +12,9 @@ export default class Spawner extends Actor {
 	spawnCooldown: number;
 	spawnTexture: PIXI.Texture;
 
-	constructor(ground: Ground, texture: PIXI.Texture, state: Game, quadrant: Quadrant) {
+	constructor(ground: Ground, texture: PIXI.Texture, engine: Engine, quadrant: Quadrant) {
 		const kind = 'spawner';
-		super(state, kind, ground, quadrant);
+		super(engine, kind, ground, quadrant);
 
 		this.spawnTexture = texture;
 		this.spawnCooldown = 0;
@@ -23,14 +23,14 @@ export default class Spawner extends Actor {
 	
 	prepare() {
 		if (this.spawnCooldown > 0) {
-			this.spawnCooldown = this.spawnCooldown - this.state.ticker.elapsedMS;
+			this.spawnCooldown = this.spawnCooldown - this.engine.ticker.elapsedMS;
 		}
 	}
 
 	act(): void {
-		if (this.spawnCooldown <= 0 && this.state.actorManager.enemiesCount < 10 ) {
-			const enemy = new Enemy(this.ground, this.spawnTexture, this.state, this.status.quadrants[0]);
-			this.state.actorManager.addActor(enemy);
+		if (this.spawnCooldown <= 0 && this.engine.actorManager.enemiesCount < 10 ) {
+			const enemy = new Enemy(this.ground, this.spawnTexture, this.engine, this.status.quadrants[0]);
+			this.engine.actorManager.addActor(enemy);
 			this.spawnCooldown = 4000;
 		}
 	}

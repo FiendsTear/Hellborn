@@ -1,5 +1,5 @@
-import Game from './stateManagement/Game';
+import Engine from './Engine';
 
-const game = new Game();
-document.body.appendChild(game.view);
-game.initialize();
+const engine = new Engine();
+document.body.appendChild(engine.view);
+engine.initialize();

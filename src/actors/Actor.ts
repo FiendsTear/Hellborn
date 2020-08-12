@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import { Point, Container } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import { Quadrant } from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
@@ -27,20 +27,20 @@ export default abstract class Actor extends Container {
 	hitBoxRadius: number;
 	strength: number;
 
-	state: Game;
+	engine: Engine;
 	ground: Ground;
 
 	isObstacle: boolean;
 	movable: boolean;
 
-	constructor(state: Game, kind: string, ground: Ground, quadrant?: Quadrant, x?: number, y?: number) {
+	constructor(engine: Engine, kind: string, ground: Ground, quadrant?: Quadrant, x?: number, y?: number) {
 		super();
 		
 		/**
 		 * Whenever you assign private fields to arguments passed to the constructor
 		 * you can remove the field declaration and write your constructor like this:
 		 * 
-		 * constructor(private state: Game, private kind: string, private quadrant: Quadrant, private ground: Ground) {
+		 * constructor(private engine: Engine, private kind: string, private quadrant: Quadrant, private ground: Ground) {
 		 * 
 		 * }
 		 * 
@@ -49,7 +49,7 @@ export default abstract class Actor extends Container {
 		 * (More info here: https://dev.to/satansdeer/typescript-constructor-shorthand-3ibd )
 		 * 
 		 */
-		this.state = state;
+		this.engine = engine;
 		this.ground = ground;
 		this.status = {
 			alive: true, 
@@ -72,7 +72,7 @@ export default abstract class Actor extends Container {
 		else {
 			this.x = x;
 			this.y = y;
-			const quadrant = this.state.grid.getQuadrantByCoords(x, y);
+			const quadrant = this.engine.grid.getQuadrantByCoords(x, y);
 			this.status.quadrants.push(quadrant);
 		}
 
@@ -90,8 +90,8 @@ export default abstract class Actor extends Container {
 	}
 
 	/**
-	 * I'd make it clearer here that calculateDestination does indeed make changes to the state
-	 * (due to the state.prepareToMoveActor call). In fact it's not super clear what this does.
+	 * I'd make it clearer here that calculateDestination does indeed make changes to the engine
+	 * (due to the engine.prepareToMoveActor call). In fact it's not super clear what this does.
 	 */
 	calculateDestination(direction: number) {
 		let x = this.x + this.status.speed * Math.cos(direction);
@@ -110,7 +110,7 @@ export default abstract class Actor extends Container {
 		}
 		this.status.destination.x = x;
 		this.status.destination.y = y;
-		this.state.grid.calculateNewQuadrants(this);
+		this.engine.grid.calculateNewQuadrants(this);
 	}
 
 	reduceHealth(damage: number) {
@@ -125,6 +125,6 @@ export default abstract class Actor extends Container {
 	die() {
 		this.status.speed = 0;
 		this.status.alive = false;
-		this.state.actorManager.removeActor(this);
+		this.engine.actorManager.removeActor(this);
 	}
 }

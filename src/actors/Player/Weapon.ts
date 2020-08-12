@@ -32,7 +32,7 @@ export class Weapon {
 		request.onload = () => {
 			const audioData = request.response;
 
-			this.owner.game.audioCtx.decodeAudioData(audioData, (buffer) => {
+			this.owner.engine.audioCtx.decodeAudioData(audioData, (buffer) => {
 				this.sound = buffer;
 			},
 			function(){ console.log('Error with decoding audio data'); });
@@ -42,7 +42,7 @@ export class Weapon {
 	}
 
 	shoot() {
-		const audioCtx = this.owner.game.audioCtx;
+		const audioCtx = this.owner.engine.audioCtx;
 
 		const gainNode = audioCtx.createGain();
 		gainNode.gain.value = 0.4;
@@ -70,14 +70,14 @@ export class Weapon {
 			owner,
 			'projectile'
 		);
-		owner.game.actorManager.addActor(bullet);
+		owner.engine.actorManager.addActor(bullet);
 		this.ready = false;
 		this.reloadTime = 500;
 	}
 
 	update() {
 		if (this.reloadTime >= 0) {
-			this.reloadTime = this.reloadTime - this.owner.state.ticker.elapsedMS;
+			this.reloadTime = this.reloadTime - this.owner.engine.ticker.elapsedMS;
 		}
 		else {
 			this.ready = true;

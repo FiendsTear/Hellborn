@@ -1,18 +1,18 @@
 import * as PIXI from 'pixi.js';
 
-import Spawner from '../actors/Spawner';
-import Ground from '../helpers/Ground';
-import Player from '../actors/Player';
+import Spawner from './actors/Spawner';
+import Ground from './helpers/Ground';
+import Player from './actors/Player';
 // eslint-disable-next-line no-unused-vars
-import Grid, { Quadrant } from '../physics/Grid';
-import ActorManager from '../actors/ActorManager';
-import Menu from '../interface/Menu';
+import Grid, { Quadrant } from './physics/Grid';
+import ActorManager from './actors/ActorManager';
+import Menu from './interface/Menu';
 // eslint-disable-next-line no-unused-vars
-import Camera from '../helpers/Camera';
-import HUD from '../interface/HUD';
-import Input from '../helpers/Input';
+import Camera from './helpers/Camera';
+import HUD from './interface/HUD';
+import Input from './helpers/Input';
 
-export default class Game extends PIXI.Application {
+export default class Engine extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
 	paused: boolean;
@@ -86,7 +86,7 @@ export default class Game extends PIXI.Application {
 			new Grid(ground, this);
 
 			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
-			const player = new Player(this, this, playerQuadrant, resources.bullet.texture);
+			const player = new Player(this, playerQuadrant, resources.bullet.texture);
 			this.actorManager.addActor(player);
 
 			const hud = new HUD(this);

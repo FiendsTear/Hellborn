@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
-import Game from '../../stateManagement/Game';
+import Engine from '../../Engine';
 // eslint-disable-next-line no-unused-vars
 import { Quadrant } from '../../physics/Grid';
 // eslint-disable-next-line no-unused-vars
@@ -10,7 +10,6 @@ import { Weapon } from './Weapon';
 // eslint-disable-next-line no-unused-vars
 
 export default class Player extends Actor {
-	game: Game;
 	maxStamina: number;
 	maxSpeed: number;
 	currencyAmount: number;
@@ -20,15 +19,14 @@ export default class Player extends Actor {
 	equippedWeapon: Weapon;
 	weapons: Weapon[];
 
-	constructor(game: Game, state: Game, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
+	constructor(engine: Engine, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
 		const kind = 'player';
-		super(state, kind, game.ground, quadrant);
-		this.game = game;
+		super(engine, kind, engine.ground, quadrant);
 
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
 
-		const resources = this.game.loader.resources;
+		const resources = this.engine.loader.resources;
 
 		this.legs = new AnimatedSprite(resources.playerLegs.spritesheet.animations['legs']);
 		this.legs.anchor.x = 0.5;
@@ -76,7 +74,7 @@ export default class Player extends Actor {
 	act() {
 		this.move();
 		this.equippedWeapon.update();
-		if (this.equippedWeapon.ready && this.game.input.mouse.pressed) {
+		if (this.equippedWeapon.ready && this.engine.input.mouse.pressed) {
 			this.equippedWeapon.shoot();
 		}
 	}
@@ -84,15 +82,15 @@ export default class Player extends Actor {
 	controlMovement() {
 		let direction = 0;
 		this.status.speed = this.maxSpeed;
-		const keys = this.game.input.keys;
+		const keys = this.engine.input.keys;
 		if (keys.space && this.currentStamina > 0) {
 			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
-			this.game.hud.updateStaminaBar();
+			this.engine.hud.updateStaminaBar();
 		}
 		if (this.currentStamina < this.maxStamina) {
 			this.currentStamina = this.currentStamina + 0.1;
-			this.game.hud.updateStaminaBar();
+			this.engine.hud.updateStaminaBar();
 		}
 		this.status.moving = false;
 		if (keys.w) {
@@ -157,18 +155,18 @@ export default class Player extends Actor {
 	controlSight() {
 		const actorRelativeToCameraX = this.x + this.ground.x;
 		const actorRelativeToCameraY = this.y + this.ground.y;
-		const angle = Math.atan2(this.game.input.mouse.y - actorRelativeToCameraY, this.game.input.mouse.x - actorRelativeToCameraX);
+		const angle = Math.atan2(this.engine.input.mouse.y - actorRelativeToCameraY, this.engine.input.mouse.x - actorRelativeToCameraX);
 		this.body.rotation = angle;
 	}
 
 	reduceHealth(damage: number) {
 		this.status.health = this.status.health - damage;
-		this.game.hud.updateHealthBar();
+		this.engine.hud.updateHealthBar();
 	}
 
 	changeCurrencyAmount(amount: number) {
 		this.currencyAmount = this.currencyAmount + amount;
-		this.game.hud.updateCurrencyAmount();
+		this.engine.hud.updateCurrencyAmount();
 	}
 
 }

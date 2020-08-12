@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import { InteractionEvent } from 'pixi.js';
 
@@ -21,10 +21,10 @@ interface Mouse {
 export default class Input {
 	keys: Keys;
 	mouse: Mouse;
-	game: Game;
+	engine: Engine;
 
-	constructor(game: Game) {
-		this.game = game;
+	constructor(engine: Engine) {
+		this.engine = engine;
 		this.mouse = {
 			x: 500,
 			y: 500,
@@ -64,17 +64,17 @@ export default class Input {
 		if (event.code === 'KeyA') this.keys.a = false;
 		if (event.code === 'Space') this.keys.space = false;
 		if (!event.shiftKey) this.keys.shift = false;
-		if (event.code === 'Escape') this.game.switchPause();
+		if (event.code === 'Escape') this.engine.switchPause();
 	}
 
 	handleMouseMove(event: InteractionEvent) {
-		this.mouse.x = event.data.getLocalPosition(this.game.camera).x;
-		this.mouse.y = event.data.getLocalPosition(this.game.camera).y;
+		this.mouse.x = event.data.getLocalPosition(this.engine.camera).x;
+		this.mouse.y = event.data.getLocalPosition(this.engine.camera).y;
 	}
 	
 	handleMouseOut() {
-		if (!this.game.paused) {
-			this.game.switchPause();
+		if (!this.engine.paused) {
+			this.engine.switchPause();
 		}
 	}
 

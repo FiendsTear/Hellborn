@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '../actors/Player';
 // eslint-disable-next-line no-unused-vars
-import Game from '../stateManagement/Game';
+import Engine from '../Engine';
 import {Graphics, Text, Container} from 'pixi.js';
 
 export default class HUD extends Container {
@@ -10,12 +10,12 @@ export default class HUD extends Container {
 	currencyAmountText: Text;
 	finish: Text;
 	player: Player;
-	game: Game;
+	engine: Engine;
 
-	constructor(game: Game) {
+	constructor(engine: Engine) {
 		super();
-		this.game = game;
-		this.player = this.game.actorManager.actors.player1 as Player;
+		this.engine = engine;
+		this.player = this.engine.actorManager.actors.player1 as Player;
 
 		this.zIndex = 10;
 
@@ -28,13 +28,13 @@ export default class HUD extends Container {
 		this.addChild(this.stamina);
 
 		this.currencyAmountText = new Text(this.player.currencyAmount.toString(10), {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
-		this.currencyAmountText.x = this.game.screen.width - 100;
-		this.currencyAmountText.y = this.game.screen.height - 100;
+		this.currencyAmountText.x = this.engine.screen.width - 100;
+		this.currencyAmountText.y = this.engine.screen.height - 100;
 		this.addChild(this.currencyAmountText);
 
 		this.finish = new Text('Level Finished', {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
-		this.finish.x = this.game.screen.width/2 - 50;
-		this.finish.y = this.game.screen.height/2 - 50;
+		this.finish.x = this.engine.screen.width/2 - 50;
+		this.finish.y = this.engine.screen.height/2 - 50;
 
 		this.updateStaminaBar = this.updateStaminaBar.bind(this);
 		this.updateHealthBar = this.updateHealthBar.bind(this);
