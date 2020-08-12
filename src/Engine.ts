@@ -87,7 +87,7 @@ export default class Engine extends PIXI.Application {
 
 			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
 			const player = new Player(this, playerQuadrant, resources.bullet.texture);
-			this.actorManager.addActor(player);
+			this.actorManager.addActor(player, 500, 500);
 
 			const hud = new HUD(this);
 			this.hud = hud;
@@ -96,13 +96,13 @@ export default class Engine extends PIXI.Application {
 
 			const spawnerQuadrant1: Quadrant = this.grid.quadrants[4][2];
 			const spawner1 = new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant1);
-			this.actorManager.addActor(spawner1);
+			this.actorManager.addActor(spawner1, 100, 300);
 			const spawnerQuadrant2: Quadrant = this.grid.quadrants[7][2];
 			const spawner2 = new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant2);
-			this.actorManager.addActor(spawner2);
+			this.actorManager.addActor(spawner2, 500, 900);
 			const spawnerQuadrant3: Quadrant = this.grid.quadrants[7][8];
 			const spawner3 = new Spawner(ground, PIXI.Texture.from('enemy'), this, spawnerQuadrant3);
-			this.actorManager.addActor(spawner3);
+			this.actorManager.addActor(spawner3, 700, 500);
 
 			// all set, go
 			this.gameStarted = true;

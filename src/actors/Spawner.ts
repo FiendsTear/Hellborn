@@ -14,7 +14,7 @@ export default class Spawner extends Actor {
 
 	constructor(ground: Ground, texture: PIXI.Texture, engine: Engine, quadrant: Quadrant) {
 		const kind = 'spawner';
-		super(engine, kind, ground, quadrant);
+		super(engine, kind);
 
 		this.spawnTexture = texture;
 		this.spawnCooldown = 0;
@@ -29,8 +29,8 @@ export default class Spawner extends Actor {
 
 	act(): void {
 		if (this.spawnCooldown <= 0 && this.engine.actorManager.enemiesCount < 10 ) {
-			const enemy = new Enemy(this.ground, this.spawnTexture, this.engine, this.status.quadrants[0]);
-			this.engine.actorManager.addActor(enemy);
+			const enemy = new Enemy(this.engine.ground, this.spawnTexture, this.engine, this.status.quadrants[0]);
+			this.engine.actorManager.addActor(enemy, this.x, this.y);
 			this.spawnCooldown = 4000;
 		}
 	}

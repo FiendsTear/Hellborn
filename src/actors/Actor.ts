@@ -4,8 +4,6 @@ import { Point, Container } from 'pixi.js';
 import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import { Quadrant } from '../physics/Grid';
-// eslint-disable-next-line no-unused-vars
-import Ground from '../helpers/Ground';
 
 interface Status {
 	moving: boolean;
@@ -14,7 +12,6 @@ interface Status {
 	attackReady: boolean;
 	health: number;
 	quadrants: Quadrant[];
-	destination: PIXI.Point;
 	speed: number;
 }
 
@@ -22,25 +19,25 @@ export default abstract class Actor extends Container {
 	id: string;
 	kind: string;
 	status: Status;
+	destination: PIXI.Point;
 
 	maxHealth: number;
 	hitBoxRadius: number;
 	strength: number;
 
 	engine: Engine;
-	ground: Ground;
 
 	isObstacle: boolean;
 	movable: boolean;
 
-	constructor(engine: Engine, kind: string, ground: Ground, quadrant?: Quadrant, x?: number, y?: number) {
+	constructor(engine: Engine, kind: string) {
 		super();
 		
 		/**
 		 * Whenever you assign private fields to arguments passed to the constructor
 		 * you can remove the field declaration and write your constructor like this:
 		 * 
-		 * constructor(private engine: Engine, private kind: string, private quadrant: Quadrant, private ground: Ground) {
+		 * constructor(private engine: Engine, private kind: string, private quadrant: Quadrant, private engine.ground: engine.ground) {
 		 * 
 		 * }
 		 * 
@@ -50,7 +47,6 @@ export default abstract class Actor extends Container {
 		 * 
 		 */
 		this.engine = engine;
-		this.ground = ground;
 		this.status = {
 			alive: true, 
 			moving: false, 
@@ -58,35 +54,17 @@ export default abstract class Actor extends Container {
 			attackReady: true,
 			health: this.maxHealth,
 			quadrants: [],
-			destination: new Point(),
 			speed: 0};
 		this.kind = kind;
-
-		if (quadrant) {
-			this.status.quadrants.push(quadrant);
-			const actorCenterX = (quadrant.x1 + quadrant.x2)/2;	
-			const actorCentery = (quadrant.y1 + quadrant.y2)/2;
-			this.x = actorCenterX;
-			this.y = actorCentery;
-		}
-		else {
-			this.x = x;
-			this.y = y;
-			const quadrant = this.engine.grid.getQuadrantByCoords(x, y);
-			this.status.quadrants.push(quadrant);
-		}
-
-		this.status.destination.x = this.x;
-		this.status.destination.y = this.y;
+		this.destination = new Point();
 
 		this.move = this.move.bind(this);
 		this.calculateDestination = this.calculateDestination.bind(this);
 	}
 
 	move() {
-		this.x = this.status.destination.x;
-		this.y = this.status.destination.y;
-
+		this.x = this.destination.x;
+		this.y = this.destination.y;
 	}
 
 	/**
@@ -99,17 +77,17 @@ export default abstract class Actor extends Container {
 		if (x - this.hitBoxRadius <= 0) {
 			x = this.hitBoxRadius;
 		}
-		if (x + this.hitBoxRadius >= this.ground.fixedWidth) {
-			x = this.ground.fixedWidth - this.hitBoxRadius;
+		if (x + this.hitBoxRadius >= this.engine.ground.fixedWidth) {
+			x = this.engine.ground.fixedWidth - this.hitBoxRadius;
 		}
 		if (y - this.hitBoxRadius <= 0) {
 			y = this.hitBoxRadius;
 		}
-		if (y + this.hitBoxRadius >= this.ground.fixedHeight) {
-			y = this.ground.fixedHeight - this.hitBoxRadius;
+		if (y + this.hitBoxRadius >= this.engine.ground.fixedHeight) {
+			y = this.engine.ground.fixedHeight - this.hitBoxRadius;
 		}
-		this.status.destination.x = x;
-		this.status.destination.y = y;
+		this.destination.x = x;
+		this.destination.y = y;
 		this.engine.grid.calculateNewQuadrants(this);
 	}
 

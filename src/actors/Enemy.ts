@@ -18,7 +18,7 @@ export default class Enemy extends Actor {
 
 	constructor(ground: Ground, texture: PIXI.Texture, engine: Engine, quadrant: Quadrant) {
 		const kind = 'enemy';
-		super(engine, kind, ground, quadrant);
+		super(engine, kind);
 
 		this.player = this.engine.actorManager.actors.player1 as Player;
 		this.zIndex = 1;

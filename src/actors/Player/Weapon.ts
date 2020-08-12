@@ -60,9 +60,7 @@ export class Weapon {
 		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
 		const bullet = new Projectile(
-			this.projectileTexture, 
-			shooterFaceCenterX, 
-			shooterFaceCenterY, 
+			this.projectileTexture,
 			this.projectileSpeed, 
 			this.projectileLifespan, 
 			projectileDirection,
@@ -70,7 +68,7 @@ export class Weapon {
 			owner,
 			'projectile'
 		);
-		owner.engine.actorManager.addActor(bullet);
+		owner.engine.actorManager.addActor(bullet, shooterFaceCenterX, shooterFaceCenterY);
 		this.ready = false;
 		this.reloadTime = 500;
 	}

@@ -14,7 +14,7 @@ export default class Menu extends Container {
 		this.engine = engine;
 		this.interactive = true;
 		this.newGame = new Container();
-		this.newGame.addChild(new Text('New engine', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
+		this.newGame.addChild(new Text('New game', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
 		this.newGame.interactive = true;
 		this.newGame.on('click', this.engine.startGame.bind(this.engine));
 		this.resume = new Container();

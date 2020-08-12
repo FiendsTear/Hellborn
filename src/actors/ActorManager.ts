@@ -26,7 +26,7 @@ export default class ActorManager {
 		this.spawnerCount = 0;
 	}
 
-	addActor(actor: Actor) {
+	addActor(actor: Actor, x: number, y: number) {
 		if (!this.actors[actor.id]) {
 			actor.id = actor.kind;
 			switch(actor.kind) {
@@ -49,9 +49,18 @@ export default class ActorManager {
 				break;
 			}
 			this.actors[actor.id] = actor;
+
+			actor.x = x;
+			actor.y = y;
+			actor.destination.x = x;
+			actor.destination.y = y;
+
+			const quadrant = this.engine.grid.getQuadrantByCoords(x, y);
+			actor.status.quadrants.push(quadrant);
+
 			const quadrantToAddActorTo = actor.status.quadrants[0];
 			this.engine.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
-			actor.ground.addChild(actor);
+			this.engine.ground.addChild(actor);
 		}
 	}
 
@@ -59,7 +68,7 @@ export default class ActorManager {
 		if (actor.kind === 'enemy') {
 			this.enemiesAlive = this.enemiesAlive - 1;
 		}
-		actor.ground.removeChild(actor);
+		this.engine.ground.removeChild(actor);
 		for (let i = 0, quadrantCount = actor.status.quadrants.length; i < quadrantCount; i++) {
 			const quadrant = actor.status.quadrants[i];
 			quadrant.activeActors.splice(quadrant.activeActors.indexOf(actor.id), 1);

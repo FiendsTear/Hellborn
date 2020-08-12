@@ -14,8 +14,8 @@ export default class Projectile extends Actor {
 	damage: number;
 	sprite: Sprite;
 
-	constructor(texture: PIXI.Texture, x: number, y: number, speed: number, lifespan: number, direction: number, damage: number, owner: Actor, kind: string) {
-		super(owner.engine, kind, owner.ground, null, x, y);
+	constructor(texture: PIXI.Texture, speed: number, lifespan: number, direction: number, damage: number, owner: Actor, kind: string) {
+		super(owner.engine, kind);
 		this.kind = 'projectile';
 		this.sprite = new Sprite(texture);
 		this.addChild(this.sprite);

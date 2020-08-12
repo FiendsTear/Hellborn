@@ -1,14 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import {Pair} from './Grid';
-// eslint-disable-next-line no-unused-vars
 import Actor from '../actors/Actor';
 
 export default class Collision {
 	static check(pair: Pair): void {
 		const firstActor = pair.firstActor;
 		const secondActor = pair.secondActor;
-		const distance = (secondActor.status.destination.x - firstActor.status.destination.x) * (secondActor.status.destination.x - firstActor.status.destination.x) + 
-			(secondActor.status.destination.y - firstActor.status.destination.y) * (secondActor.status.destination.y - firstActor.status.destination.y);
+		const distance = (secondActor.destination.x - firstActor.destination.x) * (secondActor.destination.x - firstActor.destination.x) + 
+			(secondActor.destination.y - firstActor.destination.y) * (secondActor.destination.y - firstActor.destination.y);
 		if (distance <= (secondActor.hitBoxRadius + firstActor.hitBoxRadius)*(secondActor.hitBoxRadius + firstActor.hitBoxRadius)) {	
 			this.collide(firstActor, secondActor);
 		}
@@ -36,9 +35,9 @@ export default class Collision {
 			const verticalDistanceToPushedActor = pushedActor.y - pushingActor.y;
 			const directionToPushedActor = Math.atan2(verticalDistanceToPushedActor, horizontalDistanceToPushedActor);
 
-			const horizontalDistanceToDestination = pushingActor.status.destination.x - pushingActor.x;
-			const verticalDistanceToDestination = pushingActor.status.destination.y - pushingActor.y;
-			const directionPushingActor = Math.atan2(verticalDistanceToDestination, horizontalDistanceToDestination);
+			const horizontalDistanceTodestinationtination = pushingActor.destination.x - pushingActor.x;
+			const verticalDistanceTodestinationtination = pushingActor.destination.y - pushingActor.y;
+			const directionPushingActor = Math.atan2(verticalDistanceTodestinationtination, horizontalDistanceTodestinationtination);
 
 			if (pushingActor.status.moving) {
 				pushingActor.calculateDestination(directionPushingActor);

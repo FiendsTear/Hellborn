@@ -21,7 +21,7 @@ export default class Player extends Actor {
 
 	constructor(engine: Engine, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
 		const kind = 'player';
-		super(engine, kind, engine.ground, quadrant);
+		super(engine, kind);
 
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
@@ -153,8 +153,8 @@ export default class Player extends Actor {
 	}
 
 	controlSight() {
-		const actorRelativeToCameraX = this.x + this.ground.x;
-		const actorRelativeToCameraY = this.y + this.ground.y;
+		const actorRelativeToCameraX = this.x + this.engine.ground.x;
+		const actorRelativeToCameraY = this.y + this.engine.ground.y;
 		const angle = Math.atan2(this.engine.input.mouse.y - actorRelativeToCameraY, this.engine.input.mouse.x - actorRelativeToCameraX);
 		this.body.rotation = angle;
 	}
