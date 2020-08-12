@@ -7,6 +7,7 @@ import { Quadrant } from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
 import Ground from '../helpers/Ground';
 import {Sprite} from 'pixi.js';
+import { Weapon } from './Player/Weapon';
 
 export default class Projectile extends Actor {
 	direction: number;
@@ -14,14 +15,14 @@ export default class Projectile extends Actor {
 	damage: number;
 	sprite: Sprite;
 
-	constructor(texture: PIXI.Texture, speed: number, lifespan: number, direction: number, damage: number, owner: Actor, kind: string) {
+	constructor(weapon: Weapon, direction: number, owner: Actor, kind: string) {
 		super(owner.engine, kind);
 		this.kind = 'projectile';
-		this.sprite = new Sprite(texture);
+		this.sprite = new Sprite(weapon.projectileTexture);
 		this.addChild(this.sprite);
-		this.status.speed = speed;
-		this.lifespan = lifespan;
-		this.damage = damage;
+		this.status.speed = weapon.projectileSpeed;
+		this.lifespan = weapon.projectileLifespan;
+		this.damage = weapon.damage;
 		this.status.moving = true;
 		this.direction = direction;
 		this.movable = false;

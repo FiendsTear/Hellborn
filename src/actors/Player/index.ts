@@ -19,7 +19,7 @@ export default class Player extends Actor {
 	equippedWeapon: Weapon;
 	weapons: Weapon[];
 
-	constructor(engine: Engine, quadrant: Quadrant, projectileTexture: PIXI.Texture) {
+	constructor(engine: Engine) {
 		const kind = 'player';
 		super(engine, kind);
 
@@ -54,9 +54,7 @@ export default class Player extends Actor {
 		this.currencyAmount = 0;
 
 		this.weapons = [];
-		this.weapons[0] = new Weapon(projectileTexture, this);
-		this.weapons[1] = new Weapon(projectileTexture, this);
-		this.weapons[2] = new Weapon(projectileTexture, this);
+		this.weapons[0] = new Weapon(this);
 		this.equippedWeapon = this.weapons[0];
 
 		this.strength = 90;

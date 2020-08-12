@@ -14,12 +14,11 @@ export class Weapon {
 	owner: Player;
 	swinging: boolean;
 
-	constructor(projectileTexture: PIXI.Texture, owner: Player) {
+	constructor(owner: Player) {
 		this.owner = owner;
 
 		this.projectileSpeed = 25;
 		this.projectileLifespan = 400;
-		this.projectileTexture = projectileTexture;
 		this.damage = 80;
 		this.ready = true;
 		this.reloadTime = 0;
@@ -59,16 +58,7 @@ export class Weapon {
 		const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
 		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
-		const bullet = new Projectile(
-			this.projectileTexture,
-			this.projectileSpeed, 
-			this.projectileLifespan, 
-			projectileDirection,
-			this.damage,
-			owner,
-			'projectile'
-		);
-		owner.engine.actorManager.addActor(bullet, shooterFaceCenterX, shooterFaceCenterY);
+		owner.engine.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
 		this.ready = false;
 		this.reloadTime = 500;
 	}

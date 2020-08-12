@@ -5,7 +5,6 @@ import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import {Quadrant} from '../physics/Grid';
 // eslint-disable-next-line no-unused-vars
-import Ground from '../helpers/Ground';
 import {Sprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Player from './Player';
@@ -16,13 +15,13 @@ export default class Enemy extends Actor {
 	sprite: Sprite;
 	player: Player;
 
-	constructor(ground: Ground, texture: PIXI.Texture, engine: Engine, quadrant: Quadrant) {
+	constructor(engine: Engine) {
 		const kind = 'enemy';
 		super(engine, kind);
 
 		this.player = this.engine.actorManager.actors.player1 as Player;
 		this.zIndex = 1;
-		this.sprite = new Sprite(texture);
+		this.sprite = new Sprite(this.engine.loader.resources.enemy.texture);
 		this.sprite.anchor.x = 0.5;
 		this.sprite.anchor.y = 0.5;
 		this.addChild(this.sprite);
