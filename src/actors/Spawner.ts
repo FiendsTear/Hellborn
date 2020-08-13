@@ -2,18 +2,12 @@
 import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
-// eslint-disable-next-line no-unused-vars
-import {Quadrant} from '../physics/Grid';
-import Enemy from './Enemy';
-// eslint-disable-next-line no-unused-vars
-import Ground from '../helpers/Ground';
 
 export default class Spawner extends Actor {
 	spawnCooldown: number;
 
 	constructor(engine: Engine) {
-		const kind = 'spawner';
-		super(engine, kind);
+		super(engine, 'spawner');
 
 		this.spawnCooldown = 0;
 		this.act = this.act.bind(this);

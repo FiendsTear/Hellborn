@@ -3,8 +3,6 @@ import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
-import {Quadrant} from '../physics/Grid';
-// eslint-disable-next-line no-unused-vars
 import {Sprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Player from './Player';
@@ -16,8 +14,7 @@ export default class Enemy extends Actor {
 	player: Player;
 
 	constructor(engine: Engine) {
-		const kind = 'enemy';
-		super(engine, kind);
+		super(engine, 'enemy');
 
 		this.player = this.engine.actorManager.actors.player1 as Player;
 		this.zIndex = 1;

@@ -21,10 +21,8 @@ interface Mouse {
 export default class Input {
 	keys: Keys;
 	mouse: Mouse;
-	engine: Engine;
 
-	constructor(engine: Engine) {
-		this.engine = engine;
+	constructor(private engine: Engine) {
 		this.mouse = {
 			x: 500,
 			y: 500,

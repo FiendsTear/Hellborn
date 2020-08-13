@@ -1,6 +1,6 @@
-import Projectile from '../Projectile';
 // eslint-disable-next-line no-unused-vars
 import Player from '.';
+import Engine from '../../Engine';
 
 export class Weapon {
 	sound: AudioBuffer;
@@ -11,14 +11,13 @@ export class Weapon {
 	projectileLifespan: number;
 	damage: number;
 	reloadTime: number;
-	owner: Player;
 	swinging: boolean;
 
-	constructor(owner: Player) {
-		this.owner = owner;
+	constructor(public owner: Player, public engine: Engine) {
 
 		this.projectileSpeed = 25;
 		this.projectileLifespan = 400;
+		this.projectileTexture = this.engine.loader.resources.bullet.texture;
 		this.damage = 80;
 		this.ready = true;
 		this.reloadTime = 0;
@@ -31,7 +30,7 @@ export class Weapon {
 		request.onload = () => {
 			const audioData = request.response;
 
-			this.owner.engine.audioCtx.decodeAudioData(audioData, (buffer) => {
+			this.engine.audioCtx.decodeAudioData(audioData, (buffer) => {
 				this.sound = buffer;
 			},
 			function(){ console.log('Error with decoding audio data'); });
@@ -41,7 +40,7 @@ export class Weapon {
 	}
 
 	shoot() {
-		const audioCtx = this.owner.engine.audioCtx;
+		const audioCtx = this.engine.audioCtx;
 
 		const gainNode = audioCtx.createGain();
 		gainNode.gain.value = 0.4;
@@ -58,14 +57,14 @@ export class Weapon {
 		const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
 		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
-		owner.engine.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
+		this.engine.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
 		this.ready = false;
 		this.reloadTime = 500;
 	}
 
 	update() {
 		if (this.reloadTime >= 0) {
-			this.reloadTime = this.reloadTime - this.owner.engine.ticker.elapsedMS;
+			this.reloadTime = this.reloadTime - this.engine.ticker.elapsedMS;
 		}
 		else {
 			this.ready = true;

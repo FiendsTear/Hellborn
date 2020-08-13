@@ -27,7 +27,7 @@ export default class Grid {
 	quadrants: Quadrant[][];
 	horizontalCount: number;
 	verticalCount: number;
-	constructor(ground: PIXI.Container, engine: Engine) {
+	constructor( ground: PIXI.Container, engine: Engine) {
 		this.id = 'grid';
 		this.quadrants = new Array<Array<Quadrant>>();
 		this.horizontalCount = 10;
@@ -50,7 +50,6 @@ export default class Grid {
 				};
 			}
 		}
-		engine.addGrid(this);
 	}
 
 	getQuadrantByCoords(x: number, y: number) {

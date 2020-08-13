@@ -10,11 +10,9 @@ export default class HUD extends Container {
 	currencyAmountText: Text;
 	finish: Text;
 	player: Player;
-	engine: Engine;
 
-	constructor(engine: Engine) {
+	constructor(private engine: Engine) {
 		super();
-		this.engine = engine;
 		this.player = this.engine.actorManager.actors.player1 as Player;
 
 		this.zIndex = 10;

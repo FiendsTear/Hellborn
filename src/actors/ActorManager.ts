@@ -13,7 +13,6 @@ export interface Actors {
 }
 
 export default class ActorManager {
-	engine: Engine;
 	actors: Actors;
 	enemiesCount: number;
 	enemiesAlive: number;
@@ -21,8 +20,7 @@ export default class ActorManager {
 	projectilesCount: number;
 	spawnerCount: number;
 	
-	constructor(engine: Engine) {
-		this.engine = engine;
+	constructor(private engine: Engine) {
 		this.actors = {};
 		this.enemiesCount = 0;
 		this.enemiesAlive = 0;
@@ -46,7 +44,7 @@ export default class ActorManager {
 			actor.id = kind + this.playersCount;
 			break;
 		case 'projectile':
-			actor = new Projectile(spawner as Weapon, directon, (spawner as Weapon).owner, 'projectile');
+			actor = new Projectile(spawner as Weapon, directon, (spawner as Weapon).owner);
 			this.projectilesCount = this.projectilesCount + 1;
 			actor.id = kind + this.projectilesCount;
 			break;

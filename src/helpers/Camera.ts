@@ -9,11 +9,9 @@ import Player from '../actors/Player';
 export default class Camera extends Container {
 	hud: HUD;
 	screen: any;
-	engine: Engine;
 
-	constructor(engine: Engine) {
+	constructor(private engine: Engine) {
 		super();
-		this.engine = engine;
 		this.interactive = true;
 		this.cursor = 'hover';
 	}

@@ -1,6 +1,6 @@
-import * as PIXI from 'pixi.js';
+import {Container, Sprite} from 'pixi.js';
 
-export default class Ground extends PIXI.Container {
+export default class Ground extends Container {
 	fixedWidth: number;
 	fixedHeight: number;
 	constructor() {
@@ -10,7 +10,7 @@ export default class Ground extends PIXI.Container {
 		this.fixedHeight = 2000;
 		this.zIndex = 1;
 
-		const groundSprite = PIXI.Sprite.from('ground');
+		const groundSprite = Sprite.from('ground');
 		this.addChild(groundSprite);
 	}
 }

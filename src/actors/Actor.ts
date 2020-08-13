@@ -17,7 +17,6 @@ interface Status {
 
 export default abstract class Actor extends Container {
 	id: string;
-	kind: string;
 	status: Status;
 	destination: PIXI.Point;
 
@@ -25,12 +24,10 @@ export default abstract class Actor extends Container {
 	hitBoxRadius: number;
 	strength: number;
 
-	engine: Engine;
-
 	isObstacle: boolean;
 	movable: boolean;
 
-	constructor(engine: Engine, kind: string) {
+	constructor(protected engine: Engine, public kind: string) {
 		super();
 		
 		/**
@@ -46,7 +43,6 @@ export default abstract class Actor extends Container {
 		 * (More info here: https://dev.to/satansdeer/typescript-constructor-shorthand-3ibd )
 		 * 
 		 */
-		this.engine = engine;
 		this.status = {
 			alive: true, 
 			moving: false, 
@@ -55,7 +51,7 @@ export default abstract class Actor extends Container {
 			health: this.maxHealth,
 			quadrants: [],
 			speed: 0};
-		this.kind = kind;
+
 		this.destination = new Point();
 
 		this.move = this.move.bind(this);
@@ -65,6 +61,7 @@ export default abstract class Actor extends Container {
 	move() {
 		this.x = this.destination.x;
 		this.y = this.destination.y;
+		this.engine.grid.calculateNewQuadrants(this);
 	}
 
 	/**
@@ -88,7 +85,6 @@ export default abstract class Actor extends Container {
 		}
 		this.destination.x = x;
 		this.destination.y = y;
-		this.engine.grid.calculateNewQuadrants(this);
 	}
 
 	reduceHealth(damage: number) {

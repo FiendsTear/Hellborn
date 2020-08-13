@@ -1,6 +1,5 @@
 import * as PIXI from 'pixi.js';
 
-import Spawner from './actors/Spawner';
 import Ground from './helpers/Ground';
 import Player from './actors/Player';
 // eslint-disable-next-line no-unused-vars
@@ -35,6 +34,12 @@ export default class Engine extends PIXI.Application {
 		this.gameStarted = false;
 
 		this.actorManager = new ActorManager(this);
+		this.audioCtx = new AudioContext();
+		this.input = new Input(this);
+		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';
+
+		document.addEventListener('keydown', this.input.handleKeyDown);
+		document.addEventListener('keyup', this.input.handleKeyUp);
 
 		this.play = this.play.bind(this);
 	}
@@ -52,14 +57,6 @@ export default class Engine extends PIXI.Application {
 	}
 
 	initialize() {
-		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';
-
-		this.audioCtx = new AudioContext();
-
-		this.input = new Input(this);
-		document.addEventListener('keydown', this.input.handleKeyDown);
-		document.addEventListener('keyup', this.input.handleKeyUp);
-
 		this.menu = new Menu(this);
 		this.menu.show();
 
@@ -83,10 +80,9 @@ export default class Engine extends PIXI.Application {
 			this.camera.addChild(ground);
 
 			// initialize grid for collisions
-			new Grid(ground, this);
+			const grid = new Grid(ground, this);
+			this.grid = grid;
 
-			const playerQuadrant: Quadrant = this.grid.quadrants[4][5];
-			const player = new Player(this);
 			this.actorManager.addActor('player', 500, 500);
 
 			const hud = new HUD(this);
@@ -109,10 +105,6 @@ export default class Engine extends PIXI.Application {
 			console.log(this);
 			this.play();
 		}
-	}
-
-	addGrid(grid: Grid) {
-		this.grid = grid;
 	}
 	
 	play() {

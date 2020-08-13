@@ -3,8 +3,6 @@ import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../../Engine';
 // eslint-disable-next-line no-unused-vars
-import { Quadrant } from '../../physics/Grid';
-// eslint-disable-next-line no-unused-vars
 import {AnimatedSprite} from 'pixi.js';
 import { Weapon } from './Weapon';
 // eslint-disable-next-line no-unused-vars
@@ -20,8 +18,7 @@ export default class Player extends Actor {
 	weapons: Weapon[];
 
 	constructor(engine: Engine) {
-		const kind = 'player';
-		super(engine, kind);
+		super(engine, 'player');
 
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
@@ -54,7 +51,7 @@ export default class Player extends Actor {
 		this.currencyAmount = 0;
 
 		this.weapons = [];
-		this.weapons[0] = new Weapon(this);
+		this.weapons[0] = new Weapon(this, this.engine);
 		this.equippedWeapon = this.weapons[0];
 
 		this.strength = 90;

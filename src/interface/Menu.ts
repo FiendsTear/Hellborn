@@ -6,12 +6,10 @@ import Engine from '../Engine';
 export default class Menu extends Container {
 	newGame: Container;
 	resume: Container;
-	engine: Engine;
 	graphics: Graphics;
 
-	constructor(engine: Engine) {
+	constructor(private engine: Engine) {
 		super();	
-		this.engine = engine;
 		this.interactive = true;
 		this.newGame = new Container();
 		this.newGame.addChild(new Text('New game', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
