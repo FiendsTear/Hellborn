@@ -14,7 +14,7 @@ export default class Menu extends Container {
 		this.newGame = new Container();
 		this.newGame.addChild(new Text('New game', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
 		this.newGame.interactive = true;
-		this.newGame.on('click', this.engine.startGame.bind(this.engine));
+		this.newGame.on('click', this.engine.missionManager.startMission.bind(this.engine.missionManager));
 		this.resume = new Container();
 		// this.resume.addChild(this.graphics);
 		this.resume.addChild(new Text('Resume', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
@@ -25,7 +25,7 @@ export default class Menu extends Container {
 	}
 
 	show() {
-		if (this.engine.gameStarted) {
+		if (this.engine.missionManager.missionStarted) {
 			this.addChild(this.resume);
 		}
 		else {
@@ -37,7 +37,7 @@ export default class Menu extends Container {
 	}
 
 	hide() {
-		if (this.engine.gameStarted) {
+		if (this.engine.missionManager.missionStarted) {
 			this.removeChild(this.resume);
 		}
 		else {

@@ -66,8 +66,8 @@ export default class Input {
 	}
 
 	handleMouseMove(event: InteractionEvent) {
-		this.mouse.x = event.data.getLocalPosition(this.engine.camera).x;
-		this.mouse.y = event.data.getLocalPosition(this.engine.camera).y;
+		this.mouse.x = event.data.getLocalPosition(this.engine.missionManager.camera).x;
+		this.mouse.y = event.data.getLocalPosition(this.engine.missionManager.camera).y;
 	}
 	
 	handleMouseOut() {

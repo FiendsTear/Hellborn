@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import Player from '../actors/Player';
+import Player from '../ActorManager/Player';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
 import {Graphics, Text, Container} from 'pixi.js';

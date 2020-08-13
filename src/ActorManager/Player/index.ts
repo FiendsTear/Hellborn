@@ -5,6 +5,7 @@ import Engine from '../../Engine';
 // eslint-disable-next-line no-unused-vars
 import {AnimatedSprite} from 'pixi.js';
 import { Weapon } from './Weapon';
+import HUD from '../../Interface/HUD';
 // eslint-disable-next-line no-unused-vars
 
 export default class Player extends Actor {
@@ -16,6 +17,7 @@ export default class Player extends Actor {
 	body: AnimatedSprite;
 	equippedWeapon: Weapon;
 	weapons: Weapon[];
+	hud: HUD;
 
 	constructor(engine: Engine) {
 		super(engine, 'player');
@@ -81,11 +83,11 @@ export default class Player extends Actor {
 		if (keys.space && this.currentStamina > 0) {
 			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
-			this.engine.hud.updateStaminaBar();
+			this.hud.updateStaminaBar();
 		}
 		if (this.currentStamina < this.maxStamina) {
 			this.currentStamina = this.currentStamina + 0.1;
-			this.engine.hud.updateStaminaBar();
+			this.hud.updateStaminaBar();
 		}
 		this.status.moving = false;
 		if (keys.w) {
@@ -148,20 +150,20 @@ export default class Player extends Actor {
 	}
 
 	controlSight() {
-		const actorRelativeToCameraX = this.x + this.engine.ground.x;
-		const actorRelativeToCameraY = this.y + this.engine.ground.y;
+		const actorRelativeToCameraX = this.x + this.engine.missionManager.ground.x;
+		const actorRelativeToCameraY = this.y + this.engine.missionManager.ground.y;
 		const angle = Math.atan2(this.engine.input.mouse.y - actorRelativeToCameraY, this.engine.input.mouse.x - actorRelativeToCameraX);
 		this.body.rotation = angle;
 	}
 
 	reduceHealth(damage: number) {
 		this.status.health = this.status.health - damage;
-		this.engine.hud.updateHealthBar();
+		this.hud.updateHealthBar();
 	}
 
 	changeCurrencyAmount(amount: number) {
 		this.currencyAmount = this.currencyAmount + amount;
-		this.engine.hud.updateCurrencyAmount();
+		this.hud.updateCurrencyAmount();
 	}
 
 }

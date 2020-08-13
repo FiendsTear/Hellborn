@@ -1,15 +1,11 @@
 import * as PIXI from 'pixi.js';
 
-import Ground from './managers/Ground';
-import {Collision} from './managers/Collision';
-import Player from './actors/Player';
-import ActorManager from './managers/ActorManager';
-import Menu from './managers/Menu';
-// eslint-disable-next-line no-unused-vars
-import Camera from './managers/Camera';
-import HUD from './managers/HUD';
-import Input from './managers/Input';
-import MissionManager from './managers/MissionManager';
+import {Collision} from './Physics/Collision';
+import Player from './ActorManager/Player';
+import ActorManager from './ActorManager';
+import Menu from './Interface/Menu';
+import Input from './Input';
+import MissionManager from './MissionManager';
 
 export default class Engine extends PIXI.Application {
 	audioCtx: AudioContext;
@@ -17,11 +13,7 @@ export default class Engine extends PIXI.Application {
 	missionManager: MissionManager;
 	paused: boolean;
 	menu: Menu;
-	camera: Camera;
-	hud: HUD;
-	ground: Ground;
 	input: Input;
-	gameStarted: boolean;
 
 	constructor() {
 		super({
@@ -31,12 +23,13 @@ export default class Engine extends PIXI.Application {
 			resizeTo: window
 		});
 		this.paused = true;
-		this.gameStarted = false;
 
 		this.actorManager = new ActorManager(this);
 		this.missionManager = new MissionManager(this);
 		this.audioCtx = new AudioContext();
 		this.input = new Input(this);
+		this.menu = new Menu(this);
+
 		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';
 
 		document.addEventListener('keydown', this.input.handleKeyDown);
@@ -57,44 +50,9 @@ export default class Engine extends PIXI.Application {
 			.add('sight', 'assets/sprites/sight.png');
 	}
 
-	initialize() {
-		this.menu = new Menu(this);
+	launchGame() {
 		this.menu.show();
-
 		this.ticker.add(() => this.loop());
-	}
-
-	startGame() {
-		this.loadResources().load(() =>  {
-			// set up camera, ground, hud
-			this.camera = new Camera(this);
-			this.camera.on('mousemove', this.input.handleMouseMove);
-			this.camera.on('mouseout', this.input.handleMouseOut);
-			this.camera.on('mousedown', this.input.handleMouseDown);
-			this.camera.on('mouseup', this.input.handleMouseUp);
-			window.onresize = this.camera.centerOnPlayer.bind(this.camera);
-			this.stage.addChild(this.camera);
-
-			const resources = this.loader.resources;
-			const ground = new Ground();
-			this.ground = ground;
-			this.camera.addChild(ground);
-
-			this.actorManager.addActor('player', 500, 500);
-
-			const hud = new HUD(this);
-			this.hud = hud;
-			this.camera.addChild(hud);
-			// initialize player and enemy
-
-			this.actorManager.addActor('spawner', 100, 300);
-			this.actorManager.addActor('spawner', 500, 900);
-			this.actorManager.addActor('spawner', 700, 500);
-
-			// all set, go
-			this.gameStarted = true;
-			this.switchPause();
-		});
 	}
 
 	loop(): void{
@@ -106,9 +64,9 @@ export default class Engine extends PIXI.Application {
 	
 	play() {
 		this.actorManager.prepareActors();
-		Collision.checkCollisions(this.actorManager.actors, this.ground);
+		Collision.checkCollisions(this.actorManager.actors, this.missionManager.ground);
 		this.actorManager.updateActors();
-		this.camera.centerOnPlayer(this.actorManager.actors.player1 as Player);
+		this.missionManager.camera.centerOnPlayer(this.actorManager.actors.player1 as Player);
 	}
 
 	switchPause() {

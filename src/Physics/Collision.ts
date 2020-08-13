@@ -1,6 +1,6 @@
-import Actor from '../actors/Actor';
-import {Actors} from './ActorManager';
-import Ground, {Quadrant}  from './Ground';
+import Actor from '../ActorManager/Actor';
+import {Actors} from '../ActorManager';
+import Ground, {Quadrant}  from '../MissionManager/Ground';
 
 export interface Pair {
 	firstActor: Actor;

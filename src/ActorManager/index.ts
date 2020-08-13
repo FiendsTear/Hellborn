@@ -1,12 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
-import Actor from '../actors/Actor';
-import Enemy from '../actors/Enemy';
-import Projectile from '../actors/Projectile';
-import Player from '../actors/Player';
-import Spawner from '../actors/Spawner';
-import { Weapon } from '../actors/Player/Weapon';
+import Actor from './Actor';
+import Enemy from './Enemy';
+import Projectile from './Projectile';
+import Player from './Player';
+import Spawner from './Spawner';
+import { Weapon } from './Player/Weapon';
 
 export interface Actors {
 	[id: string]: Actor;
@@ -19,6 +19,7 @@ export default class ActorManager {
 	playersCount: number;
 	projectilesCount: number;
 	spawnerCount: number;
+	player: Player;
 	
 	constructor(private engine: Engine) {
 		this.actors = {};
@@ -40,6 +41,7 @@ export default class ActorManager {
 			break;
 		case 'player':
 			actor = new Player(this.engine);
+			this.player = actor;
 			this.playersCount = this.playersCount + 1;
 			actor.id = kind + this.playersCount;
 			break;
@@ -61,19 +63,19 @@ export default class ActorManager {
 		actor.destination.x = x;
 		actor.destination.y = y;
 
-		const quadrant = this.engine.ground.getQuadrantByCoords(x, y);
+		const quadrant = this.engine.missionManager.ground.getQuadrantByCoords(x, y);
 		actor.status.quadrants.push(quadrant);
 
 		const quadrantToAddActorTo = actor.status.quadrants[0];
-		this.engine.ground.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
-		this.engine.ground.addChild(actor);
+		this.engine.missionManager.ground.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
+		this.engine.missionManager.ground.addChild(actor);
 	}
 
 	removeActor(actor: Actor) {
 		if (actor.kind === 'enemy') {
 			this.enemiesAlive = this.enemiesAlive - 1;
 		}
-		this.engine.ground.removeChild(actor);
+		this.engine.missionManager.ground.removeChild(actor);
 		for (let i = 0, quadrantCount = actor.status.quadrants.length; i < quadrantCount; i++) {
 			const quadrant = actor.status.quadrants[i];
 			quadrant.activeActors.splice(quadrant.activeActors.indexOf(actor.id), 1);

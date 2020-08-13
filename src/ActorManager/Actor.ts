@@ -3,7 +3,7 @@ import { Point, Container } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
-import { Quadrant } from '../managers/Ground';
+import { Quadrant } from '../MissionManager/Ground';
 
 interface Status {
 	moving: boolean;
@@ -48,7 +48,7 @@ export default abstract class Actor extends Container {
 	move() {
 		this.x = this.destination.x;
 		this.y = this.destination.y;
-		this.engine.ground.calculateNewQuadrants(this);
+		this.engine.missionManager.ground.calculateNewQuadrants(this);
 	}
 
 	calculateDestination(direction: number) {
@@ -57,14 +57,14 @@ export default abstract class Actor extends Container {
 		if (x - this.hitBoxRadius <= 0) {
 			x = this.hitBoxRadius;
 		}
-		if (x + this.hitBoxRadius >= this.engine.ground.fixedWidth) {
-			x = this.engine.ground.fixedWidth - this.hitBoxRadius;
+		if (x + this.hitBoxRadius >= this.engine.missionManager.ground.fixedWidth) {
+			x = this.engine.missionManager.ground.fixedWidth - this.hitBoxRadius;
 		}
 		if (y - this.hitBoxRadius <= 0) {
 			y = this.hitBoxRadius;
 		}
-		if (y + this.hitBoxRadius >= this.engine.ground.fixedHeight) {
-			y = this.engine.ground.fixedHeight - this.hitBoxRadius;
+		if (y + this.hitBoxRadius >= this.engine.missionManager.ground.fixedHeight) {
+			y = this.engine.missionManager.ground.fixedHeight - this.hitBoxRadius;
 		}
 		this.destination.x = x;
 		this.destination.y = y;

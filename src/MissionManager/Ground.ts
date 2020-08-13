@@ -1,9 +1,5 @@
 import {Container, Sprite} from 'pixi.js';
-// eslint-disable-next-line no-unused-vars
-import { Actors } from './ActorManager';
-// eslint-disable-next-line no-unused-vars
-import Actor from '../actors/Actor';
-import {Collision, Pair} from './Collision';
+import Actor from '../ActorManager/Actor';
 
 export interface Quadrant {
 	xIndex: number;
@@ -36,8 +32,8 @@ export default class Ground extends Container {
 		this.horizontalCount = 10;
 		this.verticalCount = 10;
 
-		const quadrantWidth = this.width/this.horizontalCount;
-		const quadrantHeight = this.height/this.verticalCount;
+		const quadrantWidth = this.fixedWidth/this.horizontalCount;
+		const quadrantHeight = this.fixedHeight/this.verticalCount;
 		for (let i = 0; i < this.horizontalCount; i++) {
 			this.quadrants[i] = [];
 			const currentX = i * quadrantWidth;
@@ -72,7 +68,6 @@ export default class Ground extends Container {
 					quadrantFound = true;
 					quadrant = xDimension[j];
 				}
-					
 			}
 		}
 		return quadrant;
