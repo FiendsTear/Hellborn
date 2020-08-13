@@ -30,7 +30,7 @@ export default class HUD extends Container {
 		this.currencyAmountText.y = this.engine.screen.height - 100;
 		this.addChild(this.currencyAmountText);
 
-		this.finish = new Text('Level Finished', {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
+		this.finish = new Text('MISSION COMPLETE', {fontFamily : 'Arial', fontSize: 40, fill : 0xff1010, align : 'center'});
 		this.finish.x = this.engine.screen.width/2 - 50;
 		this.finish.y = this.engine.screen.height/2 - 50;
 

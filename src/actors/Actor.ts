@@ -30,19 +30,6 @@ export default abstract class Actor extends Container {
 	constructor(protected engine: Engine, public kind: string) {
 		super();
 		
-		/**
-		 * Whenever you assign private fields to arguments passed to the constructor
-		 * you can remove the field declaration and write your constructor like this:
-		 * 
-		 * constructor(private engine: Engine, private kind: string, private quadrant: Quadrant, private engine.ground: engine.ground) {
-		 * 
-		 * }
-		 * 
-		 * In this example I used private, but you can use any access modifier you want (private, protected, public)
-		 * 
-		 * (More info here: https://dev.to/satansdeer/typescript-constructor-shorthand-3ibd )
-		 * 
-		 */
 		this.status = {
 			alive: true, 
 			moving: false, 
@@ -64,10 +51,6 @@ export default abstract class Actor extends Container {
 		this.engine.ground.calculateNewQuadrants(this);
 	}
 
-	/**
-	 * I'd make it clearer here that calculateDestination does indeed make changes to the engine
-	 * (due to the engine.prepareToMoveActor call). In fact it's not super clear what this does.
-	 */
 	calculateDestination(direction: number) {
 		let x = this.x + this.status.speed * Math.cos(direction);
 		let y = this.y + this.status.speed * Math.sin(direction);

@@ -79,6 +79,9 @@ export default class ActorManager {
 			quadrant.activeActors.splice(quadrant.activeActors.indexOf(actor.id), 1);
 		}
 		delete this.actors[actor.id];
+		if (this.enemiesCount === this.engine.missionManager.killCountGoal && this.enemiesAlive === 0) {
+			this.engine.missionManager.finishMission();
+		}
 	}
 
 	prepareActors() {

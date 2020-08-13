@@ -9,10 +9,12 @@ import Menu from './managers/Menu';
 import Camera from './managers/Camera';
 import HUD from './managers/HUD';
 import Input from './managers/Input';
+import MissionManager from './managers/MissionManager';
 
 export default class Engine extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
+	missionManager: MissionManager;
 	paused: boolean;
 	menu: Menu;
 	camera: Camera;
@@ -32,6 +34,7 @@ export default class Engine extends PIXI.Application {
 		this.gameStarted = false;
 
 		this.actorManager = new ActorManager(this);
+		this.missionManager = new MissionManager(this);
 		this.audioCtx = new AudioContext();
 		this.input = new Input(this);
 		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';
@@ -115,13 +118,6 @@ export default class Engine extends PIXI.Application {
 		}
 		else {
 			this.menu.hide();
-		}
-	}
-
-	checkLevelFinish() {
-		if (this.actorManager.enemiesCount === 10 && this.actorManager.enemiesAlive === 0) {
-			this.hud.drawFinish();
-			this.switchPause();
 		}
 	}
 }
