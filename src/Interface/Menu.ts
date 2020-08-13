@@ -4,32 +4,35 @@ import {Container, Text, Graphics} from 'pixi.js';
 import Engine from '../Engine';
 
 export default class Menu extends Container {
-	newGame: Container;
-	resume: Container;
+	startMission: Container;
+	resumeMission: Container;
 	graphics: Graphics;
+	startMissionText: Text;
 
 	constructor(private engine: Engine) {
 		super();	
 		this.interactive = true;
-		this.newGame = new Container();
-		this.newGame.addChild(new Text('New game', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
-		this.newGame.interactive = true;
-		this.newGame.on('click', this.engine.missionManager.startMission.bind(this.engine.missionManager));
-		this.resume = new Container();
+
+		this.startMission = new Container();
+		this.startMissionText = new Text('New game', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'})
+		this.startMission.addChild(this.startMissionText);
+		this.startMission.interactive = true;
+		this.startMission.on('click', this.engine.missionManager.startMission.bind(this.engine.missionManager));
+		this.addChild(this.startMission);
+		
+		this.resumeMission = new Container();
 		// this.resume.addChild(this.graphics);
-		this.resume.addChild(new Text('Resume', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
-		this.resume.interactive = true;
-		this.resume.on('click', this.engine.switchPause.bind(this.engine));
+		this.resumeMission.addChild(new Text('Resume', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
+		this.resumeMission.interactive = true;
+		this.resumeMission.on('click', this.engine.switchPause.bind(this.engine));
+
 		this.show = this.show.bind(this);
 		this.hide = this.hide.bind(this);
 	}
 
 	show() {
 		if (this.engine.missionManager.missionStarted) {
-			this.addChild(this.resume);
-		}
-		else {
-			this.addChild(this.newGame);
+			this.addChild(this.resumeMission);
 		}
 		this.x = this.engine.screen.width/2 - this.width/2;
 		this.y = this.engine.screen.height/2 - this.height/2;
@@ -38,12 +41,8 @@ export default class Menu extends Container {
 
 	hide() {
 		if (this.engine.missionManager.missionStarted) {
-			this.removeChild(this.resume);
+			this.removeChild(this.resumeMission);
 		}
-		else {
-			this.removeChild(this.newGame);
-		}
-		this.removeChild(this.newGame);
 		this.engine.stage.removeChild(this);
 	}
 }

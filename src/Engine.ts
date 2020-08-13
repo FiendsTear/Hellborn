@@ -24,10 +24,10 @@ export default class Engine extends PIXI.Application {
 		});
 		this.paused = true;
 
+		this.input = new Input(this);
 		this.actorManager = new ActorManager(this);
 		this.missionManager = new MissionManager(this);
 		this.audioCtx = new AudioContext();
-		this.input = new Input(this);
 		this.menu = new Menu(this);
 
 		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';

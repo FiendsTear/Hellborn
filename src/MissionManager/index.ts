@@ -12,26 +12,37 @@ export default class MissionManager {
 	camera: Camera;
 
 	constructor(private engine: Engine) {
-		this.killCountGoal = 10;
+		this.killCountGoal = 3;
+
+		this.camera = new Camera(this.engine);
+		this.camera.on('mousemove', this.engine.input.handleMouseMove);
+		this.camera.on('mouseout', this.engine.input.handleMouseOut);
+		this.camera.on('mousedown', this.engine.input.handleMouseDown);
+		this.camera.on('mouseup', this.engine.input.handleMouseUp);
+		window.onresize = this.camera.centerOnPlayer.bind(this.camera);
+		this.engine.stage.addChild(this.camera);
+
+		this.ground = {} as Ground;
 		this.startMission = this.startMission.bind(this);
 		this.finishMission = this.finishMission.bind(this);
 	}
 
 	startMission() {
+		this.camera.children.forEach(element => {
+			if (element === this.ground) {
+				this.camera.removeChild(element);
+				element.destroy();
+			}
+		});
 		this.engine.loadResources().load(() =>  {
 			// set up camera, ground, hud
-			this.camera = new Camera(this.engine);
-			this.camera.on('mousemove', this.engine.input.handleMouseMove);
-			this.camera.on('mouseout', this.engine.input.handleMouseOut);
-			this.camera.on('mousedown', this.engine.input.handleMouseDown);
-			this.camera.on('mouseup', this.engine.input.handleMouseUp);
-			window.onresize = this.camera.centerOnPlayer.bind(this.camera);
-			this.engine.stage.addChild(this.camera);
 
 			const resources = this.engine.loader.resources;
 			const ground = new Ground();
 			this.ground = ground;
+			// console.log(this.camera.getChildIndex(this.ground));
 			this.camera.addChild(ground);
+			console.log(this.camera.getChildIndex(this.ground));
 
 			this.engine.actorManager.addActor('player', 500, 500);
 
@@ -53,6 +64,8 @@ export default class MissionManager {
 
 	finishMission() {
 		this.hud.drawFinish();
+		this.engine.menu.startMissionText.text = 'Next mission';
+		this.engine.menu.startMission.y = 100;
 		this.engine.switchPause();
 	}
 }

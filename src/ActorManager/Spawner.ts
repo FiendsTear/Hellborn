@@ -20,7 +20,7 @@ export default class Spawner extends Actor {
 	}
 
 	act(): void {
-		if (this.spawnCooldown <= 0 && this.engine.actorManager.enemiesCount < 10 ) {
+		if (this.spawnCooldown <= 0 && this.engine.actorManager.enemiesCount < this.engine.missionManager.killCountGoal ) {
 			this.engine.actorManager.addActor('enemy', this.x, this.y);
 			this.spawnCooldown = 4000;
 		}

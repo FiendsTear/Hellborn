@@ -13,7 +13,7 @@ export default class Camera extends Container {
 	constructor(private engine: Engine) {
 		super();
 		this.interactive = true;
-		this.cursor = 'hover';
+		this.cursor = 'sight';
 	}
 
 	centerOnPlayer(player: Player) {
