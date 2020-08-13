@@ -1,22 +1,20 @@
 import * as PIXI from 'pixi.js';
 
-import Ground from './helpers/Ground';
+import Ground from './managers/Ground';
+import {Collision} from './managers/Collision';
 import Player from './actors/Player';
+import ActorManager from './managers/ActorManager';
+import Menu from './managers/Menu';
 // eslint-disable-next-line no-unused-vars
-import Grid, { Quadrant } from './physics/Grid';
-import ActorManager from './actors/ActorManager';
-import Menu from './interface/Menu';
-// eslint-disable-next-line no-unused-vars
-import Camera from './helpers/Camera';
-import HUD from './interface/HUD';
-import Input from './helpers/Input';
+import Camera from './managers/Camera';
+import HUD from './managers/HUD';
+import Input from './managers/Input';
 
 export default class Engine extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
 	paused: boolean;
 	menu: Menu;
-	grid: Grid;
 	camera: Camera;
 	hud: HUD;
 	ground: Ground;
@@ -79,10 +77,6 @@ export default class Engine extends PIXI.Application {
 			this.ground = ground;
 			this.camera.addChild(ground);
 
-			// initialize grid for collisions
-			const grid = new Grid(ground, this);
-			this.grid = grid;
-
 			this.actorManager.addActor('player', 500, 500);
 
 			const hud = new HUD(this);
@@ -109,7 +103,7 @@ export default class Engine extends PIXI.Application {
 	
 	play() {
 		this.actorManager.prepareActors();
-		this.grid.checkCollisions(this.actorManager.actors);
+		Collision.checkCollisions(this.actorManager.actors, this.ground);
 		this.actorManager.updateActors();
 		this.camera.centerOnPlayer(this.actorManager.actors.player1 as Player);
 	}

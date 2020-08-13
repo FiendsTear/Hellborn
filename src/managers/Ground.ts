@@ -1,10 +1,9 @@
+import {Container, Sprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
-import Engine from '../Engine';
-// eslint-disable-next-line no-unused-vars
-import { Actors } from '../actors/ActorManager';
+import { Actors } from './ActorManager';
 // eslint-disable-next-line no-unused-vars
 import Actor from '../actors/Actor';
-import Collision from './Collision';
+import {Collision, Pair} from './Collision';
 
 export interface Quadrant {
 	xIndex: number;
@@ -16,24 +15,29 @@ export interface Quadrant {
 	activeActors: string[];
 }
 
-export interface Pair {
-	firstActor: Actor;
-	secondActor: Actor;
-}
-
-// This class probably belongs in stateManagement and not in Physics.
-export default class Grid {
-	id: string;
+export default class Ground extends Container {
+	fixedWidth: number;
+	fixedHeight: number;
 	quadrants: Quadrant[][];
 	horizontalCount: number;
 	verticalCount: number;
-	constructor( ground: PIXI.Container, engine: Engine) {
-		this.id = 'grid';
+
+	constructor() {
+		super();
+
+		this.fixedWidth = 3500;
+		this.fixedHeight = 2000;
+		this.zIndex = 1;
+
+		const groundSprite = Sprite.from('ground');
+		this.addChild(groundSprite);
+
 		this.quadrants = new Array<Array<Quadrant>>();
 		this.horizontalCount = 10;
 		this.verticalCount = 10;
-		const quadrantWidth = ground.width/this.horizontalCount;
-		const quadrantHeight = ground.height/this.verticalCount;
+
+		const quadrantWidth = this.width/this.horizontalCount;
+		const quadrantHeight = this.height/this.verticalCount;
 		for (let i = 0; i < this.horizontalCount; i++) {
 			this.quadrants[i] = [];
 			const currentX = i * quadrantWidth;
@@ -73,7 +77,7 @@ export default class Grid {
 		}
 		return quadrant;
 	}
-	
+
 	calculateNewQuadrants(actor: Actor) {
 		const actorRightBorder = actor.x + actor.hitBoxRadius;
 		const actorLeftBorder = actor.x - actor.hitBoxRadius;
@@ -175,50 +179,4 @@ export default class Grid {
 		});
 		return quadrantIndexInArray;
 	}
-
-	checkCollisions(actors: Actors) {
-		// set up an array of quadrantIndexes to check
-		const quadrants: Quadrant[] = [];
-		for (const actorID in actors) {
-			const actor = actors[actorID];
-			actor.status.quadrants.forEach((quadrant: Quadrant) => {
-				if (this.checkQuadrantInArray(quadrants, quadrant) == -1) {
-					quadrants.push(quadrant);
-				}
-			});
-		}
-
-		const pairs: Pair[] = [];
-		quadrants.forEach((quadrant) => {
-			if (quadrant.activeActors.length > 1) {
-				for (let i = 0; i < quadrant.activeActors.length; i++) {
-					const firstActorToCheck = actors[quadrant.activeActors[i]];
-					if (firstActorToCheck.status.alive) {
-						for (let j = i + 1; j < quadrant.activeActors.length; j++) {							
-							const secondActorToCheck = actors[quadrant.activeActors[j]];
-							if (secondActorToCheck.status.alive) {
-								const pair = {firstActor: firstActorToCheck, secondActor: secondActorToCheck};
-								if (!this.isPairCheckedForCollision(pairs, pair)) {
-									pairs.push(pair);
-									Collision.check(pair);
-								}
-							}
-						}
-					}
-				}
-			}
-		});
-	}
-
-	isPairCheckedForCollision(pairs: Pair[], pair: Pair) {
-		let isPairChecked = false;
-		const pairIndexInArray = pairs.findIndex((currentPair) => {
-			if ((currentPair.firstActor.id == pair.firstActor.id && currentPair.secondActor.id == pair.secondActor.id) ||
-					(currentPair.firstActor.id == pair.secondActor.id && currentPair.secondActor.id == pair.firstActor.id)) {
-				return true;
-			}
-		});
-		if (pairIndexInArray > -1) isPairChecked = true;
-		return isPairChecked;
-	}
-} 
+}

@@ -3,7 +3,7 @@ import { Point, Container } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
-import { Quadrant } from '../physics/Grid';
+import { Quadrant } from '../managers/Ground';
 
 interface Status {
 	moving: boolean;
@@ -61,7 +61,7 @@ export default abstract class Actor extends Container {
 	move() {
 		this.x = this.destination.x;
 		this.y = this.destination.y;
-		this.engine.grid.calculateNewQuadrants(this);
+		this.engine.ground.calculateNewQuadrants(this);
 	}
 
 	/**

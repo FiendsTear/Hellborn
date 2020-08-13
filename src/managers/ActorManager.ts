@@ -5,8 +5,8 @@ import Actor from '../actors/Actor';
 import Enemy from '../actors/Enemy';
 import Projectile from '../actors/Projectile';
 import Player from '../actors/Player';
-import Spawner from './Spawner';
-import { Weapon } from './Player/Weapon';
+import Spawner from '../actors/Spawner';
+import { Weapon } from '../actors/Player/Weapon';
 
 export interface Actors {
 	[id: string]: Actor;
@@ -61,11 +61,11 @@ export default class ActorManager {
 		actor.destination.x = x;
 		actor.destination.y = y;
 
-		const quadrant = this.engine.grid.getQuadrantByCoords(x, y);
+		const quadrant = this.engine.ground.getQuadrantByCoords(x, y);
 		actor.status.quadrants.push(quadrant);
 
 		const quadrantToAddActorTo = actor.status.quadrants[0];
-		this.engine.grid.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
+		this.engine.ground.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor.id);
 		this.engine.ground.addChild(actor);
 	}
 

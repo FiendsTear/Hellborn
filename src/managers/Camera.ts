@@ -2,7 +2,7 @@ import {Container} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
-import HUD from '../interface/HUD';
+import HUD from './HUD';
 // eslint-disable-next-line no-unused-vars
 import Player from '../actors/Player';
 
