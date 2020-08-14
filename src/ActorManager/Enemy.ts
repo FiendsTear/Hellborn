@@ -18,7 +18,7 @@ export default class Enemy extends Actor {
 
 		this.player = this.engine.actorManager.actors.player1 as Player;
 		this.zIndex = 1;
-		this.sprite = new Sprite(this.engine.loader.resources.enemy.texture);
+		this.sprite = new Sprite(this.engine.resourceManager.resources.enemy.texture);
 		this.sprite.anchor.x = 0.5;
 		this.sprite.anchor.y = 0.5;
 		this.addChild(this.sprite);

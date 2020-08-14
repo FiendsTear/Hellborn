@@ -3,6 +3,7 @@ import Engine from '../Engine';
 import Ground from './Ground';
 import HUD from '../Interface/HUD';
 import Camera from './Camera';
+import {ResourceList} from '../ResourceManager/ResourceList';
 
 export default class MissionManager {
 	killCountGoal: number;
@@ -34,15 +35,22 @@ export default class MissionManager {
 				element.destroy();
 			}
 		});
-		this.engine.loadResources().load(() =>  {
+    const resourcesToLoad = [
+			ResourceList['playerLegs'], 
+			ResourceList['playerBody'], 
+			ResourceList['enemy'], 
+			ResourceList['bullet'],
+			ResourceList['ground'],
+			ResourceList['shot']
+		];
+		const check = this.engine.resourceManager.addResources(resourcesToLoad).load(() =>  {
 			// set up camera, ground, hud
 
-			const resources = this.engine.loader.resources;
+			const resources = this.engine.resourceManager.resources;
+			console.log(resources.shot);
 			const ground = new Ground();
 			this.ground = ground;
-			// console.log(this.camera.getChildIndex(this.ground));
 			this.camera.addChild(ground);
-			console.log(this.camera.getChildIndex(this.ground));
 
 			this.engine.actorManager.addActor('player', 500, 500);
 

@@ -6,11 +6,13 @@ import ActorManager from './ActorManager';
 import Menu from './Interface/Menu';
 import Input from './Input';
 import MissionManager from './MissionManager';
+import ResourceManager from './ResourceManager';
 
 export default class Engine extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
 	missionManager: MissionManager;
+	resourceManager: ResourceManager;
 	paused: boolean;
 	menu: Menu;
 	input: Input;
@@ -27,6 +29,7 @@ export default class Engine extends PIXI.Application {
 		this.input = new Input(this);
 		this.actorManager = new ActorManager(this);
 		this.missionManager = new MissionManager(this);
+		this.resourceManager = new ResourceManager();
 		this.audioCtx = new AudioContext();
 		this.menu = new Menu(this);
 
@@ -36,18 +39,6 @@ export default class Engine extends PIXI.Application {
 		document.addEventListener('keyup', this.input.handleKeyUp);
 
 		this.play = this.play.bind(this);
-	}
-
-	loadResources() {
-		return this.loader
-			.add('playerLegs', 'assets/spritesheets/legs.json')
-			.add('playerBodyRanged', 'assets/sprites/body_ranged.png')
-			.add('enemy', 'assets/sprites/enemy.png')
-			.add('ground', 'assets/sprites/ground.png')
-			.add('wall', 'assets/sprites/wall.png')
-			.add('bullet', 'assets/sprites/bullet.png')
-			.add('spawner', 'assets/sprites/spawner.png')
-			.add('sight', 'assets/sprites/sight.png');
 	}
 
 	launchGame() {

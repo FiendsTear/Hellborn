@@ -25,7 +25,7 @@ export default class Player extends Actor {
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
 
-		const resources = this.engine.loader.resources;
+		const resources = this.engine.resourceManager.resources;
 
 		this.legs = new AnimatedSprite(resources.playerLegs.spritesheet.animations['legs']);
 		this.legs.anchor.x = 0.5;
@@ -33,7 +33,7 @@ export default class Player extends Actor {
 		this.legs.animationSpeed = 0.1;
 		this.addChild(this.legs);
 
-		this.body = new AnimatedSprite([resources.playerBodyRanged.texture]);
+		this.body = new AnimatedSprite([resources.playerBody.texture]);
 		this.body.anchor.x = 0.5;
 		this.body.anchor.y = 0.5;
 		this.body.animationSpeed = 0.2;
