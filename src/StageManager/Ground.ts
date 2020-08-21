@@ -1,5 +1,9 @@
 import {Container, Sprite} from 'pixi.js';
 import Actor from '../ActorManager/Actor';
+import Player from '../ActorManager/Player';
+import Enemy from '../ActorManager/Enemy';
+import Projectile from '../ActorManager/Projectile';
+import Spawner from '../ActorManager/Spawner';
 
 export interface Quadrant {
 	xIndex: number;
@@ -8,7 +12,19 @@ export interface Quadrant {
 	y1: number;
 	x2: number;
 	y2: number;
-	activeActors: string[];
+	activeActors: Actor[];
+}
+
+interface Enemies {
+	[id: string]: Enemy;
+}
+
+interface Projectiles {
+	[id: string]: Projectile;
+}
+
+interface Spawners {
+	[id: string]: Spawner;
 }
 
 export default class Ground extends Container {
@@ -17,6 +33,11 @@ export default class Ground extends Container {
 	quadrants: Quadrant[][];
 	horizontalCount: number;
 	verticalCount: number;
+
+	player: Player;
+	enemies: Enemies;
+	projectiles: Projectiles;
+	spawners: Spawners;
 
 	constructor() {
 		super();
@@ -50,6 +71,11 @@ export default class Ground extends Container {
 				};
 			}
 		}
+
+		this.player = {} as Player;
+		this.enemies = {} as Enemies;
+		this.projectiles = {} as Projectiles;
+		this.spawners = {} as Spawners;
 	}
 
 	getQuadrantByCoords(x: number, y: number) {
@@ -150,8 +176,8 @@ export default class Ground extends Container {
 	}
 
 	addActorToQuadrant(quadrant: Quadrant, actor: Actor) {
-		if (!quadrant.activeActors.includes(actor.id)) {
-			quadrant.activeActors.push(actor.id);
+		if (!quadrant.activeActors.includes(actor)) {
+			quadrant.activeActors.push(actor);
 		}
 		const quadrantIndexInArray = this.checkQuadrantInArray(actor.status.quadrants, quadrant);
 		if (quadrantIndexInArray == -1) {
@@ -161,7 +187,7 @@ export default class Ground extends Container {
 
 	// replace indexof with findIndex
 	removeActorFromQuadrant(quadrant: Quadrant, actor: Actor) {
-		quadrant.activeActors.splice( quadrant.activeActors.indexOf(actor.id), 1);
+		quadrant.activeActors.splice( quadrant.activeActors.indexOf(actor), 1);
 		const quadrantIndexInArray = this.checkQuadrantInArray(actor.status.quadrants, quadrant);
 		actor.status.quadrants.splice(quadrantIndexInArray, 1);
 	}

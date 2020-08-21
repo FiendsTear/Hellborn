@@ -1,6 +1,5 @@
 import Actor from '../ActorManager/Actor';
-import {Actors} from '../ActorManager';
-import Ground, {Quadrant}  from '../MissionManager/Ground';
+import Ground, {Quadrant}  from '../StageManager/Ground';
 
 export interface Pair {
 	firstActor: Actor;
@@ -70,29 +69,29 @@ export class Collision {
 		return isPairChecked;
 	}
 
-	static checkCollisions(actors: Actors, ground: Ground) {
+	static checkCollisions(ground: Ground) {
 		// set up an array of quadrantIndexes to check
-		const quadrants: Quadrant[] = [];
-		for (const actorID in actors) {
-			const actor = actors[actorID];
-			actor.status.quadrants.forEach((quadrant: Quadrant) => {
-				if (ground.checkQuadrantInArray(quadrants, quadrant) == -1) {
-					quadrants.push(quadrant);
+		const quadrantsToCheck: Quadrant[] = [];
+		ground.quadrants.forEach((row) => {
+			row.forEach((quadrant) => {
+				if (quadrant.activeActors.length) {
+					quadrantsToCheck.push(quadrant);
 				}
 			});
-		}
+		});
 
 		const pairs: Pair[] = [];
-		quadrants.forEach((quadrant) => {
+		quadrantsToCheck.forEach((quadrant) => {
 			if (quadrant.activeActors.length > 1) {
 				for (let i = 0; i < quadrant.activeActors.length; i++) {
-					const firstActorToCheck = actors[quadrant.activeActors[i]];
+					const firstActorToCheck = quadrant.activeActors[i];
 					if (firstActorToCheck.status.alive) {
 						for (let j = i + 1; j < quadrant.activeActors.length; j++) {							
-							const secondActorToCheck = actors[quadrant.activeActors[j]];
+							const secondActorToCheck = quadrant.activeActors[j];
 							if (secondActorToCheck.status.alive) {
 								const pair = {firstActor: firstActorToCheck, secondActor: secondActorToCheck};
 								if (!Collision.isPairCheckedForCollision(pairs, pair)) {
+
 									pairs.push(pair);
 									const firstActor = pair.firstActor;
 									const secondActor = pair.secondActor;

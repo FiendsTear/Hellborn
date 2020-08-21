@@ -1,11 +1,12 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
-import Engine from '../../Engine';
-// eslint-disable-next-line no-unused-vars
-import {AnimatedSprite} from 'pixi.js';
+import {AnimatedSprite, IResourceDictionary} from 'pixi.js';
 import { Weapon } from './Weapon';
 import HUD from '../../Interface/HUD';
+import Input from '../../Input';
+import ActorManager from '..';
+import Ground from '../../StageManager/Ground';
 // eslint-disable-next-line no-unused-vars
 
 export default class Player extends Actor {
@@ -19,13 +20,16 @@ export default class Player extends Actor {
 	weapons: Weapon[];
 	hud: HUD;
 
-	constructor(engine: Engine) {
-		super(engine, 'player');
+	constructor(
+		ground: Ground, 
+		resources: IResourceDictionary, 
+		private input: Input,
+		private actorManager: ActorManager) {
+
+		super(ground, resources, 'player');
 
 		this.hitBoxRadius = 20;
 		this.zIndex = 1;
-
-		const resources = this.engine.resourceManager.resources;
 
 		this.legs = new AnimatedSprite(resources.playerLegs.spritesheet.animations['legs']);
 		this.legs.anchor.x = 0.5;
@@ -53,7 +57,7 @@ export default class Player extends Actor {
 		this.currencyAmount = 0;
 
 		this.weapons = [];
-		this.weapons[0] = new Weapon(this, this.engine);
+		this.weapons[0] = new Weapon(this, this.actorManager, this.resources);
 		this.equippedWeapon = this.weapons[0];
 
 		this.strength = 90;
@@ -63,15 +67,16 @@ export default class Player extends Actor {
 		this.controlMovement = this.controlMovement.bind(this);
 	}
 
-	prepare() {
+	prepare(elapsedMS: number) {
 		this.controlMovement();
 		this.controlSight();
+		this.equippedWeapon.update(elapsedMS);
 	}
 
 	act() {
 		this.move();
-		this.equippedWeapon.update();
-		if (this.equippedWeapon.ready && this.engine.input.mouse.pressed) {
+
+		if (this.equippedWeapon.ready && this.input.mouse.pressed) {
 			this.equippedWeapon.shoot();
 		}
 	}
@@ -79,7 +84,7 @@ export default class Player extends Actor {
 	controlMovement() {
 		let direction = 0;
 		this.status.speed = this.maxSpeed;
-		const keys = this.engine.input.keys;
+		const keys = this.input.keys;
 		if (keys.space && this.currentStamina > 0) {
 			this.status.speed = 8;
 			this.currentStamina = this.currentStamina - 1;
@@ -150,9 +155,9 @@ export default class Player extends Actor {
 	}
 
 	controlSight() {
-		const actorRelativeToCameraX = this.x + this.engine.missionManager.ground.x;
-		const actorRelativeToCameraY = this.y + this.engine.missionManager.ground.y;
-		const angle = Math.atan2(this.engine.input.mouse.y - actorRelativeToCameraY, this.engine.input.mouse.x - actorRelativeToCameraX);
+		const actorRelativeToCameraX = this.x + this.ground.x;
+		const actorRelativeToCameraY = this.y + this.ground.y;
+		const angle = Math.atan2(this.input.mouse.y - actorRelativeToCameraY, this.input.mouse.x - actorRelativeToCameraX);
 		this.body.rotation = angle;
 	}
 

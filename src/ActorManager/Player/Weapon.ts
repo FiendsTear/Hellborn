@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '.';
-import Engine from '../../Engine';
+import ActorManager from '..';
+import { IResourceDictionary } from 'pixi.js';
 
 export class Weapon {
 	sound: AudioBuffer;
@@ -13,11 +14,11 @@ export class Weapon {
 	reloadTime: number;
 	swinging: boolean;
 
-	constructor(public owner: Player, public engine: Engine) {
+	constructor(public owner: Player, private actorManager: ActorManager, private resources: IResourceDictionary) {
 
 		this.projectileSpeed = 25;
 		this.projectileLifespan = 400;
-		this.projectileTexture = this.engine.resourceManager.resources.bullet.texture;
+		this.projectileTexture = this.resources.bullet.texture;
 		this.damage = 80;
 		this.ready = true;
 		this.reloadTime = 0;
@@ -45,14 +46,14 @@ export class Weapon {
 		const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
 		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
-		this.engine.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
+		this.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
 		this.ready = false;
 		this.reloadTime = 500;
 	}
 
-	update() {
+	update(elapsedMS: number) {
 		if (this.reloadTime >= 0) {
-			this.reloadTime = this.reloadTime - this.engine.ticker.elapsedMS;
+			this.reloadTime = this.reloadTime - elapsedMS;
 		}
 		else {
 			this.ready = true;

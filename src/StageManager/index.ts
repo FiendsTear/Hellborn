@@ -3,9 +3,9 @@ import Engine from '../Engine';
 import Ground from './Ground';
 import HUD from '../Interface/HUD';
 import Camera from './Camera';
-import {ResourceList} from '../ResourceManager/ResourceList';
+import {ResourceList} from '../ResourceList';
 
-export default class MissionManager {
+export default class StageManager {
 	killCountGoal: number;
 	ground: Ground;
 	missionStarted: boolean;
@@ -43,11 +43,10 @@ export default class MissionManager {
 			ResourceList['ground'],
 			ResourceList['shot']
 		];
-		const check = this.engine.resourceManager.addResources(resourcesToLoad).load(() =>  {
+		const check = this.engine.loader.add(resourcesToLoad).load(() =>  {
 			// set up camera, ground, hud
 
-			const resources = this.engine.resourceManager.resources;
-			console.log(resources.shot);
+			const resources = this.engine.loader.resources;
 			const ground = new Ground();
 			this.ground = ground;
 			this.camera.addChild(ground);

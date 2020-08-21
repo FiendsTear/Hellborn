@@ -13,7 +13,7 @@ export default class HUD extends Container {
 
 	constructor(private engine: Engine) {
 		super();
-		this.player = this.engine.actorManager.actors.player1 as Player;
+		this.player = this.engine.stageManager.ground.player as Player;
 
 		this.zIndex = 10;
 
@@ -44,6 +44,7 @@ export default class HUD extends Container {
 	}
 
 	updateHealthBar() {
+		console.log(this.player);
 		this.health.clear();
 		this.health.beginFill(0x432828);
 		this.health.drawRect(50, 50, 2 * this.player.maxHealth, 20);

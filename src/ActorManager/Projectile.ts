@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from './Actor';
-import {Sprite} from 'pixi.js';
+import {Sprite, IResourceDictionary} from 'pixi.js';
 import { Weapon } from './Player/Weapon';
 
 export default class Projectile extends Actor {
@@ -9,8 +9,8 @@ export default class Projectile extends Actor {
 	damage: number;
 	sprite: Sprite;
 
-	constructor(weapon: Weapon, direction: number, owner: Actor) {
-		super(weapon.engine, 'projectile');
+	constructor(weapon: Weapon, direction: number, owner: Actor, resources: IResourceDictionary) {
+		super(weapon.owner.ground, resources, 'projectile');
 		this.sprite = new Sprite(weapon.projectileTexture);
 		this.addChild(this.sprite);
 		this.status.speed = weapon.projectileSpeed;
@@ -23,15 +23,17 @@ export default class Projectile extends Actor {
 		this.hit = this.hit.bind(this);
 	}
 
-	prepare() {
+	prepare(elapsedMS: number) {
 		this.calculateDestination(this.direction);
+		this.lifespan = this.lifespan - elapsedMS;
 	}
 
 	act() {
-		this.move();
-		this.lifespan = this.lifespan - this.engine.ticker.elapsedMS;
 		if (this.lifespan <= 0) {
 			this.die();
+		}
+		else {
+			this.move();
 		}
 	}
 

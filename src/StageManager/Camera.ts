@@ -23,16 +23,16 @@ export default class Camera extends Container {
 		if (player.x - screen.width/2 <= 0) {
 			x = 0;
 		}
-		if (player.x + screen.width/2 >= this.engine.missionManager.ground.fixedWidth) {
-			x = this.engine.missionManager.ground.fixedWidth - screen.width;
+		if (player.x + screen.width/2 >= this.engine.stageManager.ground.fixedWidth) {
+			x = this.engine.stageManager.ground.fixedWidth - screen.width;
 		}
 		if (player.y - screen.height/2 <= 0) {
 			y = 0;
 		}
-		if (player.y + screen.height/2 >= this.engine.missionManager.ground.fixedHeight) {
-			y = this.engine.missionManager.ground.fixedHeight - screen.height;
+		if (player.y + screen.height/2 >= this.engine.stageManager.ground.fixedHeight) {
+			y = this.engine.stageManager.ground.fixedHeight - screen.height;
 		}
-		this.engine.missionManager.ground.x = -x;
-		this.engine.missionManager.ground.y = -y;
+		this.engine.stageManager.ground.x = -x;
+		this.engine.stageManager.ground.y = -y;
 	}
 }

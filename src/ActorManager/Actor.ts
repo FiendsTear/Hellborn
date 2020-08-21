@@ -1,9 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import { Point, Container } from 'pixi.js';
+import { Point, Container, Ticker, IResourceDictionary } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
-import Engine from '../Engine';
-// eslint-disable-next-line no-unused-vars
-import { Quadrant } from '../MissionManager/Ground';
+import Ground, { Quadrant } from '../StageManager/Ground';
 
 interface Status {
 	moving: boolean;
@@ -27,7 +25,7 @@ export default abstract class Actor extends Container {
 	isObstacle: boolean;
 	movable: boolean;
 
-	constructor(protected engine: Engine, public kind: string) {
+	constructor(public ground: Ground, protected resources: IResourceDictionary, public kind: string) {
 		super();
 		
 		this.status = {
@@ -48,7 +46,7 @@ export default abstract class Actor extends Container {
 	move() {
 		this.x = this.destination.x;
 		this.y = this.destination.y;
-		this.engine.missionManager.ground.calculateNewQuadrants(this);
+		this.ground.calculateNewQuadrants(this);
 	}
 
 	calculateDestination(direction: number) {
@@ -57,14 +55,14 @@ export default abstract class Actor extends Container {
 		if (x - this.hitBoxRadius <= 0) {
 			x = this.hitBoxRadius;
 		}
-		if (x + this.hitBoxRadius >= this.engine.missionManager.ground.fixedWidth) {
-			x = this.engine.missionManager.ground.fixedWidth - this.hitBoxRadius;
+		if (x + this.hitBoxRadius >= this.ground.fixedWidth) {
+			x = this.ground.fixedWidth - this.hitBoxRadius;
 		}
 		if (y - this.hitBoxRadius <= 0) {
 			y = this.hitBoxRadius;
 		}
-		if (y + this.hitBoxRadius >= this.engine.missionManager.ground.fixedHeight) {
-			y = this.engine.missionManager.ground.fixedHeight - this.hitBoxRadius;
+		if (y + this.hitBoxRadius >= this.ground.fixedHeight) {
+			y = this.ground.fixedHeight - this.hitBoxRadius;
 		}
 		this.destination.x = x;
 		this.destination.y = y;
@@ -72,9 +70,12 @@ export default abstract class Actor extends Container {
 
 	reduceHealth(damage: number) {
 		this.status.health = this.status.health - damage;
+		if (this.status.health <= 0) {
+			this.die();
+		}
 	}
 
-	prepare() {}
+	prepare(elapsedMS: number) {}
 	act(){}
 	// eslint-disable-next-line no-unused-vars
 	hit(actor: Actor){}
@@ -82,6 +83,5 @@ export default abstract class Actor extends Container {
 	die() {
 		this.status.speed = 0;
 		this.status.alive = false;
-		this.engine.actorManager.removeActor(this);
 	}
 }

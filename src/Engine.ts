@@ -5,14 +5,12 @@ import Player from './ActorManager/Player';
 import ActorManager from './ActorManager';
 import Menu from './Interface/Menu';
 import Input from './Input';
-import MissionManager from './MissionManager';
-import ResourceManager from './ResourceManager';
+import StageManager from './StageManager';
 
 export default class Engine extends PIXI.Application {
 	audioCtx: AudioContext;
 	actorManager: ActorManager;
-	missionManager: MissionManager;
-	resourceManager: ResourceManager;
+	stageManager: StageManager;
 	paused: boolean;
 	menu: Menu;
 	input: Input;
@@ -27,9 +25,8 @@ export default class Engine extends PIXI.Application {
 		this.paused = true;
 
 		this.input = new Input(this);
-		this.actorManager = new ActorManager(this);
-		this.missionManager = new MissionManager(this);
-		this.resourceManager = new ResourceManager();
+		this.stageManager = new StageManager(this);
+		this.actorManager = new ActorManager(this.stageManager, this.loader.resources, this.input);
 		this.audioCtx = new AudioContext();
 		this.menu = new Menu(this);
 
@@ -48,16 +45,16 @@ export default class Engine extends PIXI.Application {
 
 	loop(): void{
 		if (!this.paused) {
-			console.log(this);
+			// console.log(this);
 			this.play();
 		}
 	}
 	
 	play() {
-		this.actorManager.prepareActors();
-		Collision.checkCollisions(this.actorManager.actors, this.missionManager.ground);
+		this.actorManager.prepareActors(this.ticker.elapsedMS);
+		Collision.checkCollisions(this.stageManager.ground);
 		this.actorManager.updateActors();
-		this.missionManager.camera.centerOnPlayer(this.actorManager.actors.player1 as Player);
+		this.stageManager.camera.centerOnPlayer(this.stageManager.ground.player as Player);
 	}
 
 	switchPause() {
