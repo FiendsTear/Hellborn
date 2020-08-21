@@ -14,7 +14,11 @@ export default class StageManager {
 
 	constructor(private engine: Engine) {
 		this.killCountGoal = 3;
+		this.startMission = this.startMission.bind(this);
+		this.finishMission = this.finishMission.bind(this);
+	}
 
+	startMission() {
 		this.camera = new Camera(this.engine);
 		this.camera.on('mousemove', this.engine.input.handleMouseMove);
 		this.camera.on('mouseout', this.engine.input.handleMouseOut);
@@ -23,18 +27,6 @@ export default class StageManager {
 		window.onresize = this.camera.centerOnPlayer.bind(this.camera);
 		this.engine.stage.addChild(this.camera);
 
-		this.ground = {} as Ground;
-		this.startMission = this.startMission.bind(this);
-		this.finishMission = this.finishMission.bind(this);
-	}
-
-	startMission() {
-		this.camera.children.forEach(element => {
-			if (element === this.ground) {
-				this.camera.removeChild(element);
-				element.destroy();
-			}
-		});
     const resourcesToLoad = [
 			ResourceList['playerLegs'], 
 			ResourceList['playerBody'], 
@@ -43,10 +35,14 @@ export default class StageManager {
 			ResourceList['ground'],
 			ResourceList['shot']
 		];
-		const check = this.engine.loader.add(resourcesToLoad).load(() =>  {
+		for (const resource of resourcesToLoad) {
+			if (!this.engine.loader.resources[resource.name]) {
+				this.engine.loader.add(resource.name, resource.url);
+			}
+		}
+		this.engine.loader.load(() =>  {
 			// set up camera, ground, hud
 
-			const resources = this.engine.loader.resources;
 			const ground = new Ground();
 			this.ground = ground;
 			this.camera.addChild(ground);
