@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Player from '.';
 import ActorManager from '..';
-import { IResourceDictionary } from 'pixi.js';
+import { IResourceDictionary, Point } from 'pixi.js';
 
 export class Weapon {
 	sound: AudioBuffer;
@@ -13,6 +13,7 @@ export class Weapon {
 	damage: number;
 	reloadTime: number;
 	swinging: boolean;
+	projectileOriginPoint: Point;
 
 	constructor(public owner: Player, private actorManager: ActorManager, private resources: IResourceDictionary) {
 
@@ -22,6 +23,9 @@ export class Weapon {
 		this.damage = 80;
 		this.ready = true;
 		this.reloadTime = 0;
+		this.projectileOriginPoint = new Point();
+		this.projectileOriginPoint.x = 45;
+		this.projectileOriginPoint.y = 40;
 
 		// this.engine.audioCtx.decodeAudioData(this.engine.resourceManager.resources.shot.data, (buffer) => {
 		// 	this.sound = buffer;
@@ -42,8 +46,8 @@ export class Weapon {
 		// source.start(0);
 		// this.sound.play();
 		const owner = this.owner;
-		const shooterFaceCenterX = owner.x + owner.hitBoxRadius * Math.cos(owner.rotation);
-		const shooterFaceCenterY = owner.y + owner.hitBoxRadius * Math.sin(owner.rotation);
+		const shooterFaceCenterX = owner.x + this.projectileOriginPoint.x * Math.cos(owner.body.rotation);
+		const shooterFaceCenterY = owner.y + this.projectileOriginPoint.y * Math.sin(owner.body.rotation);
 		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
 		this.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);

@@ -10,15 +10,15 @@
 },
 "legs_02.png":
 {
-	"frame": {"x":35,"y":0,"w":35,"h":25},
+	"frame": {"x":35,"y":0,"w":28,"h":22},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
-	"sourceSize": {"w":35,"h":25}
+	"spriteSourceSize": {"x":0,"y":0,"w":28,"h":22},
+	"sourceSize": {"w":28,"h":22}
 },
 "legs_03.png":
 {
-	"frame": {"x":70,"y":0,"w":35,"h":25},
+	"frame": {"x":63,"y":0,"w":35,"h":25},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
@@ -26,11 +26,11 @@
 },
 "legs_04.png":
 {
-	"frame": {"x":105,"y":0,"w":35,"h":25},
+	"frame": {"x":98,"y":0,"w":28,"h":17},
 	"rotated": false,
 	"trimmed": false,
-	"spriteSourceSize": {"x":0,"y":0,"w":35,"h":25},
-	"sourceSize": {"w":35,"h":25}
+	"spriteSourceSize": {"x":0,"y":0,"w":28,"h":17},
+	"sourceSize": {"w":28,"h":17}
 }},
 "animations": {
 	"legs": ["legs_01.png","legs_02.png","legs_03.png","legs_04.png"]
@@ -40,8 +40,8 @@
 	"version": "1.0",
 	"image": "legs.png",
 	"format": "RGBA8888",
-	"size": {"w":140,"h":25},
+	"size": {"w":126,"h":25},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:7543846c76cb3116e6ec44294aaf2288:2b36adad59e1116fd4c02743cba3bb1c:3640100e9060e5a04ba45cd1355ffc52$"
+	"smartupdate": "$TexturePacker:SmartUpdate:b62b9a43bc9d20c6f8080d9248d73b20:a88c9dbc97074e510a159b7190dd0a96:3640100e9060e5a04ba45cd1355ffc52$"
 }
 }

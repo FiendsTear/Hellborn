@@ -38,8 +38,8 @@ export default class Player extends Actor {
 		this.addChild(this.legs);
 
 		this.body = new AnimatedSprite([resources.playerBody.texture]);
-		this.body.anchor.x = 0.5;
-		this.body.anchor.y = 0.5;
+		this.body.anchor.x = 0.3;
+		this.body.anchor.y = 0.6;
 		this.body.animationSpeed = 0.2;
 		this.body.loop = false;
 		this.addChild(this.body);
