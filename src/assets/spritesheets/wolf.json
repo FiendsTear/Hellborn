@@ -15,17 +15,33 @@
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":50},
 	"sourceSize": {"w":100,"h":50}
+},
+"wolf_03.png":
+{
+	"frame": {"x":200,"y":0,"w":100,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":50},
+	"sourceSize": {"w":100,"h":50}
+},
+"wolf_04.png":
+{
+	"frame": {"x":300,"y":0,"w":100,"h":50},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":100,"h":50},
+	"sourceSize": {"w":100,"h":50}
 }},
 "animations": {
-	"wolf": ["wolf_01.png","wolf_02.png"]
+	"wolf": ["wolf_01.png","wolf_02.png","wolf_03.png","wolf_04.png"]
 },
 "meta": {
 	"app": "https://www.codeandweb.com/texturepacker",
 	"version": "1.0",
 	"image": "wolf.png",
 	"format": "RGBA8888",
-	"size": {"w":200,"h":50},
+	"size": {"w":400,"h":50},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:0f2f7c3441fe3ebfb8e85ec25bb34dd9:563de08a5911af119c485e8f590d6419:6aa8f2d37925a18e990d23a498f81618$"
+	"smartupdate": "$TexturePacker:SmartUpdate:508b171a0f79948d25bff123227395cd:09d0a1ad01142a8c4cfdae3b6268bc8b:6aa8f2d37925a18e990d23a498f81618$"
 }
 }
