@@ -2,9 +2,11 @@
 import Player from '.';
 import ActorManager from '..';
 import { IResourceDictionary, Point } from 'pixi.js';
+import { ResourceList } from '../../ResourceList';
+import Sounds from 'pixi-sound';
 
 export class Weapon {
-	sound: AudioBuffer;
+	sound: Sounds.Sound;
 	ready: boolean;
 	cooldown: number;
 	projectileTexture: PIXI.Texture;
@@ -12,7 +14,6 @@ export class Weapon {
 	projectileLifespan: number;
 	damage: number;
 	reloadTime: number;
-	swinging: boolean;
 	projectileOriginPoint: Point;
 
 	constructor(public owner: Player, private actorManager: ActorManager, private resources: IResourceDictionary) {
@@ -27,24 +28,12 @@ export class Weapon {
 		this.projectileOriginPoint.x = 45;
 		this.projectileOriginPoint.y = 40;
 
-		// this.engine.audioCtx.decodeAudioData(this.engine.resourceManager.resources.shot.data, (buffer) => {
-		// 	this.sound = buffer;
-		// })
+		this.sound = Sounds.add(ResourceList.shot.name, ResourceList.shot.url);
+		this.sound.volume = 0.3;
 	}
 
 	shoot() {
-		// const audioCtx = this.engine.audioCtx;
-
-		// const gainNode = audioCtx.createGain();
-		// gainNode.gain.value = 0.4;
-		// gainNode.connect(audioCtx.destination);
-
-		// const source = audioCtx.createBufferSource();
-		// source.buffer = this.sound;
-
-		// source.connect(gainNode);
-		// source.start(0);
-		// this.sound.play();
+		this.sound.play();
 		const owner = this.owner;
 		const shooterFaceCenterX = owner.x + this.projectileOriginPoint.x * Math.cos(owner.body.rotation);
 		const shooterFaceCenterY = owner.y + this.projectileOriginPoint.y * Math.sin(owner.body.rotation);

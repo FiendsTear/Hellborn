@@ -8,7 +8,7 @@ import Input from './Input';
 import StageManager from './StageManager';
 
 export default class Engine extends PIXI.Application {
-	audioCtx: AudioContext;
+
 	actorManager: ActorManager;
 	stageManager: StageManager;
 	paused: boolean;
@@ -27,7 +27,6 @@ export default class Engine extends PIXI.Application {
 		this.input = new Input(this);
 		this.stageManager = new StageManager(this);
 		this.actorManager = new ActorManager(this.stageManager, this.loader.resources, this.input);
-		this.audioCtx = new AudioContext();
 		this.menu = new Menu(this);
 
 		this.renderer.plugins.interaction.cursorStyles.sight = 'url("assets/sprites/sight.png"),auto';
