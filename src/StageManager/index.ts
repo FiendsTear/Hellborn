@@ -30,7 +30,7 @@ export default class StageManager {
     const resourcesToLoad = [
 			ResourceList['playerLegs'], 
 			ResourceList['playerBody'], 
-			ResourceList['enemy'], 
+			ResourceList['wolf'], 
 			ResourceList['bullet'],
 			ResourceList['ground'],
 			ResourceList['shot']

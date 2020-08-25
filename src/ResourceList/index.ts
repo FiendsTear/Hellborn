@@ -15,9 +15,9 @@ export class ResourceList  {
 		url: 'assets/sprites/body.png',
 		kind: 'sprite'
 	};
-	static enemy = {
-		name: 'enemy',
-		url: 'assets/sprites/enemy.png',
+	static wolf = {
+		name: 'wolf',
+		url: 'assets/spritesheets/wolf.json',
 		kind: 'sprite'
 	};
 	static ground = {

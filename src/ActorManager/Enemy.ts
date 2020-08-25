@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import Actor from './Actor';
 // eslint-disable-next-line no-unused-vars
-import {Sprite, IResourceDictionary} from 'pixi.js';
+import {IResourceDictionary, AnimatedSprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Player from './Player';
 import Ground from '../StageManager/Ground';
@@ -9,7 +9,7 @@ import Ground from '../StageManager/Ground';
 export default class Enemy extends Actor {
 	attackCooldown: number;
 	attackReach: number;
-	sprite: Sprite;
+	sprite: AnimatedSprite;
 	player: Player;
 
 	constructor(ground: Ground, resources: IResourceDictionary) {
@@ -17,10 +17,12 @@ export default class Enemy extends Actor {
 
 		this.player = this.ground.player as Player;
 		this.zIndex = 1;
-		this.sprite = new Sprite(resources.enemy.texture);
+		this.sprite = new AnimatedSprite(resources.wolf.spritesheet.animations['wolf']);
 		this.sprite.anchor.x = 0.5;
 		this.sprite.anchor.y = 0.5;
 		this.addChild(this.sprite);
+		this.sprite.animationSpeed = 0.1;
+		this.sprite.play();
 		this.rotation = -(Math.PI/2);
 		
 		this.attackCooldown = 0;
@@ -62,6 +64,7 @@ export default class Enemy extends Actor {
 		if (quadDistance <= this.attackReach*this.attackReach + this.player.hitBoxRadius*this.player.hitBoxRadius && this.status.attackReady) {
 			this.attack(this.player);
 		}
+
 	}
 
 	act(): void {
