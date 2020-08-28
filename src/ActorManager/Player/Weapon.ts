@@ -18,7 +18,7 @@ export class Weapon {
 
 	constructor(public owner: Player, private actorManager: ActorManager, private resources: IResourceDictionary) {
 
-		this.projectileSpeed = 25;
+		this.projectileSpeed = 20;
 		this.projectileLifespan = 400;
 		this.projectileTexture = this.resources.bullet.texture;
 		this.damage = 80;

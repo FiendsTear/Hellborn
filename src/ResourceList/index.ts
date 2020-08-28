@@ -32,7 +32,7 @@ export class ResourceList  {
 	};
 	static shot = {
 		name: 'shot',
-		url: './assets/sounds/shot.wav',
+		url: './assets/sounds/shot.mp3',
 		kind: 'sound'
 	}
 }

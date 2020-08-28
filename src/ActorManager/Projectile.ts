@@ -13,6 +13,7 @@ export default class Projectile extends Actor {
 		super(weapon.owner.ground, resources, 'projectile');
 		this.sprite = new Sprite(weapon.projectileTexture);
 		this.addChild(this.sprite);
+		this.sprite.rotation = direction;
 		this.status.speed = weapon.projectileSpeed;
 		this.lifespan = weapon.projectileLifespan;
 		this.damage = weapon.damage;
