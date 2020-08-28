@@ -1,7 +1,9 @@
 // eslint-disable-next-line no-unused-vars
-import Actor from './Actor';
+import Actor from '../Actor';
 import {Sprite, IResourceDictionary} from 'pixi.js';
-import { Weapon } from './Player/Weapon';
+import Weapon from '../Player/Weapon';
+import ProjectileManager from './ProjectileManager';
+import Ground from '../../StageManager/Ground';
 
 export default class Projectile extends Actor {
 	direction: number;
@@ -9,14 +11,14 @@ export default class Projectile extends Actor {
 	damage: number;
 	sprite: Sprite;
 
-	constructor(weapon: Weapon, direction: number, owner: Actor, resources: IResourceDictionary) {
-		super(weapon.owner.ground, resources, 'projectile');
-		this.sprite = new Sprite(weapon.projectileTexture);
+	constructor(source: Weapon, direction: number, resources: IResourceDictionary, ground: Ground) {
+		super(ground, resources, 'projectile');
+		this.sprite = new Sprite(source.projectileTexture);
 		this.addChild(this.sprite);
 		this.sprite.rotation = direction;
-		this.status.speed = weapon.projectileSpeed;
-		this.lifespan = weapon.projectileLifespan;
-		this.damage = weapon.damage;
+		this.status.speed = source.projectileSpeed;
+		this.lifespan = source.projectileLifespan;
+		this.damage = source.damage;
 		this.status.moving = true;
 		this.direction = direction;
 		this.movable = false;

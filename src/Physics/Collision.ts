@@ -1,4 +1,4 @@
-import Actor from '../ActorManager/Actor';
+import Actor from '../Actors/Actor';
 import Ground, {Quadrant}  from '../StageManager/Ground';
 
 export interface Pair {

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
-import Actor from './Actor';
-import Ground from '../StageManager/Ground';
+import Actor from '../Actor';
+import Ground from '../../StageManager/Ground';
 import { IResourceDictionary } from 'pixi.js';
 
 export default class Spawner extends Actor {

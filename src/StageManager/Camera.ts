@@ -4,7 +4,7 @@ import Engine from '../Engine';
 // eslint-disable-next-line no-unused-vars
 import HUD from '../Interface/HUD';
 // eslint-disable-next-line no-unused-vars
-import Player from '../ActorManager/Player';
+import Player from '../Actors/Player/Player';
 
 export default class Camera extends Container {
 	hud: HUD;

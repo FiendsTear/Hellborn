@@ -1,21 +1,19 @@
 // eslint-disable-next-line no-unused-vars
-import Actor from './Actor';
+import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
 import {IResourceDictionary, AnimatedSprite} from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
-import Player from './Player';
-import Ground from '../StageManager/Ground';
+import Ground from '../../StageManager/Ground';
+import Player from '../Player/Player';
 
-export default class Enemy extends Actor {
+export default class Wolf extends Actor {
 	attackCooldown: number;
 	attackReach: number;
 	sprite: AnimatedSprite;
-	player: Player;
 
-	constructor(ground: Ground, resources: IResourceDictionary) {
+	constructor(ground: Ground, resources: IResourceDictionary, private player: Player) {
 		super(ground, resources, 'enemy');
 
-		this.player = this.ground.player as Player;
 		this.zIndex = 1;
 		this.sprite = new AnimatedSprite(resources.wolf.spritesheet.animations['wolf']);
 		this.sprite.anchor.x = 0.5;

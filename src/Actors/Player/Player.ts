@@ -2,12 +2,12 @@
 import Actor from '../Actor';
 // eslint-disable-next-line no-unused-vars
 import {AnimatedSprite, IResourceDictionary} from 'pixi.js';
-import { Weapon } from './Weapon';
+import Weapon from './Weapon';
+import Ground from '../../StageManager/Ground';
+import PlayerManager from '../../PlayerManager/PlayerManager';
 import HUD from '../../Interface/HUD';
 import Input from '../../Input';
-import ActorManager from '..';
-import Ground from '../../StageManager/Ground';
-// eslint-disable-next-line no-unused-vars
+import StageManager from '../../StageManager';
 
 export default class Player extends Actor {
 	maxStamina: number;
@@ -24,7 +24,8 @@ export default class Player extends Actor {
 		ground: Ground, 
 		resources: IResourceDictionary, 
 		private input: Input,
-		private actorManager: ActorManager) {
+		private playerManager: PlayerManager,
+		private stageManager: StageManager) {
 
 		super(ground, resources, 'player');
 
@@ -57,7 +58,7 @@ export default class Player extends Actor {
 		this.currencyAmount = 0;
 
 		this.weapons = [];
-		this.weapons[0] = new Weapon(this, this.actorManager, this.resources);
+		this.weapons[0] = new Weapon(this, this.stageManager.projectileManager, this.resources);
 		this.equippedWeapon = this.weapons[0];
 
 		this.strength = 90;
