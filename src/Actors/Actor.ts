@@ -84,4 +84,9 @@ export default abstract class Actor extends Container {
 		this.status.speed = 0;
 		this.status.alive = false;
 	}
+
+	removeQuadrantFromStatus(quadrant: Quadrant) {
+		const quadrantIndexInArray = this.ground.checkQuadrantInArray(this.status.quadrants, quadrant);
+		this.status.quadrants.splice(quadrantIndexInArray, 1);
+	}
 }

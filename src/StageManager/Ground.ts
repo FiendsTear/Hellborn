@@ -153,6 +153,7 @@ export default class Ground extends Container {
 					actorRightBorder < quadrant.x1 ||
 					actorLeftBorder > quadrant.x2) {
 				this.removeActorFromQuadrant(quadrant, actor);
+				actor.removeQuadrantFromStatus(quadrant);
 			}
 		});
 	}
@@ -170,8 +171,6 @@ export default class Ground extends Container {
 	// replace indexof with findIndex
 	removeActorFromQuadrant(quadrant: Quadrant, actor: Actor) {
 		quadrant.activeActors.splice( quadrant.activeActors.indexOf(actor), 1);
-		const quadrantIndexInArray = this.checkQuadrantInArray(actor.status.quadrants, quadrant);
-		actor.status.quadrants.splice(quadrantIndexInArray, 1);
 	}
 	
 	checkQuadrantInArray(quadrants: Quadrant[], quadrant: Quadrant) {
@@ -194,10 +193,8 @@ export default class Ground extends Container {
 
 	removeActor(actor: Actor) {
 		this.removeChild(actor);
-
 		for (let i = 0, quadrantCount = actor.status.quadrants.length; i < quadrantCount; i++) {
 			const quadrant = actor.status.quadrants[i];
-			console.log(actor.status.quadrants);
 			this.removeActorFromQuadrant(quadrant, actor);
 		}
 	}
