@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import { Point, Container, Ticker, IResourceDictionary } from 'pixi.js';
+import { Point, Container, IResourceDictionary } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Ground, { Quadrant } from '../StageManager/Ground';
 
@@ -10,7 +10,33 @@ interface Status {
 	attackReady: boolean;
 	health: number;
 	quadrants: Quadrant[];
-	speed: number;
+}
+
+export const enum Pace {
+	standing = 1, walking, charging, backing
+}
+
+interface Movement {
+	pace: Pace;
+	currentSpeed: number;
+ 
+	chargeSpeed: number;
+	chargeAcceleration: number;
+	chargeStaminaConsumption: number;
+	chargeTurningSpeed: number;
+	chargeAnimationSpeed: number;
+
+	walkSpeed: number;
+	walkAcceleration: number;
+	walkTurningSpeed: number;
+	walkAnimationSpeed: number;
+
+	deceleration: number;
+	backingMultiplier: number;
+
+	standTurningSpeed: number;
+
+	direction: number;
 }
 
 export default abstract class Actor extends Container {
@@ -23,7 +49,8 @@ export default abstract class Actor extends Container {
 	strength: number;
 
 	isObstacle: boolean;
-	movable: boolean;
+	collidedWith: Actor[];
+	movement: Movement;
 
 	constructor(public ground: Ground, protected resources: IResourceDictionary, public kind: string) {
 		super();
@@ -34,10 +61,28 @@ export default abstract class Actor extends Container {
 			attacking: false, 
 			attackReady: true,
 			health: this.maxHealth,
-			quadrants: [],
-			speed: 0};
+			quadrants: []};
+		this.movement = {
+			currentSpeed: 0,
+			direction: 0,
+			pace: Pace.standing,
+			standTurningSpeed: 0,
+			deceleration: 0,
+			backingMultiplier: 0,
 
+			chargeSpeed: 0,
+			chargeAcceleration: 0,
+			chargeAnimationSpeed: 0,
+			chargeStaminaConsumption: 0,
+			chargeTurningSpeed: 0,
+
+			walkSpeed: 0,
+			walkAcceleration: 0,
+			walkAnimationSpeed: 0,
+			walkTurningSpeed: 0,
+		};
 		this.destination = new Point();
+		this.collidedWith = [];
 
 		this.move = this.move.bind(this);
 		this.calculateDestination = this.calculateDestination.bind(this);
@@ -49,9 +94,9 @@ export default abstract class Actor extends Container {
 		this.ground.calculateNewQuadrants(this);
 	}
 
-	calculateDestination(direction: number) {
-		let x = this.x + this.status.speed * Math.cos(direction);
-		let y = this.y + this.status.speed * Math.sin(direction);
+	calculateDestination() {
+		let x = this.x + this.movement.currentSpeed * Math.cos(this.movement.direction);
+		let y = this.y + this.movement.currentSpeed * Math.sin(this.movement.direction);
 		if (x - this.hitBoxRadius <= 0) {
 			x = this.hitBoxRadius;
 		}
@@ -81,12 +126,48 @@ export default abstract class Actor extends Container {
 	hit(actor: Actor){}
 	
 	die() {
-		this.status.speed = 0;
 		this.status.alive = false;
 	}
 
 	removeQuadrantFromStatus(quadrant: Quadrant) {
 		const quadrantIndexInArray = this.ground.checkQuadrantInArray(this.status.quadrants, quadrant);
 		this.status.quadrants.splice(quadrantIndexInArray, 1);
+	}
+
+	changeSpeed() {
+		let maxSpeed;
+		let acceleration;
+		if (this.movement.pace === Pace.standing) {
+			maxSpeed = 0;
+			acceleration = this.movement.deceleration;
+		}
+		if (this.movement.pace === Pace.walking) {
+			maxSpeed = this.movement.walkSpeed;
+			acceleration = this.movement.walkAcceleration;
+		}
+		if (this.movement.pace === Pace.charging) {
+			maxSpeed = this.movement.chargeSpeed;
+			acceleration = this.movement.chargeAcceleration;
+		}
+		if (this.movement.pace === Pace.backing) {
+			maxSpeed = this.movement.walkSpeed * this.movement.backingMultiplier;
+			acceleration = this.movement.deceleration;
+		}
+		if (this.movement.currentSpeed < maxSpeed) {
+			if (maxSpeed - this.movement.currentSpeed > acceleration) {
+				this.movement.currentSpeed = this.movement.currentSpeed + acceleration;
+			}
+			else {
+				this.movement.currentSpeed = maxSpeed;
+			}
+		}
+		if (this.movement.currentSpeed > maxSpeed) {
+			if (this.movement.currentSpeed - maxSpeed > acceleration) {
+				this.movement.currentSpeed = this.movement.currentSpeed - acceleration;
+			}
+			else {
+				this.movement.currentSpeed = maxSpeed;
+			}
+		}
 	}
 }

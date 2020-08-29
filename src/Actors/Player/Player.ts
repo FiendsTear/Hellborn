@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import Actor from '../Actor';
+import Actor, {Pace} from '../Actor';
 // eslint-disable-next-line no-unused-vars
 import {AnimatedSprite, IResourceDictionary} from 'pixi.js';
 import Weapon from './Weapon';
@@ -11,9 +11,10 @@ import StageManager from '../../StageManager';
 
 export default class Player extends Actor {
 	maxStamina: number;
-	maxSpeed: number;
-	currencyAmount: number;
+	staminaRegeneration: number;
 	currentStamina: number;
+
+	currencyAmount: number;
 	legs: AnimatedSprite;
 	body: AnimatedSprite;
 	equippedWeapon: Weapon;
@@ -45,14 +46,30 @@ export default class Player extends Actor {
 		this.body.loop = false;
 		this.addChild(this.body);
 
-		this.maxSpeed = 4;
-		this.status.speed = 0;
+		this.movement.chargeSpeed = 7;
+		this.movement.chargeAcceleration = 0.4;
+		this.movement.chargeStaminaConsumption = 1;
+		this.movement.chargeTurningSpeed = 0.1;
+		this.movement.chargeAnimationSpeed = 0.2;
+
+		this.movement.walkSpeed = 4;
+		this.movement.walkAcceleration = 0.2;
+		this.movement.walkAnimationSpeed = 0.1;
+		this.movement.walkTurningSpeed = 0.2;
+
+		this.movement.pace = Pace.standing;
+		this.movement.currentSpeed = 0;
+
+		this.movement.deceleration = 0.5;
+		this.movement.backingMultiplier = 0.7;
+
 		this.interactive = true;
 
 		this.maxHealth = 100;
 		this.status.health = this.maxHealth;
 
 		this.maxStamina = 100;
+		this.staminaRegeneration = 0.3;
 		this.currentStamina = this.maxStamina;
 
 		this.currencyAmount = 0;
@@ -62,97 +79,94 @@ export default class Player extends Actor {
 		this.equippedWeapon = this.weapons[0];
 
 		this.strength = 90;
-		this.movable = true;
 
 		this.act = this.act.bind(this);
 		this.controlMovement = this.controlMovement.bind(this);
 	}
 
 	prepare(elapsedMS: number) {
+		this.calculateMoveDirectionFromInput();
 		this.controlMovement();
 		this.controlSight();
+		this.changeSpeed();
 		this.equippedWeapon.update(elapsedMS);
 	}
 
 	act() {
 		this.move();
-
+		if (this.movement.pace === Pace.charging) {
+			this.currentStamina = this.currentStamina - this.movement.chargeStaminaConsumption;
+			this.hud.updateStaminaBar();
+		}
+		if (this.movement.pace !== Pace.charging && this.currentStamina < this.maxStamina) {
+			this.currentStamina = this.currentStamina + this.staminaRegeneration;
+			this.hud.updateStaminaBar();
+		}
 		if (this.equippedWeapon.ready && this.input.mouse.pressed) {
 			this.equippedWeapon.shoot();
 		}
 	}
 
-	controlMovement() {
-		let direction = 0;
-		this.status.speed = this.maxSpeed;
+	calculateMoveDirectionFromInput() {
 		const keys = this.input.keys;
-		if (keys.space && this.currentStamina > 0) {
-			this.status.speed = 8;
-			this.currentStamina = this.currentStamina - 1;
-			this.hud.updateStaminaBar();
+		this.movement.pace = Pace.standing;
+
+		if (keys.w && !keys.s) {
+			this.movement.pace = Pace.walking;
+			this.movement.direction = 3*Math.PI/2;
 		}
-		if (this.currentStamina < this.maxStamina) {
-			this.currentStamina = this.currentStamina + 0.1;
-			this.hud.updateStaminaBar();
-		}
-		this.status.moving = false;
-		if (keys.w) {
-			this.status.moving = true;
-			direction = -Math.PI/2;
-		}
-		if (keys.s) {
-			if (keys.w) {
-				this.status.moving = false;
-			}
-			else {
-				direction = Math.PI/2;
-				this.status.moving = true;
-			}
-		}
-		if (keys.d) {   
-			if (keys.s) {
-				direction = direction - Math.PI/4;
-			}
-			if (keys.w) {
-				direction = direction + Math.PI/4;
-			}
-			if (!keys.s && !keys.w) {
-				direction = 0;
-			}
-			this.status.moving = true;
-		}
+
 		if (keys.a) {
-			if (keys.d) {
-				this.status.moving = false;
-			}
-			else {
-				this.status.moving = true;
-				if (keys.w) {
-					direction = direction - Math.PI/4;
-				}
-				if (keys.s) {
-					direction = direction + Math.PI/4;
-				}	
-				if (!keys.w && !keys.s) {
-					direction = Math.PI;
+			if (!keys.d) {
+				this.movement.pace = Pace.walking;
+				this.movement.direction = Math.PI;
+				if (keys.w && !keys.s) {
+					this.movement.direction = 5*Math.PI/4;
 				}
 			}
 		}
-		if (this.status.moving) {
-			const diffBodyLegs = Math.cos(this.body.rotation - direction);
-			if (diffBodyLegs > -0.3) {
-				this.legs.rotation = direction;
+
+		if (keys.s) {
+			if (!keys.w) {
+				this.movement.pace = Pace.walking;
+				this.movement.direction = Math.PI/2;
+				if (keys.a && !keys.w) {
+					this.movement.direction = 3*Math.PI/4;
+				}
 			}
-			else {
-				this.status.speed = this.status.speed/1.5;
-				this.legs.rotation = direction + Math.PI;
+		}
+
+		if (keys.d) {
+			if (!keys.a) {
+				this.movement.pace = Pace.walking;
+				this.movement.direction = 0;
+				if (keys.w && !keys.s) {
+					this.movement.direction = 7*Math.PI/4;
+				}
+				if (keys.s && !keys.w) {
+					this.movement.direction = Math.PI/4;
+				}
 			}
-			this.legs.play();
-			this.calculateDestination(direction);
+		}
+	}
+
+	controlMovement() {
+		const keys = this.input.keys;
+		if (keys.space && this.currentStamina > 0 && this.movement.pace === Pace.walking) {
+			this.movement.pace = Pace.charging;
+		}
+		const diffBodyLegs = Math.cos(this.body.rotation - this.movement.direction);
+		if (diffBodyLegs > -0.3) {
+			this.legs.rotation = this.movement.direction;
 		}
 		else {
-			this.legs.gotoAndStop(0);
+			if (this.movement.pace !== Pace.standing) {
+				this.movement.pace = Pace.backing;
+			}
+			this.legs.rotation = this.movement.direction + Math.PI;
 		}
+		this.legs.play();
+		this.calculateDestination();
 	}
 
 	controlSight() {

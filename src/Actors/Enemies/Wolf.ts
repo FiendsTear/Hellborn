@@ -10,6 +10,10 @@ export default class Wolf extends Actor {
 	attackCooldown: number;
 	attackReach: number;
 	sprite: AnimatedSprite;
+	charging: boolean;
+	chargingSpeed: number;
+	chargingDistance: number;
+	quadDistanceToPlayer: number;
 
 	constructor(ground: Ground, resources: IResourceDictionary, private player: Player) {
 		super(ground, resources, 'enemy');
@@ -31,8 +35,12 @@ export default class Wolf extends Actor {
 		this.strength = 80;
 		this.maxHealth = 80;
 		this.status.health = this.maxHealth;
-		this.status.speed = 3;
-		this.movable = true;
+		
+		this.chargingSpeed = 8;
+		this.charging = false;
+		this.chargingDistance = 250;
+
+		this.movement.currentSpeed = 0;
 
 		this.attack = this.attack.bind(this);
 		this.act = this.act.bind(this);
@@ -45,35 +53,36 @@ export default class Wolf extends Actor {
 				this.status.attackReady = true;
 			}
 		}
-		this.status.moving = true;
-		this.status.speed = 3;
 
-		// temporarily set as player1 cause there's no multiplayer yet
-		const playerX = this.player.x;
-		const playerY = this.player.y;
-		const verticalDistance = playerY - this.y;
-		const horizontalDistance = playerX - this.x;
-		const direction = Math.atan2(verticalDistance, horizontalDistance);
-		this.rotation = direction;
-
-		this.calculateDestination(direction);
-		
-		const quadDistance = verticalDistance*verticalDistance + horizontalDistance*horizontalDistance;
-		if (quadDistance <= this.attackReach*this.attackReach + this.player.hitBoxRadius*this.player.hitBoxRadius && this.status.attackReady) {
-			this.attack(this.player);
+		const verticalDistance = this.player.y - this.y;
+		const horizontalDistance = this.player.x - this.x;
+		this.quadDistanceToPlayer = verticalDistance*verticalDistance + horizontalDistance*horizontalDistance;
+		if (!this.charging) {
+			if (this.quadDistanceToPlayer <= this.chargingDistance*this.chargingDistance) {
+				this.charging = true;
+				this.movement.currentSpeed = this.chargingSpeed;
+				this.status.moving = true;
+				this.movement.direction = Math.atan2(verticalDistance, horizontalDistance);
+				this.rotation = this.movement.direction;
+			}
 		}
-
+		if (this.status.moving) {
+			this.changeSpeed();
+			this.calculateDestination();
+		}
 	}
 
 	act(): void {
-		this.move();
+		if (this.status.moving) {
+			this.move();
+		}
+		if (this.quadDistanceToPlayer <= this.attackReach*this.attackReach + this.player.hitBoxRadius*this.player.hitBoxRadius && this.status.attackReady) {
+			this.attack(this.player);
+		}
 	}
 
 	attack(player: Actor): void {
 		player.reduceHealth(10);
-		// if (player.status.health <= 0) {
-		// 	this.engine.switchPause();
-		// }
 		this.status.attackReady = false;
 		this.attackCooldown = 1000;
 	}

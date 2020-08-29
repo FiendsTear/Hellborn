@@ -16,18 +16,17 @@ export default class Projectile extends Actor {
 		this.sprite = new Sprite(source.projectileTexture);
 		this.addChild(this.sprite);
 		this.sprite.rotation = direction;
-		this.status.speed = source.projectileSpeed;
+		this.movement.currentSpeed = source.projectileSpeed;
 		this.lifespan = source.projectileLifespan;
 		this.damage = source.damage;
 		this.status.moving = true;
-		this.direction = direction;
-		this.movable = false;
+		this.movement.direction = direction;
 		this.hitBoxRadius = 3;
 		this.hit = this.hit.bind(this);
 	}
 
 	prepare(elapsedMS: number) {
-		this.calculateDestination(this.direction);
+		this.calculateDestination();
 		this.lifespan = this.lifespan - elapsedMS;
 	}
 

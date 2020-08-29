@@ -40,7 +40,6 @@ export default class HUD extends Container {
 	}
 
 	updateHealthBar() {
-		console.log(this.player);
 		this.health.clear();
 		this.health.beginFill(0x432828);
 		this.health.drawRect(50, 50, 2 * this.player.maxHealth, 20);
