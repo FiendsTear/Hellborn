@@ -8,6 +8,7 @@ import PlayerManager from '../../PlayerManager/PlayerManager';
 import HUD from '../../Interface/HUD';
 import Input from '../../Input';
 import StageManager from '../../StageManager';
+import { Calculations } from '../../helpers/Calculations';
 
 export default class Player extends Actor {
 	maxStamina: number;
@@ -20,6 +21,7 @@ export default class Player extends Actor {
 	equippedWeapon: Weapon;
 	weapons: Weapon[];
 	hud: HUD;
+	bodyRotationSpeed: number;
 
 	constructor(
 		ground: Ground, 
@@ -44,12 +46,13 @@ export default class Player extends Actor {
 		this.body.anchor.y = 0.6;
 		this.body.animationSpeed = 0.2;
 		this.body.loop = false;
+		this.bodyRotationSpeed = 0.4;
 		this.addChild(this.body);
 
 		this.movement.chargeSpeed = 7;
 		this.movement.chargeAcceleration = 0.4;
-		this.movement.chargeStaminaConsumption = 1;
-		this.movement.chargeTurningSpeed = 0.1;
+		this.movement.chargeStaminaConsumption = 0.7;
+		this.movement.chargeTurningSpeed = 0.05;
 		this.movement.chargeAnimationSpeed = 0.2;
 
 		this.movement.walkSpeed = 4;
@@ -58,6 +61,7 @@ export default class Player extends Actor {
 		this.movement.walkTurningSpeed = 0.2;
 
 		this.movement.pace = Pace.standing;
+		this.movement.standTurningSpeed = this.bodyRotationSpeed;
 		this.movement.currentSpeed = 0;
 
 		this.movement.deceleration = 0.5;
@@ -85,9 +89,18 @@ export default class Player extends Actor {
 	}
 
 	prepare(elapsedMS: number) {
-		this.calculateMoveDirectionFromInput();
-		this.controlMovement();
 		this.controlSight();
+		const direction = this.calculateMoveDirectionFromInput();
+		if (direction !== null) {
+			this.changePaceFromInput();
+			this.changeDirection(direction);
+			this.controlMovement();
+		}
+		else {
+			this.movement.pace = Pace.standing;
+			this.changeDirection(this.body.rotation);
+		}
+
 		this.changeSpeed();
 		this.equippedWeapon.update(elapsedMS);
 	}
@@ -109,60 +122,64 @@ export default class Player extends Actor {
 
 	calculateMoveDirectionFromInput() {
 		const keys = this.input.keys;
-		this.movement.pace = Pace.standing;
+		let direction = null;
 
 		if (keys.w && !keys.s) {
-			this.movement.pace = Pace.walking;
-			this.movement.direction = 3*Math.PI/2;
+			direction = -Math.PI/2;
 		}
 
 		if (keys.a) {
 			if (!keys.d) {
-				this.movement.pace = Pace.walking;
-				this.movement.direction = Math.PI;
+				direction = Math.PI;
 				if (keys.w && !keys.s) {
-					this.movement.direction = 5*Math.PI/4;
+					direction = -3*Math.PI/4;
 				}
 			}
 		}
 
 		if (keys.s) {
 			if (!keys.w) {
-				this.movement.pace = Pace.walking;
-				this.movement.direction = Math.PI/2;
+				direction = Math.PI/2;
 				if (keys.a && !keys.w) {
-					this.movement.direction = 3*Math.PI/4;
+					direction = 3*Math.PI/4;
 				}
 			}
 		}
 
 		if (keys.d) {
 			if (!keys.a) {
-				this.movement.pace = Pace.walking;
-				this.movement.direction = 0;
+				direction = 0;
 				if (keys.w && !keys.s) {
-					this.movement.direction = 7*Math.PI/4;
+					direction = -Math.PI/4;
 				}
 				if (keys.s && !keys.w) {
-					this.movement.direction = Math.PI/4;
+					direction = Math.PI/4;
 				}
 			}
 		}
+
+		return direction;
 	}
 
-	controlMovement() {
+	changePaceFromInput() {
+		this.movement.pace = Pace.walking;
+
 		const keys = this.input.keys;
 		if (keys.space && this.currentStamina > 0 && this.movement.pace === Pace.walking) {
 			this.movement.pace = Pace.charging;
 		}
 		const diffBodyLegs = Math.cos(this.body.rotation - this.movement.direction);
+		if (diffBodyLegs < -0.3) {
+			this.movement.pace = Pace.backing;
+		}
+	}
+
+	controlMovement() {
+		const diffBodyLegs = Math.cos(this.body.rotation - this.movement.direction);
 		if (diffBodyLegs > -0.3) {
 			this.legs.rotation = this.movement.direction;
 		}
 		else {
-			if (this.movement.pace !== Pace.standing) {
-				this.movement.pace = Pace.backing;
-			}
 			this.legs.rotation = this.movement.direction + Math.PI;
 		}
 		this.legs.play();
@@ -173,7 +190,7 @@ export default class Player extends Actor {
 		const actorRelativeToCameraX = this.x + this.ground.x;
 		const actorRelativeToCameraY = this.y + this.ground.y;
 		const angle = Math.atan2(this.input.mouse.y - actorRelativeToCameraY, this.input.mouse.x - actorRelativeToCameraX);
-		this.body.rotation = angle;
+		this.body.rotation = Calculations.rotate(this.body.rotation, this.bodyRotationSpeed, angle);
 	}
 
 	reduceHealth(damage: number) {

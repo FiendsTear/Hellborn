@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
-import { Point, Container, IResourceDictionary } from 'pixi.js';
+import { Point, Container, IResourceDictionary, Sprite } from 'pixi.js';
 // eslint-disable-next-line no-unused-vars
 import Ground, { Quadrant } from '../StageManager/Ground';
+import { Calculations } from '../helpers/Calculations';
 
 interface Status {
 	moving: boolean;
@@ -153,21 +154,31 @@ export default abstract class Actor extends Container {
 			maxSpeed = this.movement.walkSpeed * this.movement.backingMultiplier;
 			acceleration = this.movement.deceleration;
 		}
-		if (this.movement.currentSpeed < maxSpeed) {
-			if (maxSpeed - this.movement.currentSpeed > acceleration) {
-				this.movement.currentSpeed = this.movement.currentSpeed + acceleration;
-			}
-			else {
-				this.movement.currentSpeed = maxSpeed;
-			}
+		this.movement.currentSpeed = Calculations.getValueCloserToMax(
+			this.movement.currentSpeed,
+			acceleration,
+			maxSpeed);
+	}
+
+	changeDirection(turnTo: number) {
+		let turningSpeed;
+		switch(this.movement.pace) {
+		case Pace.standing:
+			turningSpeed = this.movement.standTurningSpeed;
+			break;
+		case Pace.walking:
+			turningSpeed = this.movement.walkTurningSpeed;
+			break;
+		case Pace.backing:
+			turningSpeed = this.movement.walkTurningSpeed;
+			break;
+		case Pace.charging:
+			turningSpeed = this.movement.chargeTurningSpeed;
+			break;
+		default:
+			turningSpeed = this.movement.standTurningSpeed;
+			break;
 		}
-		if (this.movement.currentSpeed > maxSpeed) {
-			if (this.movement.currentSpeed - maxSpeed > acceleration) {
-				this.movement.currentSpeed = this.movement.currentSpeed - acceleration;
-			}
-			else {
-				this.movement.currentSpeed = maxSpeed;
-			}
-		}
+		this.movement.direction = Calculations.rotate(this.movement.direction, turningSpeed, turnTo);
 	}
 }
