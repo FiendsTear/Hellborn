@@ -19,7 +19,6 @@ export default class Projectile extends Actor {
 		this.movement.currentSpeed = source.projectileSpeed;
 		this.lifespan = source.projectileLifespan;
 		this.damage = source.damage;
-		this.status.moving = true;
 		this.movement.direction = direction;
 		this.hitBoxRadius = 3;
 		this.hit = this.hit.bind(this);

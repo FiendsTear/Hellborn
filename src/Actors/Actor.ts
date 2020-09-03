@@ -5,7 +5,6 @@ import Ground, { Quadrant } from '../StageManager/Ground';
 import { Calculations } from '../helpers/Calculations';
 
 interface Status {
-	moving: boolean;
 	alive: boolean;
 	attacking: boolean;
 	attackReady: boolean;
@@ -58,7 +57,6 @@ export default abstract class Actor extends Container {
 		
 		this.status = {
 			alive: true, 
-			moving: false, 
 			attacking: false, 
 			attackReady: true,
 			health: this.maxHealth,
