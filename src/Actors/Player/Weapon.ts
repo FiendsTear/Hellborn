@@ -1,11 +1,11 @@
 // eslint-disable-next-line no-unused-vars
-import Player from '.';
-import ActorManager from '..';
+import Player from './Player';
 import { IResourceDictionary, Point } from 'pixi.js';
 import { ResourceList } from '../../ResourceList';
 import Sounds from 'pixi-sound';
+import ProjectileManager from '../Projectiles/ProjectileManager';
 
-export class Weapon {
+export default class Weapon {
 	sound: Sounds.Sound;
 	ready: boolean;
 	cooldown: number;
@@ -16,7 +16,7 @@ export class Weapon {
 	reloadTime: number;
 	projectileOriginPoint: Point;
 
-	constructor(public owner: Player, private actorManager: ActorManager, private resources: IResourceDictionary) {
+	constructor(public owner: Player, private projectileManager: ProjectileManager, private resources: IResourceDictionary) {
 
 		this.projectileSpeed = 20;
 		this.projectileLifespan = 400;
@@ -33,13 +33,13 @@ export class Weapon {
 	}
 
 	shoot() {
-		this.sound.play();
+		// this.sound.play();
 		const owner = this.owner;
 		const shooterFaceCenterX = owner.x + this.projectileOriginPoint.x * Math.cos(owner.body.rotation);
 		const shooterFaceCenterY = owner.y + this.projectileOriginPoint.y * Math.sin(owner.body.rotation);
 		const projectileDirection =  owner.body.rotation + Math.random() * Math.PI/30 - Math.PI/60;
 
-		this.actorManager.addActor('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
+		this.projectileManager.addProjectile('projectile', shooterFaceCenterX, shooterFaceCenterY, projectileDirection, this);
 		this.ready = false;
 		this.reloadTime = 500;
 	}

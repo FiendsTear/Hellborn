@@ -1,9 +1,5 @@
 import {Container, Sprite} from 'pixi.js';
-import Actor from '../ActorManager/Actor';
-import Player from '../ActorManager/Player';
-import Enemy from '../ActorManager/Enemy';
-import Projectile from '../ActorManager/Projectile';
-import Spawner from '../ActorManager/Spawner';
+import Actor from '../Actors/Actor';
 
 export interface Quadrant {
 	xIndex: number;
@@ -15,16 +11,8 @@ export interface Quadrant {
 	activeActors: Actor[];
 }
 
-interface Enemies {
-	[id: string]: Enemy;
-}
-
-interface Projectiles {
-	[id: string]: Projectile;
-}
-
-interface Spawners {
-	[id: string]: Spawner;
+interface Actors {
+	[id: string]: Actor;
 }
 
 export default class Ground extends Container {
@@ -34,10 +22,7 @@ export default class Ground extends Container {
 	horizontalCount: number;
 	verticalCount: number;
 
-	player: Player;
-	enemies: Enemies;
-	projectiles: Projectiles;
-	spawners: Spawners;
+	actors: Actors;
 
 	constructor() {
 		super();
@@ -72,10 +57,7 @@ export default class Ground extends Container {
 			}
 		}
 
-		this.player = {} as Player;
-		this.enemies = {} as Enemies;
-		this.projectiles = {} as Projectiles;
-		this.spawners = {} as Spawners;
+		this.actors = {} as Actors;
 	}
 
 	getQuadrantByCoords(x: number, y: number) {
@@ -106,7 +88,7 @@ export default class Ground extends Container {
 		const actorTopBorder = actor.y - actor.hitBoxRadius;
 
 		let currentQuadrantsClone = actor.status.quadrants.slice();
-		currentQuadrantsClone.forEach((quadrant) => {
+		currentQuadrantsClone.forEach((quadrant: Quadrant) => {
 			// right
 			if (actorRightBorder >= quadrant.x2) {	
 				if (quadrant.xIndex + 1 < this.horizontalCount) {
@@ -165,12 +147,13 @@ export default class Ground extends Container {
 			}
 		});
 		currentQuadrantsClone = actor.status.quadrants.slice();
-		currentQuadrantsClone.forEach((quadrant) => {
+		currentQuadrantsClone.forEach((quadrant: Quadrant) => {
 			if (actorBottomBorder < quadrant.y1 ||
 					actorTopBorder > quadrant.y2 ||
 					actorRightBorder < quadrant.x1 ||
 					actorLeftBorder > quadrant.x2) {
 				this.removeActorFromQuadrant(quadrant, actor);
+				actor.removeQuadrantFromStatus(quadrant);
 			}
 		});
 	}
@@ -188,8 +171,6 @@ export default class Ground extends Container {
 	// replace indexof with findIndex
 	removeActorFromQuadrant(quadrant: Quadrant, actor: Actor) {
 		quadrant.activeActors.splice( quadrant.activeActors.indexOf(actor), 1);
-		const quadrantIndexInArray = this.checkQuadrantInArray(actor.status.quadrants, quadrant);
-		actor.status.quadrants.splice(quadrantIndexInArray, 1);
 	}
 	
 	checkQuadrantInArray(quadrants: Quadrant[], quadrant: Quadrant) {
@@ -199,5 +180,22 @@ export default class Ground extends Container {
 			}
 		});
 		return quadrantIndexInArray;
+	}
+
+	addActor(actor: Actor) {
+		const quadrant = this.getQuadrantByCoords(actor.x, actor.y);
+		actor.status.quadrants.push(quadrant);
+
+		const quadrantToAddActorTo = actor.status.quadrants[0];
+		this.quadrants[quadrantToAddActorTo.xIndex][quadrantToAddActorTo.yIndex].activeActors.push(actor);
+		this.addChild(actor);
+	}
+
+	removeActor(actor: Actor) {
+		this.removeChild(actor);
+		for (let i = 0, quadrantCount = actor.status.quadrants.length; i < quadrantCount; i++) {
+			const quadrant = actor.status.quadrants[i];
+			this.removeActorFromQuadrant(quadrant, actor);
+		}
 	}
 }

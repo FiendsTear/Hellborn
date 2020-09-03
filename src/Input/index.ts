@@ -62,7 +62,7 @@ export default class Input {
 		if (event.code === 'KeyA') this.keys.a = false;
 		if (event.code === 'Space') this.keys.space = false;
 		if (!event.shiftKey) this.keys.shift = false;
-		if (event.code === 'Escape') this.engine.switchPause();
+		if (event.code === 'Escape') this.engine.stageManager.switchPause();
 	}
 
 	handleMouseMove(event: InteractionEvent) {
@@ -71,8 +71,8 @@ export default class Input {
 	}
 	
 	handleMouseOut() {
-		if (!this.engine.paused) {
-			this.engine.switchPause();
+		if (!this.engine.stageManager.paused) {
+			this.engine.stageManager.switchPause();
 		}
 	}
 

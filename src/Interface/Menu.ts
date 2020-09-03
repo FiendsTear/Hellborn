@@ -24,7 +24,7 @@ export default class Menu extends Container {
 		// this.resume.addChild(this.graphics);
 		this.resumeMission.addChild(new Text('Resume', {fontFamily : 'Arial', fontSize: 24, fill : 0xff1010, align : 'center'}));
 		this.resumeMission.interactive = true;
-		this.resumeMission.on('click', this.engine.switchPause.bind(this.engine));
+		this.resumeMission.on('click', this.engine.stageManager.switchPause.bind(this.engine.stageManager));
 
 		this.show = this.show.bind(this);
 		this.hide = this.hide.bind(this);
