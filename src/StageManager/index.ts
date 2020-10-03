@@ -6,8 +6,11 @@ import Camera from './Camera';
 import {ResourceList} from '../ResourceList';
 import {Collision} from '../Physics/Collision';
 import ProjectileManager from '../Actors/Projectiles/ProjectileManager';
-import EnemyManager from '../Actors/Enemies/EnemyManager';
 import Player from '../Actors/Player/Player';
+
+interface Players {
+	[id: string]: Player;
+}
 
 export default class StageManager {
 	paused: boolean;
@@ -17,11 +20,12 @@ export default class StageManager {
 	hud: HUD;
 	camera: Camera;
 	playerActor: Player;
-	enemyManager: EnemyManager;
+	players: Players;
 	projectileManager: ProjectileManager;
 
-	constructor(private engine: Engine) {
+	constructor(public engine: Engine) {
 		this.killCountGoal = 3;
+		this.players = {};
 		this.startMission = this.startMission.bind(this);
 		this.finishMission = this.finishMission.bind(this);
 		this.paused = true;
@@ -39,7 +43,6 @@ export default class StageManager {
     const resourcesToLoad = [
 			ResourceList['playerLegs'], 
 			ResourceList['playerBody'], 
-			ResourceList['wolf'], 
 			ResourceList['bullet'],
 			ResourceList['ground'],
 			ResourceList['shot']
@@ -49,7 +52,6 @@ export default class StageManager {
 				this.engine.loader.add(resource.name, resource.url);
 			}
 		}
-		this.enemyManager = new EnemyManager(this, this.engine.loader.resources);
 		this.projectileManager = new ProjectileManager(this, this.engine.loader.resources);
 
 		this.engine.loader.load(() =>  {
@@ -63,8 +65,8 @@ export default class StageManager {
 				this.ground, 
 				this.engine.loader.resources, 
 				this.engine.input, 
-				this.engine.playerManager,
 				this);
+				this.engine.socket.emit('new-player');
 			this.playerActor.id = 'player';
 			this.playerActor.x = 500;
 			this.playerActor.y = 1000;
@@ -76,11 +78,6 @@ export default class StageManager {
 			this.hud = hud;
 			this.camera.addChild(hud);
 			this.playerActor.hud = hud;
-			// initialize player and enemy
-
-			this.enemyManager.addSpawner(100, 300);
-			this.enemyManager.addSpawner(500, 900);
-			this.enemyManager.addSpawner(700, 500);
 
 			// all set, go
 			this.missionStarted = true;
@@ -98,13 +95,11 @@ export default class StageManager {
 	processMission(elapsedMS: number) {
 		if (!this.paused) {
 			this.playerActor.prepare(elapsedMS);
-			this.enemyManager.prepare(elapsedMS);
 			this.projectileManager.prepare(elapsedMS);
 	
 			Collision.checkCollisions(this.ground);
 	
 			this.playerActor.act();
-			this.enemyManager.update();
 			this.projectileManager.update();
 			this.camera.centerOnPlayer(this.playerActor);
 		}

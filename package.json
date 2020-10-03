@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/socket.io-client": "^1.4.34",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "copy-webpack-plugin": "^6.0.3",
@@ -26,6 +27,7 @@
   },
   "dependencies": {
     "pixi-sound": "^3.0.5",
-    "pixi.js": "^5.3.3"
+    "pixi.js": "^5.3.3",
+    "socket.io-client": "^2.3.1"
   }
 }

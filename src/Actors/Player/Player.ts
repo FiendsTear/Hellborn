@@ -4,7 +4,6 @@ import Actor, {Pace} from '../Actor';
 import {AnimatedSprite, IResourceDictionary} from 'pixi.js';
 import Weapon from './Weapon';
 import Ground from '../../StageManager/Ground';
-import PlayerManager from '../../PlayerManager/PlayerManager';
 import HUD from '../../Interface/HUD';
 import Input from '../../Input';
 import StageManager from '../../StageManager';
@@ -27,7 +26,6 @@ export default class Player extends Actor {
 		ground: Ground, 
 		resources: IResourceDictionary, 
 		private input: Input,
-		private playerManager: PlayerManager,
 		private stageManager: StageManager) {
 
 		super(ground, resources, 'player');
@@ -107,6 +105,7 @@ export default class Player extends Actor {
 
 	act() {
 		this.move();
+		this.stageManager.engine.socket.emit('new-place', {x: this.x, y: this.y});
 		if (this.movement.pace === Pace.charging) {
 			this.currentStamina = this.currentStamina - this.movement.chargeStaminaConsumption;
 			this.hud.updateStaminaBar();
